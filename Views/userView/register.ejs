@@ -1,0 +1,104 @@
+<%-include('header')%>
+<!-- Ec breadcrumb start -->
+<div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="row ec_breadcrumb_inner">
+                    <div class="col-md-6 col-sm-12">
+                        <h2 class="ec-breadcrumb-title">Register</h2>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <!-- ec-breadcrumb-list start -->
+                        <ul class="ec-breadcrumb-list">
+                            <li class="ec-breadcrumb-item"><a href="index.html">Home</a></li>
+                            <li class="ec-breadcrumb-item active">Register</li>
+                        </ul>
+                        <!-- ec-breadcrumb-list end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Ec breadcrumb end -->
+
+<!-- Start Register -->
+<section class="ec-page-content section-space-p">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="section-title">
+                    <h2 class="ec-bg-title">Register</h2>
+                    <h2 class="ec-title">Register</h2>
+                    <p class="sub-title mb-3">Best place to buy and sell digital products</p>
+                </div>
+            </div>
+            <div class="ec-register-wrapper">
+                <div class="ec-register-container">
+                    <div class="ec-register-form">
+                        <form action="/signup" method="post">
+                            <span class="ec-register-wrap ec-register-half">
+                                <label>First Name*</label>
+                                <input type="text" name="firstname" placeholder="Enter your first name" required />
+                            </span>
+                            <span class="ec-register-wrap ec-register-half">
+                                <label>Last Name*</label>
+                                <input type="text" name="lastname" placeholder="Enter your last name" required />
+                            </span>
+                            <span class="ec-register-wrap ec-register-half">
+                                <label>Email*</label>
+                                <input type="email" name="email" placeholder="Enter your email add..." required />
+                            </span>
+                            <span class="ec-register-wrap ec-register-half">
+                                <label>Phone Number*</label>
+                                <input type="text" name="phonenumber" placeholder="Enter your phone number"
+                                    required />
+                            </span>
+                            <span class="ec-register-wrap ec-register-half">
+                                <label>Password*</label>
+                                <input type="text" name="password" placeholder="Enter your password"
+                                    required />
+                            </span>
+                            <span class="ec-register-wrap ec-register-half">
+                                <label>Re-Type Password*</label>
+                                <input type="text" name="re-password" placeholder="Re-Type your password"
+                                    required />
+                            </span>
+                           
+
+
+
+                            
+                            <span class="ec-register-wrap ec-register-btn">
+                                <button class="btn btn-primary" type="submit">Register</button>
+                            </span>
+                            <br>
+                            <div class="member mb-4">
+                              Already a member? <a href="/login">Login here</a>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Register -->
+<script>
+    // Get the password and re-type password input elements
+    $('#signup').submit(function(e) {
+  const password = $("#password_signup").val();
+  const retypePassword = $("#re_password").val();
+
+  if (password !== retypePassword) {
+    e.preventDefault();
+    $("#notmatch").show();
+  } else {
+    $("#notmatch").hide();
+  }
+});
+
+
+</script>
+<%-include('footer')%>
