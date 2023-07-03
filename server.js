@@ -60,7 +60,7 @@ app.use(
     
 );
 
-
+app.use(nocache())
 
 app.use('/',userRoute)
 app.use('/admin',adminRoute)

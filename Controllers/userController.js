@@ -10,20 +10,19 @@ const moment = require('moment')
 
 const signup = async (req, res) => {
         try {
-            res.render("register");
+            res.render("register",{loggedIn:false});
         } catch (error) {
             console.log(error.message);
         }
     };
     
 const login = async (req, res) => {
-        res.render("login");
         try {
             if (req.session.passwordUpdated) {
-                res.render("login", { success: "Password changed successfully!!" });
+                res.render("login", { success: "Password changed successfully!!",loggedIn:false });
                 req.session.passwordUpdated = false;
             } else {
-                res.render("login");
+                res.render("login",{blocked:false,user:req.session.user,loggedIn:false});
             }
         } catch (error) {
             console.log(error.message);
@@ -68,11 +67,12 @@ let forgotPasswordOtp;
                     mobile = req.body.phonenumber;
                     password = req.body.password;
                     sendOtpMail(email, generatedOtp);
-                    res.redirect("/Otp");
+                  
+                    res.render("otp");
                 
                             
             } else {
-                res.render("signup", { alreadyUser: "user already exist" });
+                res.render("register", { alreadyUser: "user already exist" });
             }
         } catch (error) {
             console.log(error.message);
@@ -80,7 +80,7 @@ let forgotPasswordOtp;
     };
     const showOtp = async (req, res) => {
         try {
-            res.render("Otp");
+            res.render("otp");
         } catch (error) {}
     };
 
@@ -146,15 +146,15 @@ let forgotPasswordOtp;
             try {
                 await newUser.save();
                 
-                    res.render("login", { success: "Successfully registered!" });
+                    res.render("login", { success: "Successfully registered!" ,loggedIn:false});
                 
             } catch (error) {
                 console.log(error);
-                res.render("Otp", { invalidOtp: "Error registering new user" });
+                res.render("otp", { invalidOtp: "Error registering new user" });
             }
     
         } else {
-            res.render("Otp", { invalidOtp: "wrong OTP" });
+            res.render("otp", { invalidOtp: "wrong OTP" });
         }
     };
 
@@ -167,27 +167,152 @@ let forgotPasswordOtp;
             const userData = await User.findOne({ email: email });
                 console.log(userData);
             if (userData) {
+                
                 const passwordMatch = await bcrypt.compare(password, userData.password);
                 if (userData.is_blocked === true) {
-                    return res.render("login", { blocked: "Your account is blocked - conatct: yara@gmail.com" });
+                    
+                    return res.render("login", { blocked: "Your account is blocked",user:req.session.user ,loggedIn:false});
                 }
     
                 if (passwordMatch) {
                         console.log("verified pass");
                     req.session.user = userData;
-                    res.redirect("/home");
+                    res.render('home',{user:req.session.user.email,blocked:false,loggedIn:true})
                 }
                 if (!passwordMatch) {
-                    res.render("login", { invalid: "Entered password is wrong" });
+                    res.render("login", { invalid: "Entered password is wrong" ,blocked:false,loggedIn:false});
                 }
             } else {
-                res.render("login", { invalid: "You are not registered. please register now!!" });
+                res.render("login", { invalid: "You are not registered. please register now!!" ,blocked:false,loggedIn:false});
             }
         } catch (error) {
             console.log(error.message);
         }
     };
+////////////////////Forgot Password/////////////////////////////
 
+const loadForgotPassword = async (req, res) => {
+    try {
+        if (req.session.forgotEmailNotExist) {
+            res.render("verifyEmail", { emailNotExist: "Sorry, email does not exist! Please register now!" ,loggedIn:false});
+            req.session.forgotEmailNotExist = false;
+        } else {
+            res.render("verifyEmail",{loggedIn:false});
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const verifyForgotEmail = async (req, res) => {
+    try {
+        const verifyEmail = req.body.email;
+        const ExistingEmail = await User.findOne({ email: verifyEmail });
+
+        if (ExistingEmail) {
+            if (!forgotPasswordOtp) {
+                forgotPasswordOtp = generateOTP();
+                console.log(forgotPasswordOtp);
+                email = verifyEmail;
+                sendForgotPasswordOtp(email, forgotPasswordOtp);
+                res.redirect("/forgotOtpEnter");
+                setTimeout(() => {
+                    forgotPasswordOtp = null;
+                }, 60 * 1000);
+            } else {
+                res.redirect("/forgotOtpEnter");
+            }
+        } else {
+            req.session.forgotEmailNotExist = true;
+            res.redirect("/forgotPassword");
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+async function sendForgotPasswordOtp(email, otp) {
+    try {
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "itsprabanchcv@gmail.com",
+                pass: "efhzfchvjqstvmkb",
+            },
+        });
+
+        const mailOptions = {
+            from: "itsprabanchcv@gmail.com",
+            to: email,
+            subject: "Your OTP for password resetting",
+            text: `Your OTP is ${otp}. Please enter this code to reset your password.`,
+        };
+
+        const result = await transporter.sendMail(mailOptions);
+        console.log(result);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const resendForgotOtp = async (req, res) => {
+    try {
+        const generatedOtp = generateOTP();
+        forgotPasswordOtp = generatedOtp;
+
+        sendForgotPasswordOtp(email, generatedOtp);
+        res.redirect("/forgotOtpEnter");
+        setTimeout(() => {
+            forgotPasswordOtp = null;
+        }, 60 * 1000);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const showForgotOtp = async (req, res) => {
+    try {
+        if (req.session.wrongOtp) {
+            res.render("forgotOtpEnter", { invalidOtp: "Otp does not match" ,loggedIn:false});
+            req.session.wrongOtp = false;
+        } else {
+            res.render("forgotOtpEnter", { countdown: true ,loggedIn:false, invalidOtp:"" });
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const verifyForgotOtp = async (req, res) => {
+    try {
+        const userEnteredOtp = req.body.otp;
+        if (userEnteredOtp === forgotPasswordOtp) {
+            res.render("passwordReset",{loggedIn:false,invalidOtp:""});
+        } else {
+            req.session.wrongOtp = true;
+            res.redirect("/forgotOtpEnter");
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const updatePassword = async (req, res) => {
+    try {
+        const newPassword = req.body.password;
+        const securedPassword = await securePassword(newPassword);
+
+        const userData = await User.findOneAndUpdate({ email: email }, { $set: { password: securedPassword } });
+        if (userData) {
+            req.session.passwordUpdated = true;
+            res.render("login",{blocked:false,loggedIn:false});
+        } else {
+            console.log("Something error happened");
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
     const homeload = async (req, res) => {
         // try {
         // //     const categoryData = await Category.find({ is_blocked: false });
@@ -237,7 +362,7 @@ let forgotPasswordOtp;
         // } catch (error) {
         //     console.log(error.message);
         // }
-        res.render('home')
+        res.render('home',{user:req.session.email,loggedIn:false})
     };
 
 
@@ -270,6 +395,18 @@ module.exports={
     showOtp,
     verifyOtp,
     verifyLogin,
+
+    loadForgotPassword,
+    verifyForgotEmail,
+    showForgotOtp,
+    verifyForgotOtp,
+    resendForgotOtp,
+    updatePassword,
+
+
+
+
+
     doLogout,
     
 }

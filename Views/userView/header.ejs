@@ -69,32 +69,27 @@
                     <!-- Header Top Message Start -->
                     <div class="col text-center header-top-center">
                         <div class="header-top-message text-upper">
-                            <span>Free Shipping</span>This Week Order Over - $75
+                            <span style="color: rgb(1, 60, 10); font-size: larger; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Welcome <%=locals.user%></span>
                         </div>
                     </div>
                     <!-- Header Top Message End -->
                     <!-- Header Top Language Currency -->
                     <div class="col header-top-right d-none d-lg-block">
                         <div class="header-top-lan-curr d-flex justify-content-end">
-                            <!-- Currency Start -->
-                            <div class="header-top-curr dropdown">
-                                <button class="dropdown-toggle text-upper" data-bs-toggle="dropdown">Currency <i
-                                        class="ecicon eci-caret-down" aria-hidden="true"></i></button>
-                                <ul class="dropdown-menu">
-                                    <li class="active"><a class="dropdown-item" href="#">USD $</a></li>
-                                    <li><a class="dropdown-item" href="#">EUR €</a></li>
-                                </ul>
-                            </div>
-                            <!-- Currency End -->
+                           
                             <!-- Language Start -->
-                            <div class="header-top-lan dropdown">
-                                <button class="dropdown-toggle text-upper" data-bs-toggle="dropdown">Language <i
-                                        class="ecicon eci-caret-down" aria-hidden="true"></i></button>
-                                <ul class="dropdown-menu">
-                                    <li class="active"><a class="dropdown-item" href="#">English</a></li>
-                                    <li><a class="dropdown-item" href="#">Italiano</a></li>
-                                </ul>
-                            </div>
+                            
+                            <% if (loggedIn) { %>
+                                <li class="nav-item">
+                                    <a id="logoutBtn" class="btn btn-sm btn-primary " href="/logout">logout</a>
+                                </li>
+                              <% }  else { %>
+                                <li class="nav-item">
+                                    <a id="logoutBtn" class="btn btn-sm btn-primary " href="/login">login</a>
+                                </li>
+                            <%}%>
+                           
+
                             <!-- Language End -->
 
                         </div>
@@ -177,7 +172,7 @@
                                     <button class="dropdown-toggle" data-bs-toggle="dropdown"><i
                                             class="fi-rr-user"></i></button>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a class="dropdown-item" href="/register">Register</a></li>
+                                        <li><a class="dropdown-item" href="/signup">Register</a></li>
                                         <li><a class="dropdown-item" href="checkout.html">Checkout</a></li>
                                         <li><a class="dropdown-item" href="/login">Login</a></li>
                                     </ul>
@@ -710,10 +705,7 @@
                         <div class="header-top-lan dropdown">
                             <button class="dropdown-toggle text-upper" data-bs-toggle="dropdown">Language <i
                                     class="ecicon eci-caret-down" aria-hidden="true"></i></button>
-                            <ul class="dropdown-menu">
-                                <li class="active"><a class="dropdown-item" href="#">English</a></li>
-                                <li><a class="dropdown-item" href="#">Italiano</a></li>
-                            </ul>
+                           
                         </div>
                         <!-- Language End -->
                         <!-- Currency Start -->
