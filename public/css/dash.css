@@ -18,8 +18,8 @@ input::-webkit-inner-spin-button {
 }
 
 thead{
-  background-color: #ef7367; 
-  color: white;
+  background-color: #005772; 
+  color: rgb(138, 225, 128);
 }
 
 tbody{
@@ -227,7 +227,7 @@ tbody{
 }
 
 .new-brand{
-  background-color: #0d6efd;
+  background-color: #0dfd1d;
   color: white;
 }
 

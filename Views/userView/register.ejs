@@ -37,41 +37,59 @@
             <div class="ec-register-wrapper">
                 <div class="ec-register-container">
                     <div class="ec-register-form">
-                        <form action="/signup" method="post">
+                        <form id="signupForm">
                             <span class="ec-register-wrap ec-register-half">
                                 <label>First Name*</label>
-                                <input type="text" name="firstname" placeholder="Enter your first name" required />
+                                <input type="text" name="firstname" placeholder="Enter your first name" />
+                                <p id="firstnameError" class="p-1 text-danger"></p>
                             </span>
                             <span class="ec-register-wrap ec-register-half">
                                 <label>Last Name*</label>
-                                <input type="text" name="lastname" placeholder="Enter your last name" required />
+                                <input type="text" name="lastname" placeholder="Enter your last name" />
+                                <p id="lastnameError" class="p-1 text-danger"></p>
                             </span>
                             <span class="ec-register-wrap ec-register-half">
                                 <label>Email*</label>
-                                <input type="email" name="email" placeholder="Enter your email add..." required />
+                                <input type="email" name="email" id="email" placeholder="Enter your email add..." />
+                                <p id="emailError" class="p-1 text-danger"></p>
                             </span>
+                     
                             <span class="ec-register-wrap ec-register-half">
                                 <label>Phone Number*</label>
-                                <input type="text" name="phonenumber" placeholder="Enter your phone number"
-                                    required />
+                                <input type="text" name="phonenumber" id="phonenumber" placeholder="Enter your phone number"
+                                    />
+                                    <p id="phoneError" class="p-1 text-danger"></p>
                             </span>
                             <span class="ec-register-wrap ec-register-half">
                                 <label>Password*</label>
-                                <input type="text" name="password" placeholder="Enter your password"
-                                    required />
-                            </span>
-                            <span class="ec-register-wrap ec-register-half">
-                                <label>Re-Type Password*</label>
-                                <input type="text" name="re-password" placeholder="Re-Type your password"
-                                    required />
+                                <input type="password" name="password" id="password" placeholder="Enter your password"
+                                    />
+                                    <p id="passwordError" class="p-1 text-danger"></p>
                             </span>
                            
+                            <span class="ec-register-wrap ec-register-half">
+                                <label>Re-Type Password*</label>
+                                <input type="password" name="repassword" id="password2" placeholder="Re-Type your password"
+                                    />
+                                    <p id="repasswordError" class="p-1 pb-0 text-danger"></p>
+                            </span>
+                            
+                           <div style="display: flex;">
+                            <input type="checkbox" style="width: 15px; margin-left: 10px; " id="showPassword" onchange="togglePasswordVisibility()" />
+                            <label for="showPassword">Show Password</label>
+                           </div>
+                            
+                            
+                       
+                            
+                      
+                          
 
 
 
                             
                             <span class="ec-register-wrap ec-register-btn">
-                                <button class="btn btn-primary" type="submit">Register</button>
+                                <button class="btn btn-primary" type="submit" id="submit">Register</button>
                             </span>
                             <br>
                             <div class="member mb-4">
@@ -85,20 +103,61 @@
     </div>
 </section>
 <!-- End Register -->
+
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
 <script>
-    // Get the password and re-type password input elements
-    $('#signup').submit(function(e) {
-  const password = $("#password_signup").val();
-  const retypePassword = $("#re_password").val();
+    
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+            console.log("ho");
 
-  if (password !== retypePassword) {
-    e.preventDefault();
-    $("#notmatch").show();
-  } else {
-    $("#notmatch").hide();
-  }
-});
+            const formData = new FormData(event.target);
+            try {
+                const response = await axios.post('/signup',formData, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                alert("ok")
 
+                if (response.status === 200) {
+                    window.location.href = '/showOtp'
+                }
+            } catch (error) {
+                alert(error)
 
+                if (error.response.status == 400) {
+                    const errors = error.response.data.error;
+                    Object.keys(errors).forEach((key) => {
+                        let element = document.getElementById(key).textContent = errors[key];
+                    });
+                } else if (error.response.status == 401) {
+                    document.getElementById('emailError').textContent = error.response.data.error;
+                }
+                else if (error.response.status == 409) {
+                    document.getElementById('passwordError').textContent = error.response.data.error;
+                }
+                else {
+                    alert("something went wrong");
+                }
+
+            }
+        };
+
+        document.getElementById('signupForm').addEventListener('submit', handleSubmit);
+    
+
+        
+        
+                              function togglePasswordVisibility() {
+                                const passwordField = document.getElementById("password");
+                                if (passwordField.type === "password") {
+                                  passwordField.type = "text";
+                                } else {
+                                  passwordField.type = "password";
+                                }
+                              }
+                         
 </script>
 <%-include('footer')%>

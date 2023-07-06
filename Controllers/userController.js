@@ -17,6 +17,7 @@ const signup = async (req, res) => {
     };
     
 const login = async (req, res) => {
+  
         try {
             if (req.session.passwordUpdated) {
                 res.render("login", { success: "Password changed successfully!!",loggedIn:false });
@@ -44,9 +45,64 @@ const securePassword = async (password) => {
         }
     };
     ////user verification
+
+
+    function validate(data) {
+        const { firstname,lastname, email, phonenumber, password, repassword } = data;
+        const errors = {}
+    
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phonePattern = /^\d{10}$/;
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,}$/;
+
+        // /Name validation //
+        if (!firstname) {
+            errors.firstnameError = "Please Enter Your first Name"
+        } else if (firstname.length < 3 || firstname[0] == " ") {
+            errors.firstnameError = "Enter a Valid Name"
+        }
+        if (!lastname) {
+            errors.lastnameError = "Please Enter Your last Name"
+        } else if (lastname.length < 1 || lastname[0] == " ") {
+            errors.lastnameError = "Enter a Valid Name"
+        }
+    
+        // email validation //
+        if (!email) {
+            errors.emailError = "please enter your email address";
+        } else if (email.length < 1 || email.trim() === "" || !emailPattern.test(email)) {
+            errors.emailError = "please Enter a Valid email";
+        }
+    
+        // Phone No Validation //
+        if (!phonenumber) {
+            errors.phoneError = "please Enter your mobile number";
+        } else if (!phonePattern.test(phonenumber)) {
+            errors.phoneError = "please check your number and provide a valid one";
+        }
+    
+        // Password Validation //
+        if (!password) {
+            errors.passwordError = "please Enter Your  password"
+        } else if (!passwordPattern.test(password)) {
+            errors.passwordError = "password must be atleast 8 characters with atleast one uppercase, lowercase, digit and special character";
+        }
+    
+        // Comfirm Password Validation //
+        if (password && !repassword) {
+            errors.repasswordError = "please Enter Your password"
+        } else if (password && repassword && password !== repassword) {
+            errors.repasswordError = "passwords doesn't match";
+        }
+    
+        return {
+            isValid: Object.keys(errors).length === 0,
+            errors
+        }
+    }
     
 let saveOtp;
-let name;
+let firstName;
 let email;
 let mobile;
 let password;
@@ -55,32 +111,76 @@ let forgotPasswordOtp;
 
 
     const sendOtp = async (req, res) => {
+        console.log(req.body);
         try {
-            const emailExist = await User.findOne({ email: req.body.email });
-            if (!emailExist) {
-               
-                    const generatedOtp = generateOTP();
+
+            const { emailvalid, phonenumber } = req.body
+            
+            const emailExist = await User.findOne({ email: emailvalid })
+            const phoneExist = await User.findOne({ phone: phonenumber })
+    
+            const valid = validate(req.body)
+    
+            if (emailExist) {
+    
+                return res.status(401).json({ error: "user with same Email already Exists" })
+    
+            } else if (phoneExist) {
+    
+                return res.status(409).json({ error: "The user with same Mobile Number already Exist please try another Number" })
+    
+            } else if (!valid.isValid) {
+                return res.status(400).json({ error: valid.errors })
+            }
+            else {
+                const generatedOtp = generateOTP();
                     saveOtp = generatedOtp;
                     firstName = req.body.firstname;
                     lastName=req.body.lastname;
                     email = req.body.email;
                     mobile = req.body.phonenumber;
                     password = req.body.password;
+                    repassword=req.body.repassword
                     sendOtpMail(email, generatedOtp);
-                  
-                    res.render("otp");
-                
-                            
-            } else {
-                res.render("register", { alreadyUser: "user already exist" });
+                 
+    
+                return res.status(200).end();
+    
             }
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
-    };
+    }
+        // try {
+        //     const emailExist = await User.findOne({ email: req.body.email });
+            
+        //     if (!emailExist) {
+               
+        //             const generatedOtp = generateOTP();
+        //             saveOtp = generatedOtp;
+        //             firstName = req.body.firstname;
+        //             lastName=req.body.lastname;
+        //             email = req.body.email;
+        //             mobile = req.body.phonenumber;
+        //             password = req.body.password;
+        //             sendOtpMail(email, generatedOtp);
+                  
+        //             res.render("otp",{loggedIn:false});
+                
+                            
+        //     } else {
+        //         res.render("register", { alreadyUser: "user already exist",loggedIn:false });
+        //     }
+        // } catch (error) {
+        //     console.log(error.message);
+        // }
+    // };
+
+
+
     const showOtp = async (req, res) => {
         try {
-            res.render("otp");
+            res.render("otp",{loggedIn:false});
         } catch (error) {}
     };
 
@@ -146,7 +246,7 @@ let forgotPasswordOtp;
             try {
                 await newUser.save();
                 
-                    res.render("login", { success: "Successfully registered!" ,loggedIn:false});
+                    res.render("login", { success: "Successfully registered!" ,loggedIn:false,blocked:false});
                 
             } catch (error) {
                 console.log(error);
@@ -177,6 +277,7 @@ let forgotPasswordOtp;
                 if (passwordMatch) {
                         console.log("verified pass");
                     req.session.user = userData;
+                    req.session.logged=true
                     res.render('home',{user:req.session.user.email,blocked:false,loggedIn:true})
                 }
                 if (!passwordMatch) {
@@ -362,7 +463,9 @@ const updatePassword = async (req, res) => {
         // } catch (error) {
         //     console.log(error.message);
         // }
-        res.render('home',{user:req.session.email,loggedIn:false})
+     
+            res.render('home',{user:req.session.email,loggedIn:false})
+        
     };
 
 
@@ -378,7 +481,7 @@ const updatePassword = async (req, res) => {
 //user logout
     const doLogout = async (req, res) => {
         try {
-            req.session.destroy();
+            delete req.session.email
             res.redirect("/login");
         } catch (error) {
             console.log(error.message);

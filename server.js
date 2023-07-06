@@ -1,6 +1,8 @@
 const express=require('express')
 const app=express()
 const session=require('express-session')
+const axios = require('axios');
+
 // const Port=process.env.PORT || 3000
 const {v4:uuid}=require("uuid")
 const mongoose=require('mongoose')
@@ -18,7 +20,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 
 // const Category = require("./models/categoryModel");
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8000
 mongoDB()
 
 

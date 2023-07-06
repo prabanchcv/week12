@@ -1,4 +1,4 @@
-const adminController = require("../controllers/adminController");
+const adminController = require("../Controllers/adminController");
 // const adminDashboard = require('../controllers/adminDashboard')
 const express = require("express");
 const adminAuth= require('../middleware/adminAuth');
@@ -38,6 +38,20 @@ admin_route.get('/editCategory/:id', adminAuth.isLogin, adminController.editCate
 admin_route.post('/updateCategory/:id', adminAuth.isLogin, store.single('image') , adminController.updateCategory)
 admin_route.get('/unlistCategory/:id', adminAuth.isLogin, adminController.unlistCategory)
 
+
+admin_route.get("/subCategories", adminAuth.isLogin, adminController.loadSubCategories)
+admin_route.get('/addSubCategory', adminAuth.isLogin, adminController.addSubCategory)
+admin_route.post('/addSubCategory', adminAuth.isLogin, store.single('image') , adminController.addNewSubCategory)
+admin_route.get('/editSubCategory/:id', adminAuth.isLogin, adminController.editSubCategory)
+admin_route.post('/updateSubCategory/:id', adminAuth.isLogin, store.single('image') , adminController.updateSubCategory)
+admin_route.get('/unlistSubCategory/:id', adminAuth.isLogin, adminController.unlistSubCategory)
+
+admin_route.get("/banners", adminAuth.isLogin, adminController.loadBanners)
+admin_route.get("/addBanner", adminAuth.isLogin, adminController.addBanner)
+admin_route.post('/addBanner', adminAuth.isLogin, store.single('image') , adminController.addNewBanner)
+admin_route.get('/updateBanner/:id', adminAuth.isLogin, adminController.editBanner)
+admin_route.post('/updateBanner/:id', adminAuth.isLogin, store.single('image') , adminController.updateBanner)
+admin_route.get('/bannerStatus/:id', adminAuth.isLogin, adminController.bannerStatus)
 
 
 

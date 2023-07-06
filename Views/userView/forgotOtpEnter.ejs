@@ -1,0 +1,109 @@
+<%- include('header') %>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+  }
+
+  .otpPage {
+    text-align: center;
+    padding: 60px 0;
+  }
+
+  h1 {
+    color: #333333;
+    margin: 0;
+    margin-bottom: 20px;
+    font-size: 28px;
+  }
+
+  p {
+    color: #777777;
+    margin: 0;
+    margin-bottom: 30px;
+    font-size: 18px;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .recover {
+    margin-bottom: 20px;
+  }
+
+  .recover a {
+    color: #0056b3;
+    text-decoration: none;
+  }
+
+  #fillout2 {
+    color: #ff0000;
+    display: none;
+  }
+
+  .logout_alert,
+  .invalid_alert {
+    margin-bottom: 20px;
+  }
+
+  .logout_alert {
+    color: #ff0000;
+  }
+
+  .invalid_alert {
+    color: #ff0000;
+  }
+
+  button[type="submit"] {
+    padding: 10px 30px;
+    font-size: 16px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #004080;
+  }
+
+  #countdown {
+    color: grey;
+    text-align: center;
+    margin-top: 20px;
+  }
+</style>
+
+<div class="otpPage">
+  <h1>Enter the OTP</h1>
+  <p>Please enter the one-time password<br>sent to your registered email</p>
+  <form action="/verifyForgotOtp" method="post" id="otpEnter">
+    <input style="max-width: 200px;" type="number" placeholder="Enter OTP here" id="otp" name="otp" required />
+    <div class="recover" id="resend_link" style="display: none;">
+      <a href="/resendForgotPasswordotp">Resend OTP</a>
+    </div>
+    <p id="fillout2">Please enter the OTP</p>
+
+    <div class="logout_alert" role="alert">
+
+    </div>
+    <div class="invalid_alert" role="alert">
+      <%= invalidOtp %>
+    </div>
+    <button type="submit" id="auth_button">Verify</button>
+  </form>
+  <div id="countdown" class="text-center mt-3" style="color: grey;"></div>
+</div>
+
+<%- include('footer') %>

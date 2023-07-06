@@ -24,8 +24,8 @@ user_route.get('/logout',  userController.doLogout)
 //otp verification routes
 user_route.get("/signup", isLogout,  userController.signup);
 user_route.post('/signup',  userController.sendOtp)
-user_route.get('/showOtp', userController.showOtp)
-user_route.post('/otpEnter' ,userController.verifyOtp);
+user_route.get('/showOtp',isLogout, userController.showOtp)
+user_route.post('/otpEnter' ,isLogout,userController.verifyOtp);
 
 //forgot
 user_route.get('/forgotPassword',isLogout,userController.loadForgotPassword)
@@ -35,7 +35,7 @@ user_route.post('/verifyForgotOtp',isLogout,userController.verifyForgotOtp)
 user_route.get('/resendForgotPasswordotp', isLogout ,userController.resendForgotOtp)
 user_route.post('/newPassword',isLogout, userController.updatePassword)
 
-user_route.get("/home",userController.homeload);
+user_route.get("/home",isLogin, blockCheck,userController.homeload);
 
 user_route.get("/404",  userController.err_404);
 

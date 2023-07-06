@@ -2,7 +2,7 @@ const moment = require("moment");
 const User = require("../Models/usermodel");
 const Category = require("../Models/categoryModel");
 const SubCategory = require("../Models/subCategoryModel");
-// const Banner = require('../Models/bannerModel')
+const Banner = require('../Models/bannerModel')
 // const Product = require("../models/productModel");
 
 const cloudinary = require('../database/cloudinary')
@@ -171,7 +171,7 @@ const editCategory = async (req, res) => {
     try {
         const categoryData = await Category.findById({ _id: categoryId });
 
-        res.render("editCategory", { categoryData, user: req.session.admin,catUpdated:"" });
+       return  res.render("editCategory", { categoryData, user: req.session.admin,catUpdated:"" });
     } catch (error) {
         console.log(error.message);
     }
@@ -254,6 +254,7 @@ const loadSubCategories = async (req, res) => {
             res.render("subCategories", {
                 subCategoryData,
                 catUpdated: "Sub-Category updated successfully",
+                catNoUpdation:"",
                 user: req.session.admin,
             });
             req.session.subCategoryUpdate = false;
@@ -261,6 +262,7 @@ const loadSubCategories = async (req, res) => {
             res.render("subCategories", {
                 subCategoryData,
                 catUpdated: "Sub-Category Added successfully",
+                catNoUpdation:"",
                 user: req.session.admin,
             });
             req.session.subCategorySave = false;
@@ -268,11 +270,12 @@ const loadSubCategories = async (req, res) => {
             res.render("subCategories", {
                 subCategoryData,
                 catNoUpdation: "Sub-Category Already Exists!!",
+                catUpdated: "",
                 user: req.session.admin,
             });
             req.session.subCategoryExist = false;
         } else {
-            res.render("subCategories", { subCategoryData, user: req.session.admin });
+            res.render("subCategories", { subCategoryData,catUpdated: "", catNoUpdation:"", user: req.session.admin });
         }
     } catch (error) {
         console.log(error.message);
@@ -281,11 +284,14 @@ const loadSubCategories = async (req, res) => {
 
 const addSubCategory = async (req, res) => {
     try {
-        res.render("addSubCategory", { user: req.session.admin });
+        res.render("addSubCategory", { catUpdated: "",user: req.session.admin });
     } catch (error) {
         console.log(error.message);
     }
 };
+
+
+
 
 const addNewSubCategory = async (req, res) => {
     const subCategoryName = req.body.name;
@@ -406,6 +412,195 @@ const unlistSubCategory = async (req, res) => {
     }
 };
 
+
+////////////////////BANNERS/////////////////////////////
+
+
+const loadBanners = async (req, res) => {
+    try {
+        const bannerData = await Banner.find();
+
+        if (req.session.bannerSave) {
+            res.render("banners", {
+                bannerData,
+                bannerSave: "Banner created successfully!",
+                user: req.session.admin,
+            });
+            req.session.bannerSave = false;
+        } else if (req.session.bannerExist) {
+            res.render("banners", {
+                bannerData,
+                bannerSave:"",
+                bannerExist: "Banner alreddy exitsts!",
+                bannerDelete: "",
+                user: req.session.admin,
+            });
+            req.session.bannerExist = false;
+        } else if (req.session.bannerUpdate) {
+            res.render("banners", {
+                bannerData,
+                bannerUpdate: "Banner updated successfully!",
+                bannerDelete: "",
+                bannerSave:"",
+                bannerExist:"",
+                user: req.session.admin,
+            });
+            req.session.bannerUpdate = false;
+        }else if (req.session.bannerDelete) {
+            res.render("banners", {
+                bannerData,
+                bannerDelete: "Banner deleted successfully!",
+                bannerUpdate:"",
+                bannerSave:"",
+                bannerExist:"",
+                user: req.session.admin,
+            });
+            req.session.bannerDelete = false;
+        }
+        else {
+            res.render("banners", { bannerData, user: req.session.admin,bannerSave:"",bannerExist:"",bannerUpdate:"", bannerDelete: ""});
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+const addBanner = async (req, res) => {
+    try {
+        res.render("addBanner", { user: req.session.admin });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+const addNewBanner = async (req,res)=>{
+    try {
+
+        const { title, label, bannerSubtitle } = req.body
+        const image = req.file
+
+        const existing = await Banner.findOne({ title: title })
+        if (existing) {
+            req.session.bannerExist = true;
+            res.redirect("/admin/banners");
+        } else {
+            const result = await cloudinary.uploader.upload(image.path, {
+                folder: "Banners",
+            });
+
+            const banner = new Banner({
+                title: title,
+                subtitle: bannerSubtitle,
+                label: label,
+                image: {
+                    public_id: result.public_id,
+                    url: result.secure_url
+                }
+            });
+
+            await banner.save();
+            req.session.bannerSave = true;
+            res.redirect("/admin/banners");
+        }
+        
+    } catch (error) {
+        console.log(error.messaage);
+    }
+}
+
+const editBanner = async (req, res) => {
+    
+    try {
+
+        const bannerId = req.params.id;
+        const bannerData = await Banner.findById({ _id: bannerId });
+
+        res.render("editBanner", { bannerData, user: req.session.admin });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+const updateBanner = async (req, res) => {
+    try {
+
+        const { title, label, bannerSubtitle } = req.body
+        const bannerId = req.params.id;
+        const newImage = req.file;
+
+        const banner = await Banner.findById(bannerId);
+        const bannerImageUrl = banner.image.url;
+        
+        let result;
+        if (newImage) {
+            if(bannerImageUrl){
+                await cloudinary.uploader.destroy(banner.image.public_id);
+            }
+            result = await cloudinary.uploader.upload(newImage.path, {
+                folder: "Banners"
+            });
+        } else {
+            result = {
+                public_id: banner.imageUrl.public_id,
+                secure_url: bannerImageUrl
+            };
+        }
+
+        const bannerExist = await Banner.findOne({ title: title });
+        const imageExist = await Banner.findOne({ 'image.url': result.secure_url });
+
+        if (!bannerExist || !imageExist) {
+            await Banner.findByIdAndUpdate(
+                bannerId,
+                {
+                    title: title,
+                    subtitle: bannerSubtitle,
+                    label: label,
+                    image: {
+                        public_id: result.public_id,
+                        url: result.secure_url
+                    },
+                },
+                { new: true }
+            );
+            req.session.bannerUpdate = true;
+            res.redirect("/admin/banners");
+        } else {
+            req.session.bannerExist = true;
+            res.redirect("/admin/banners");
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+const bannerStatus = async (req, res) => {
+    try {
+        const bannerId = req.params.id;
+
+        const unlistBanner = await Banner.findById(bannerId);
+
+        await Banner.findByIdAndUpdate(
+            bannerId,
+            { $set: { active: !unlistBanner.active } },
+            { new: true }
+        );
+
+        res.redirect('/admin/banners')
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+
+
+
+
 module.exports={
     loadLogin,
     adminLogout,
@@ -432,6 +627,17 @@ module.exports={
     editSubCategory,
     updateSubCategory,
     unlistSubCategory,
+
+
+    loadBanners,
+    addBanner,
+    addNewBanner,
+    editBanner,
+    updateBanner,
+    bannerStatus,
+    
+
+
 
 
 
