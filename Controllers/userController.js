@@ -1,4 +1,9 @@
 const User=require('../Models/usermodel')
+const Category = require("../Models/categoryModel");
+const SubCategory = require("../Models/subCategoryModel");
+const Address = require("../Models/addressmodel");
+const Products = require("../Models/productModel");
+const Banner = require("../Models/bannerModel")
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const moment = require('moment')
@@ -278,7 +283,9 @@ let forgotPasswordOtp;
                         console.log("verified pass");
                     req.session.user = userData;
                     req.session.logged=true
-                    res.render('home',{user:req.session.user.email,blocked:false,loggedIn:true})
+                    // res.render('home',{user:req.session.user.email,blocked:false,loggedIn:true, 
+                    //     bannerData })
+                    res.redirect("/home")
                 }
                 if (!passwordMatch) {
                     res.render("login", { invalid: "Entered password is wrong" ,blocked:false,loggedIn:false});
@@ -415,56 +422,57 @@ const updatePassword = async (req, res) => {
     }
 };
     const homeload = async (req, res) => {
-        // try {
-        // //     const categoryData = await Category.find({ is_blocked: false });
-        // //     const subCategoryData = await SubCategory.find({ is_blocked: false });
-        // //     const bannerData = await Banner.find({ active: true });
-        //     const userData = req.session.user;
-        //     console.log("userData:", userData)
-        //     const offerProducts = await Products.aggregate([
-        //         { $match: { offerlabel: { $ne: [] } } },
-        //         { $sample: { size: 4 } },
-        //         {
-        //             $lookup: {
-        //                 from: "categories",
-        //                 localField: "category",
-        //                 foreignField: "_id",
-        //                 as: "category",
-        //             },
-        //         },{
-        //             $unwind: "$category",
-        //         },
-        //         {
-        //             $lookup: {
-        //                 from: "subcategories",
-        //                 localField: "subCategory",
-        //                 foreignField: "_id",
-        //                 as: "subCategory",
-        //             },
-        //         },
-        //         {
-        //             $unwind: "$subCategory",
-        //         }
-        //     ]);
+        try {
+            const categoryData = await Category.find({ is_blocked: false });
+            const subCategoryData = await SubCategory.find({ is_blocked: false });
+            const bannerData = await Banner.find({ active: true });
+            const userData = req.session.user;
+            console.log("userData:", userData)
+            const offerProducts = await Products.aggregate([
+                { $match: { offerlabel: { $ne: [] } } },
+                { $sample: { size: 4 } },
+                {
+                    $lookup: {
+                        from: "categories",
+                        localField: "category",
+                        foreignField: "_id",
+                        as: "category",
+                    },
+                },{
+                    $unwind: "$category",
+                },
+                {
+                    $lookup: {
+                        from: "subcategories",
+                        localField: "subCategory",
+                        foreignField: "_id",
+                        as: "subCategory",
+                    },
+                },
+                {
+                    $unwind: "$subCategory",
+                }
+            ]);
     
-        //     if (userData) {
-        //         const userId = userData._id;
-        //         let cartId = null;
-        //         const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
-        //         console.log("user:", user);
-        //         if (user.cart && user.cart.length > 0) {
-        //             cartId = user.cart[0]._id;
-        //         }
+            if (userData) {
+                const userId = userData._id;
+                let cartId = null;
+                const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
+                console.log("user:", user);
+                if (user.cart && user.cart.length > 0) {
+                    cartId = user.cart[0]._id;
+                }
+                var useremail=req.session.user.email
     
-        //         res.render("home", { userData, cartId, categoryData, bannerData, subCategoryData, offerProducts });
-        //     } else {
-        //         res.render("home", { categoryData, subCategoryData, bannerData, offerProducts });
-        //     }
-        // } catch (error) {
-        //     console.log(error.message);
-        // }
+                res.render("home", { userData, cartId, categoryData, bannerData, subCategoryData, offerProducts,loggedIn:true,useremail });
+            } else {
+                res.render("home", { categoryData, subCategoryData, bannerData, offerProducts,loggedIn:false ,useremail });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
      
-            res.render('home',{user:req.session.email,loggedIn:false})
+          
         
     };
 

@@ -421,7 +421,7 @@ const loadBanners = async (req, res) => {
         const bannerData = await Banner.find();
 
         if (req.session.bannerSave) {
-            res.render("banners", {
+           res.render("banners", {
                 bannerData,
                 bannerSave: "Banner created successfully!",
                 user: req.session.admin,

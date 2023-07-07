@@ -68,9 +68,20 @@
                     <!-- Header Top social End -->
                     <!-- Header Top Message Start -->
                     <div class="col text-center header-top-center">
-                        <div class="header-top-message text-upper">
-                            <span style="color: rgb(1, 60, 10); font-size: larger; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Welcome <%=locals.user%></span>
-                        </div>
+                        <!-- Your home EJS template -->
+                        <% if (loggedIn) { %>
+                            <div class="header-top-message text-upper">
+                                <span style="color: rgb(1, 60, 10); font-size: larger; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Welcome <%=locals.useremail%></span>
+                            </div>
+                        <% } else { %>
+                            <div class="header-top-message text-upper">
+                                <span style="color: rgb(1, 60, 10); font-size: larger; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Welcome Guest</span>
+                            </div>
+                        <% } %>
+  
+  <!-- Rest of your template code -->
+  
+                     
                     </div>
                     <!-- Header Top Message End -->
                     <!-- Header Top Language Currency -->
@@ -236,7 +247,7 @@
                                 <i class="fi fi-rr-apps"></i>
                             </a>
                             <ul>
-                                <li><a href="/">Home</a></li>
+                                <li><a href="/home">Home</a></li>
                                 <li class="dropdown position-static"><a href="javascript:void(0)">Categories</a>
                                     <ul class="mega-menu d-block">
                                         <li class="d-flex">
