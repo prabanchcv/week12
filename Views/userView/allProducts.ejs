@@ -1,0 +1,233 @@
+
+<%-include('header')%>
+    <!-- Ec breadcrumb start -->
+    <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row ec_breadcrumb_inner">
+                        <div class="col-md-6 col-sm-12">
+                            <h2 class="ec-breadcrumb-title">All products</h2>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <!-- ec-breadcrumb-list start -->
+                            <ul class="ec-breadcrumb-list">
+                                <li class="ec-breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="ec-breadcrumb-item active">All products</li>
+                            </ul>
+                            <!-- ec-breadcrumb-list end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Ec breadcrumb end -->
+
+  <!-- Ec Shop page -->
+  <section class="ec-page-content section-space-p">
+    <div class="container">
+        <div class="row">
+            <div class="ec-shop-rightside col-lg-12 col-md-12">
+                <!-- Shop Top Start -->
+                <div class="ec-pro-list-top d-flex">
+                    <div class="col-md-6 ec-grid-list">
+                        <div class="ec-gl-btn">
+                            <button class="btn sidebar-toggle-icon"><i class="fi-rr-filter"></i></button>
+                            <!-- <button class="btn btn-grid-50 active"><i class="fi-rr-apps"></i></button> -->
+                            <button class="btn btn-list-50"><i class="fi-rr-list"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ec-sort-select">
+                        <span class="sort-by">Sort by</span>
+                        <div class="ec-select-inner">
+                            <select name="sortby" id="sortOptions" onchange="sortProducts()" class="form-control">
+                                <option value="relevent" selected="selected">Most Relevent</option>
+                                <option value="asc">Price: Low to High</option>
+                                <option value="desc">Price: High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Shop Top End -->
+
+                <!--product-->>
+                <% if (id) { %>
+                    <input type="hidden" id="productId" value="<%= id %>">
+                <% } %>
+                
+
+                <!-- Shop content Start -->
+                <div class="shop-pro-content"><!--div till pagination-->>
+                    <div class="shop-pro-inner">
+                        <div class="row">
+                            <% productData.forEach(function(product) { %>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
+                                <div class="ec-product-inner">
+                                    <div class="ec-pro-image-outer">
+                                        <div class="ec-pro-image">
+                                            <a href="/productView?id=<%= product._id %>" class="image">
+                                                <img class="main-image" src="<%= product.imageUrl[0].url %>"
+                                                    alt="Product" />
+                                                <img class="hover-image" src="<%= product.imageUrl[1].url %>"
+                                                    alt="Product" />
+                                            </a>
+                                            <span class="percentage">20%</span>
+                                            <% if (product.stock === 0) { %>
+                                                
+                                                <span class="flags">
+                                                    <span class="sale">Out of stock</span>
+                                                </span>
+                                            <% } %>
+                                            <% if (product.offerlabel && product.offerlabel.length > 0) { %>
+                                                <span class="flags">
+                                                    <span class="sale">Sale</span>
+                                                </span>
+                                            <% } %>
+                                            <a href="#" class="quickview" data-link-action="quickview"
+                                                title="Quick view" data-bs-toggle="modal"
+                                                data-bs-target="#ec_quickview_modal"><i class="fi-rr-eye"></i></a>
+                                            <div class="ec-pro-actions">
+                                                <a href="#" class="ec-btn-group compare"
+                                                    title="Compare"><i class="fi fi-rr-arrows-repeat"></i></a>
+                                                <button title="Add To Cart" class="add-to-cart"><i
+                                                        class="fi-rr-shopping-basket"></i> Add To Cart</button>
+                                                <a class="ec-btn-group wishlist" title="Wishlist"><i
+                                                        class="fi-rr-heart"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ec-pro-content">
+                                        <h5 class="ec-pro-title"> <a href="/productView?id=<%= product._id %>"><%= product.name %></a></h5>
+                                        <div class="ec-pro-rating">
+                                            <i class="ecicon eci-star fill"></i>
+                                            <i class="ecicon eci-star fill"></i>
+                                            <i class="ecicon eci-star fill"></i>
+                                            <i class="ecicon eci-star fill"></i>
+                                            <i class="ecicon eci-star"></i>
+                                        </div>
+                                        <div class="ec-pro-list-desc">Lorem Ipsum is simply dummy text of the
+                                            printing and typesetting industry. Lorem Ipsum is simply dutmmy text.
+                                        </div>
+                                       
+                                        <% if (product.oldPrice) { %>
+                                            <span class="ec-price">
+                                            <span class="new-price">₹ <%= product.price %></span>
+                                            <span class="old-price">₹ <%= product.oldPrice %></span>
+                                        </span>
+                                        <% } else { %>
+                                            ₹ <%= product.price %>
+                                        <% } %>
+                                      
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+
+                        </div>
+                    </div>
+                    <!-- Ec Pagination Start -->
+                    <!-- <div class="ec-pro-pagination">
+                        <span>Showing 1-12 of 21 item(s)</span>
+                        <ul class="ec-pro-pagination-inner">
+                            <li><a class="active" href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li><a class="next" href="#">Next <i class="ecicon eci-angle-right"></i></a></li>
+                        </ul>
+                    </div> -->
+
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item <%= (currentPage === 1) ? 'disabled' : '' %>">
+                                <a class="page-link page-link-prev" href="?allProductsPage=<%= currentPage - 1 %>" aria-label="Previous" tabindex="-1" aria-disabled="<%= (currentPage === 1) %>">
+                                    <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                                </a>
+                            </li>
+                            <li class="page-item-total">Page <%= currentPage %> of <%= totalPages %></li>
+                            <li class="page-item <%= (currentPage === totalPages) ? 'disabled' : '' %>">
+                                <a class="page-link page-link-next" href="?allProductsPage=<%= currentPage + 1 %>" aria-label="Next" aria-disabled="<%= (currentPage === totalPages) %>">
+                                    Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- Ec Pagination End -->
+                </div>
+                <!--Shop content End -->
+            </div>
+            <!-- Sidebar Area Start -->
+            <div class="filter-sidebar-overlay"></div>
+            <div class="ec-shop-leftside filter-sidebar">
+                <div class="ec-sidebar-heading">
+                    <h1>Filter Products By</h1>
+                    <a class="filter-cls-btn" href="javascript:void(0)">×</a>
+                </div>
+                <div class="ec-sidebar-wrap">
+                    <!-- Sidebar Category Block -->
+
+                    <%if(categoryFilterData){%>
+                    <div class="ec-sidebar-block">
+                        <div class="ec-sb-title">
+                            <h3 class="ec-sidebar-title">Category</h3>
+                        </div>
+                        <div class="ec-sb-block-content">
+                            <ul>
+                                <%categoryFilterData.forEach(function(category){
+
+                               
+                                <li>
+
+                                    <div class="ec-sidebar-block-item">
+                                       
+                                        <input type="checkbox" onclick="categoryFilter('<%= category._id %>')"  id="cat-1">
+                                        <label class="filterName"><%= category.category %></label>
+                                        <span class="item-count"><%= category.productCount %></span>
+                                    </div>
+                                </li>
+                                
+                             <% })>%>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <%}%>
+
+                    <>
+        
+                
+                    <!-- Sidebar Price Block -->
+                    <div class="ec-sidebar-block">
+                        <div class="ec-sb-title">
+                            <h3 class="ec-sidebar-title">Price</h3>
+                        </div>
+                        <div class="ec-sb-block-content es-price-slider">
+                            <div class="ec-price-filter">
+                                <div id="ec-sliderPrice" class="filter__slider-price" data-min="0" data-max="250"
+                                    data-step="10"></div>
+                                <div class="ec-price-input">
+                                    <label class="filter__label"><input type="text" class="filter__input"></label>
+                                    <span class="ec-price-divider"></span>
+                                    <label class="filter__label"><input type="text" class="filter__input"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- End Shop page -->
+
+<%-include('footer')%>
+
+
+
+
+
+
+       

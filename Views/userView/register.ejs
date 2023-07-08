@@ -110,8 +110,7 @@
     
         const handleSubmit = async (event) => {
             event.preventDefault();
-            console.log("ho");
-
+            
             const formData = new FormData(event.target);
             try {
                 const response = await axios.post('/signup',formData, {
@@ -119,7 +118,7 @@
                         'Content-Type': 'application/json'
                     }
                 })
-                alert("ok")
+                
 
                 if (response.status === 200) {
                     window.location.href = '/showOtp'

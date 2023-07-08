@@ -22,13 +22,13 @@ const signup = async (req, res) => {
     };
     
 const login = async (req, res) => {
-  
+    const categoryData = await Category.find({ is_blocked: false });
         try {
             if (req.session.passwordUpdated) {
-                res.render("login", { success: "Password changed successfully!!",loggedIn:false });
+                res.render("login", { success: "Password changed successfully!!",loggedIn:false ,categoryData});
                 req.session.passwordUpdated = false;
             } else {
-                res.render("login",{blocked:false,user:req.session.user,loggedIn:false});
+                res.render("login",{blocked:false,user:req.session.user,loggedIn:false,categoryData});
             }
         } catch (error) {
             console.log(error.message);
@@ -255,7 +255,7 @@ let forgotPasswordOtp;
                 
             } catch (error) {
                 console.log(error);
-                res.render("otp", { invalidOtp: "Error registering new user" });
+                res.render("otp", { invalidOtp: "Error registering new user" ,loggedIn:false});
             }
     
         } else {
@@ -457,7 +457,8 @@ const updatePassword = async (req, res) => {
             if (userData) {
                 const userId = userData._id;
                 let cartId = null;
-                const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
+                // const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
+                const user = await User.findOne({ _id: userId });
                 console.log("user:", user);
                 if (user.cart && user.cart.length > 0) {
                     cartId = user.cart[0]._id;
@@ -489,7 +490,8 @@ const updatePassword = async (req, res) => {
 //user logout
     const doLogout = async (req, res) => {
         try {
-            delete req.session.email
+          req.session.destroy()
+            
             res.redirect("/login");
         } catch (error) {
             console.log(error.message);
@@ -514,6 +516,8 @@ module.exports={
     resendForgotOtp,
     updatePassword,
 
+
+  
 
 
 

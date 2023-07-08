@@ -17271,7 +17271,8 @@ h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
 .ec-main-menu ul li .mega-menu {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  width: 100%;
+  margin-left: 60%;
+  width: 50%;
   margin-top: 15px;
   padding: 20px 0px 30px 30px;
   position: absolute;

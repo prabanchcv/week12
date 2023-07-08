@@ -3,37 +3,38 @@ const mongoose = require("mongoose")
 
  
 const userSchema = new mongoose.Schema({
-  name: {
-      type: String,
-      required: true,
-  },
-
-  email: {
-      type: String,
-      required: true,
-  },
-
-  mobile: {
-      type: Number,
-      required: true,
-  },
-
-  password: {
-      type: String,
-      required: true,
-  },
-
-  is_blocked: {
-      type: Boolean,
-      required: true,
-  },
-
-  wishlist: [
-      {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
+    firstName: {
+        type: String,
+        required: true
       },
-  ],
+      lastName: {
+        type: String,
+        required: true
+      },
+      email: {
+        type: String,
+        required: true
+      },
+      phoneNumber: {
+        type: String,
+        required: true
+      },
+      password: {
+        type: String,
+        required: true
+      },
+      
+      is_blocked: {
+        type: Boolean,
+        required: true,
+      },
+
+//   wishlist: [
+//       {
+//           type: mongoose.Schema.Types.ObjectId,
+//           ref: "Product",
+//       },
+//   ],
 
   cart: [
       {
@@ -48,33 +49,33 @@ const userSchema = new mongoose.Schema({
       },
   ],
 
-  wallet: {
-      balance: {
-          type: Number,
-          default: 0,
-      },
-      transactions: [
-          {
-              date: {
-                  type: Date,
-              },
-              details: {
-                type: String,
-              },
-              amount: {
-                  type: Number,
-              },
-              status: {
-                  type: String,
-              },
-          },
-      ],
-  },
+//   wallet: {
+//       balance: {
+//           type: Number,
+//           default: 0,
+//       },
+//       transactions: [
+//           {
+//               date: {
+//                   type: Date,
+//               },
+//               details: {
+//                 type: String,
+//               },
+//               amount: {
+//                   type: Number,
+//               },
+//               status: {
+//                   type: String,
+//               },
+//           },
+//       ],
+//   },
 
-  referralCode:{
-    type:String,
-    required:true
-  }
+//   referralCode:{
+//     type:String,
+//     required:true
+//   }
 });
 
 
