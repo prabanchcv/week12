@@ -1,5 +1,4 @@
 <%-include('adminhead')%>
-
 <style>
     .nav-6 h2 a {
         color: black;
@@ -10,21 +9,28 @@
     <div class="row">
         <div id="user_search">
             <div class="col-lg-6">
+
                 <div id="catMsg">
-                    <h5 style="color: #4CAF50;">{{productUpdated}}</h5>
+                    <h5 style="color: #4CAF50;"><%= productUpdated %></h5>
                     <h5 id="noResultsFound">no results found!!</h5>
+
                 </div>
             </div>
+
             <div class="col-lg-6">
+
                 <div id="search">
                     <input type="search" placeholder="Search Products" aria-label="Search" />
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>
 </div>
 </div>
+
 
 <div class="row">
     <div class="col-lg-10 m-auto">
@@ -62,50 +68,54 @@
                         <td>₹ <%= product.price %></td>
                         <td><%= product.stock %></td>
                         <td class="description-Cell" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            title="<%= product.description %>">
-                            <%= product.description %>
-                        </td>
+                            title="<%= product.description %>"><%= product.description %></td>
                         <td>
                             <a href="/admin/updateProduct/<%= product._id %>" class="btn btn-sm btn-primary">Update</a>
                             <button value="<%= product._id %>" class="productDeleteBtn btn btn-sm btn-danger">Delete</button>
                         </td>
                     </tr>
-                    <% }) %>
+                    <% }); %>
                 </tbody>
             </table>
         </div>
 
         <div class="row mt-2">
-            <div class="col-lg-7">
+            <div class="col-lg-7 ">
+
+
                 <div class="d-flex justify-content-end">
                     <a href="/admin/addProduct"><button class="btn btn-primary add_user" id="addUser">Add
                             Product</button></a>
                 </div>
             </div>
+
             <div class="col-lg-5">
+
                 <div class="d-flex justify-content-end">
                     <nav aria-label="...">
                         <ul class="pagination pagination-sm">
-                            <% if (totalPages```
-                            > 1) { 
-                                for (let i = 1; i <= totalPages; i++) { 
-                                    if (i === currentPage) { %>
-                                        <li class="page-item active" aria-current="page">
-                                            <span class="page-link"><%= i %></span>
-                                        </li>
-                                    <% } else { %>
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                                        </li>
-                                    <% }
-                                } 
-                            } %>
+                            <% if (totalPages > 1) { %>
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                            <% if (i === currentPage) { %>
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link"><%= i %></span>
+                            </li>
+                            <% } else { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                            </li>
+                            <% } %>
+                            <% } %>
+                            <% } %>
                         </ul>
                     </nav>
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>
+
 
 <%-include('adminfoot')%>

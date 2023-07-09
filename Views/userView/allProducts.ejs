@@ -51,10 +51,6 @@
                 </div>
                 <!-- Shop Top End -->
 
-                <!--product-->>
-                <% if (id) { %>
-                    <input type="hidden" id="productId" value="<%= id %>">
-                <% } %>
                 
 
                 <!-- Shop content Start -->
@@ -76,7 +72,7 @@
                                             <% if (product.stock === 0) { %>
                                                 
                                                 <span class="flags">
-                                                    <span class="sale">Out of stock</span>
+                                                    <span class="sale">Sold Out</span>
                                                 </span>
                                             <% } %>
                                             <% if (product.offerlabel && product.offerlabel.length > 0) { %>
@@ -145,9 +141,10 @@
                                 <a class="page-link page-link-prev" href="?allProductsPage=<%= currentPage - 1 %>" aria-label="Previous" tabindex="-1" aria-disabled="<%= (currentPage === 1) %>">
                                     <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
                                 </a>
-                            </li>
-                            <li class="page-item-total">Page <%= currentPage %> of <%= totalPages %></li>
+                                
+                            <li class="page-item-total">Page <%= currentPage %> of  <%= totalPages %></li>
                             <li class="page-item <%= (currentPage === totalPages) ? 'disabled' : '' %>">
+                                
                                 <a class="page-link page-link-next" href="?allProductsPage=<%= currentPage + 1 %>" aria-label="Next" aria-disabled="<%= (currentPage === totalPages) %>">
                                     Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
                                 </a>
@@ -175,7 +172,7 @@
                         </div>
                         <div class="ec-sb-block-content">
                             <ul>
-                                <%categoryFilterData.forEach(function(category){
+                                <%categoryFilterData.forEach(function(category){%>
 
                                
                                 <li>
@@ -188,14 +185,14 @@
                                     </div>
                                 </li>
                                 
-                             <% })>%>
+                             <% })%>
 
                             </ul>
                         </div>
                     </div>
                     <%}%>
 
-                    <>
+                    
         
                 
                     <!-- Sidebar Price Block -->

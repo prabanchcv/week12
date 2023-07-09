@@ -17,7 +17,10 @@ admin_route.get('/logout',adminController.adminLogout)
 
 
 admin_route.get("/admindash",adminController.loadDashboard);
-
+// admin_route.get('/chartData', adminDashboard.chartData)
+// admin_route.get('/getSales', adminDashboard.getSales)
+// admin_route.post('/downloadSalesReport', adminDashboard.downloadSalesReport)
+// admin_route.get('/renderSalesReport', adminDashboard.renderSalesReport)
 
 
 
@@ -53,6 +56,14 @@ admin_route.get('/updateBanner/:id', adminAuth.isLogin, adminController.editBann
 admin_route.post('/updateBanner/:id', adminAuth.isLogin, store.single('image') , adminController.updateBanner)
 admin_route.get('/bannerStatus/:id', adminAuth.isLogin, adminController.bannerStatus)
 
+
+admin_route.get("/products", adminAuth.isLogin, adminController.loadProducts)
+admin_route.get('/addProduct', adminAuth.isLogin, adminController.addProduct)
+admin_route.post('/addProduct', adminAuth.isLogin, store.array('image', 4), adminController.addNewProduct)
+admin_route.delete('/product_img_delete', adminController.deleteProductImage)
+admin_route.get('/updateProduct/:id', store.array('image', 4) , adminAuth.isLogin, adminController.updateProduct)
+admin_route.post('/updateProduct/:id', store.array('image', 5) , adminAuth.isLogin, adminController.updateNewProduct)
+admin_route.get('/deleteProduct/:id', adminAuth.isLogin, adminController.deleteProduct)
 
 
 module.exports=admin_route

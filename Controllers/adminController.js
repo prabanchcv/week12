@@ -3,7 +3,8 @@ const User = require("../Models/usermodel");
 const Category = require("../Models/categoryModel");
 const SubCategory = require("../Models/subCategoryModel");
 const Banner = require('../Models/bannerModel')
-// const Product = require("../models/productModel");
+const Product = require("../Models/productModel");
+const Brand=require("../Models/brandModel")
 
 const cloudinary = require('../database/cloudinary')
 //admin login
@@ -599,6 +600,294 @@ const bannerStatus = async (req, res) => {
 
 
 
+////////////////////PRODUCTS/////////////////////////////
+
+const loadProducts = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const productsPerPage = 4;
+
+        const totalCount = await Product.countDocuments();
+        const totalPages = Math.ceil(totalCount / productsPerPage);
+        const skip = (page - 1) * productsPerPage;
+
+        const productData = await Product.aggregate([
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "category",
+                },
+            },
+            {
+                $unwind: "$category",
+            },
+            {
+                $lookup: {
+                    from: "subcategories",
+                    localField: "subCategory",
+                    foreignField: "_id",
+                    as: "subCategory",
+                },
+            },
+            {
+                $unwind: "$subCategory",
+            },
+
+            {
+                $lookup: {
+                    from: "brands",
+                    localField: "brand",
+                    foreignField: "_id",
+                    as: "brand",
+                },
+            },
+            {
+                $unwind: "$brand",
+            },
+        ])
+            .skip(skip)
+            .limit(productsPerPage);
+
+        if (req.session.productSave) {
+            res.render("products", {
+                productData,
+                totalPages,
+                currentPage: page,
+                productUpdated: "Product added successfully!!",
+                user: req.session.admin,
+            });
+            req.session.productSave = false;
+        }
+        if (req.session.productUpdate) {
+            res.render("products", {
+                productData,
+                totalPages,
+                currentPage: page,
+                productUpdated: "Product Updated successfully!!",
+                user: req.session.admin,
+            });
+            req.session.productUpdate = false;
+        } else {
+            res.render("products", {
+                productData,
+                user: req.session.admin,
+                totalPages,
+                currentPage: page,
+                productUpdated:"",
+            });
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const addProduct = async (req, res) => {
+    try {
+        const categoryData = await Category.find();
+        const subCategoryData = await SubCategory.find();
+        const brands = await Brand.find();
+        
+        const banners = await Banner.find()
+
+        res.render("addProduct", { 
+            categoryData, 
+            subCategoryData, 
+            brands,
+            banners, 
+            user: req.session.admin 
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const addNewProduct = async (req, res) => {
+    try {
+        const files = req.files;
+        const productImages = [];
+
+        for (const file of files) {
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "Products"
+            });
+
+            const image = {
+                public_id: result.public_id,
+                url: result.secure_url
+            };
+
+            productImages.push(image);
+        }
+
+        const { name, price, quantity, description, category, subCategory, brand, newBrand, offerLabel, offerPrice } = req.body;
+
+        let brandId;
+
+        if (brand === "new" && newBrand) {
+            const newBrandData = new Brand({
+                name: newBrand,
+            });
+
+            const savedBrand = await newBrandData.save();
+            brandId = savedBrand._id;
+        } else {
+            brandId = brand;
+        }
+
+        let updatedPrice
+        let oldPrice
+        if(offerPrice){
+            updatedPrice = offerPrice
+            oldPrice = price
+        }else{
+            updatedPrice = price
+        }
+
+        const product = new Product({
+            name: name,
+            price: updatedPrice,
+            stock: quantity,
+            description: description,
+            category: category,
+            subCategory: subCategory,
+            brand: brandId,
+            imageUrl: productImages,
+            offerlabel: offerLabel,
+            oldPrice: oldPrice
+        });
+        await product.save();
+        req.session.productSave = true;
+        res.redirect("/admin/products");
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const updateProduct = async (req, res) => {
+    try {
+        const proId = req.params.id;
+
+        const productData = await Product.findById({ _id: proId });
+        const categories = await Category.find();
+        const subCategories = await SubCategory.find();
+        const brands = await Brand.find();
+        const banners = await Banner.find()
+
+        res.render("editProduct", { productData, categories, subCategories, brands, banners, user: req.session.admin });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const deleteProductImage = async (req, res) => {
+    try {
+        const { id, image } = req.query;
+        console.log(id, image);
+        const product = await Product.findById(id);
+        const imageUrl = product.imageUrl[image];
+
+        await cloudinary.uploader.destroy(imageUrl.public_id);
+
+        product.imageUrl.splice(image, 1);
+
+        await product.save();
+        res.status(200).send({ message: "Image deleted successfully" });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const updateNewProduct = async (req, res) => {
+    try {
+        const proId = req.params.id;
+        const product = await Product.findById(proId);
+        const exImage = product.imageUrl;
+        const files = req.files;
+
+        let updImages = [];
+
+        if (files && files.length > 0) {
+            for (const file of files) {
+                const result = await cloudinary.uploader.upload(file.path, {
+                    folder: "Products"
+                });
+
+                const image = {
+                    public_id: result.public_id,
+                    url: result.secure_url
+                };
+
+                updImages.push(image);
+            }
+
+            updImages = [...exImage, ...updImages];
+            product.imageUrl = updImages;
+        } else {
+            updImages = exImage;
+        }
+
+        const { name, price, quantity, description, category, subCategory, brand, newBrand, offerLabel, offerPrice } = req.body;
+
+        let updatedPrice
+        let oldPrice
+        if(offerPrice){
+            updatedPrice = offerPrice
+            oldPrice = price
+        }else{
+            updatedPrice = price
+        }
+
+        let brandId;
+
+        if (brand === "new" && newBrand) {
+            const newBrandData = new Brand({
+                name: newBrand,
+            });
+
+            const savedBrand = await newBrandData.save();
+            brandId = savedBrand._id;
+        } else {
+            brandId = brand;
+        }
+
+        await Product.findByIdAndUpdate(
+            proId,
+            {
+                name: name,
+                price: updatedPrice,
+                stock: quantity,
+                description: description,
+                category: category,
+                subCategory: subCategory,
+                brand: brandId,
+                imageUrl: updImages,
+                offerlabel: offerLabel && offerLabel.length > 0 ? offerLabel : [],
+                oldPrice: oldPrice
+            },
+            { new: true }
+        );
+        req.session.productUpdate = true;
+        res.redirect("/admin/products");
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const deleteProduct = async (req, res) => {
+    try {
+        const deleteId = req.params.id;
+
+        await Product.findByIdAndDelete(deleteId);
+        res.status(200).send();
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+
 
 
 module.exports={
@@ -637,6 +926,13 @@ module.exports={
     bannerStatus,
     
 
+    loadProducts,
+    addProduct,
+    addNewProduct,
+    updateProduct,
+    updateNewProduct,
+    deleteProductImage,
+    deleteProduct,
 
 
 

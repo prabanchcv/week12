@@ -7,6 +7,9 @@ const User = require("../Models/usermodel");
 ////////////////////Products/////////////////////////////
 
 const loadAllProducts = async (req, res) => {
+
+
+
     const categoryData = await Category.find({ is_blocked: false });
     const categoryFilterData = await Category.find({ is_blocked: false });
 
@@ -65,10 +68,11 @@ const loadAllProducts = async (req, res) => {
             : await Product.countDocuments();
 
         const totalPages = Math.ceil(totalCount / productsPerPage);
-
+        console.log(req.session.user);
         if (req.session.user) {
             const userData = req.session.user;
             res.render("allProducts", {
+                loggedIn:true,
                 userData,
                 productData,
                 categoryData,
@@ -77,9 +81,11 @@ const loadAllProducts = async (req, res) => {
                 brandData,
                 currentPage: page,
                 totalPages,
+                
             });
         } else {
             res.render("allProducts", {
+                loggedIn:false,
                 productData,
                 categoryData,
                 categoryFilterData,
@@ -87,12 +93,13 @@ const loadAllProducts = async (req, res) => {
                 brandData,
                 currentPage: page,
                 totalPages,
+                
             });
         }
     } catch (error) {
         console.log(error.message);
         const userData = req.session.user;
-        res.render("404", { userData, categoryData });
+        res.render("404", { userData, categoryData ,loggedIn:false});
     }
 };
 
