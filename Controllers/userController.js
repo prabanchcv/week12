@@ -271,12 +271,13 @@ let forgotPasswordOtp;
             const password = req.body.password;
             const userData = await User.findOne({ email: email });
                 console.log(userData);
+            const categoryData = await Category.find({ is_blocked: false });
             if (userData) {
                 
                 const passwordMatch = await bcrypt.compare(password, userData.password);
                 if (userData.is_blocked === true) {
                     
-                    return res.render("login", { blocked: "Your account is blocked",user:req.session.user ,loggedIn:false});
+                    return res.render("login", { blocked: "Your account is blocked",user:req.session.user ,loggedIn:false,categoryData});
                 }
     
                 if (passwordMatch) {
@@ -288,10 +289,10 @@ let forgotPasswordOtp;
                     res.redirect("/home")
                 }
                 if (!passwordMatch) {
-                    res.render("login", { invalid: "Entered password is wrong" ,blocked:false,loggedIn:false});
+                    res.render("login", { invalid: "Entered password is wrong" ,blocked:false,loggedIn:false,categoryData});
                 }
             } else {
-                res.render("login", { invalid: "You are not registered. please register now!!" ,blocked:false,loggedIn:false});
+                res.render("login", { invalid: "You are not registered. please register now!!" ,blocked:false,loggedIn:false,categoryData});
             }
         } catch (error) {
             console.log(error.message);

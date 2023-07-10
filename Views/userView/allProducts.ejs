@@ -1,5 +1,7 @@
 
 <%-include('header')%>
+    <body class="shop_page">
+        <%-include('body')%>
     <!-- Ec breadcrumb start -->
     <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
         <div class="container">
@@ -12,7 +14,7 @@
                         <div class="col-md-6 col-sm-12">
                             <!-- ec-breadcrumb-list start -->
                             <ul class="ec-breadcrumb-list">
-                                <li class="ec-breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="ec-breadcrumb-item"><a href="/home">Home</a></li>
                                 <li class="ec-breadcrumb-item active">All products</li>
                             </ul>
                             <!-- ec-breadcrumb-list end -->
@@ -172,25 +174,63 @@
                         </div>
                         <div class="ec-sb-block-content">
                             <ul>
-                                <%categoryFilterData.forEach(function(category){%>
-
-                               
+                              
+                             <%categoryFilterData.forEach(function(category){%>
                                 <li>
-
-                                    <div class="ec-sidebar-block-item">
-                                       
-                                        <input type="checkbox" onclick="categoryFilter('<%= category._id %>')"  id="cat-1">
-                                        <label class="filterName"><%= category.category %></label>
-                                        <span class="item-count"><%= category.productCount %></span>
-                                    </div>
-                                </li>
-                                
-                             <% })%>
+                                   <div class="ec-sidebar-block-item">
+                                       <input id="cat-1" type="checkbox" onclick="categoryFilter('<%= category._id %>')" checked /> <a class="filterName" ><%= category.category %></a><a class="item-count"><%= category.productCount %></a><span
+                                           class="checked"></span>
+                                   </div>
+                               </li>
+                               <% })%>
 
                             </ul>
                         </div>
                     </div>
                     <%}%>
+
+                   
+
+                    <div class="ec-sidebar-block">
+                        <div class="ec-sb-title">
+                            <h3 class="ec-sidebar-title">Sub Category</h3>
+                        </div>
+                        <div class="ec-sb-block-content">
+                            <ul>
+                              
+                             <%subCategoryData.forEach(function(subCategory){%>
+                                <li>
+                                   <div class="ec-sidebar-block-item">
+                                       <input id="cat-1" type="checkbox" onclick="categoryFilter('<%= subCategory._id %>')" checked /> <a class="filterName" ><%= subCategory.subCategory %></a><a class="item-count"><%= subCategory.productCount %></a><span
+                                           class="checked"></span>
+                                   </div>
+                               </li>
+                               <% })%>
+
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <div class="ec-sidebar-block">
+                        <div class="ec-sb-title">
+                            <h3 class="ec-sidebar-title">Brand</h3>
+                        </div>
+                        <div class="ec-sb-block-content">
+                            <ul>
+                              
+                             <%brandData.forEach(function(brand){%>
+                                <li>
+                                   <div class="ec-sidebar-block-item">
+                                       <input id="cat-1" type="checkbox" onclick="categoryFilter('<%= brand._id %>')" checked /> <a class="filterName" ><%= brand.name %></a><a class="item-count"><%= brand.productCount %></a><span
+                                           class="checked"></span>
+                                   </div>
+                               </li>
+                               <% })%>
+
+                            </ul>
+                        </div>
+                    </div>
 
                     
         

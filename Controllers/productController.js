@@ -203,7 +203,7 @@ const loadProducts = async (req, res) => {
         const totalPages = Math.ceil(totalCount / productsPerPage);
 
         const userData = req.session.user;
-
+          var val=(userData)?true:false
         res.render("products", {
             id,
             productData,
@@ -213,6 +213,7 @@ const loadProducts = async (req, res) => {
             brandData,
             currentPage: page,
             totalPages,
+            loggedIn:val
         });
     } catch (error) {
         console.log(error.message);
@@ -302,14 +303,14 @@ const productView = async (req, res) => {
 
                 if (!productData) {
                     res.render("404", { userData });
-                } else res.render("productView", { productData, cartId, categoryData, userData });
+                } else res.render("productView", { productData, cartId, categoryData, userData,loggedIn:true });
             } else {
-                res.render("productView", { productData, categoryData, userData });
+                res.render("productView", { productData, categoryData, userData ,loggedIn:true});
             }
         } else {
             if (!productData) {
                 res.render("404", { categoryData });
-            } else res.render("productView", { productData, categoryData });
+            } else res.render("productView", { productData, categoryData ,loggedIn:false});
         }
     } catch (error) {
         console.log(error.message);
