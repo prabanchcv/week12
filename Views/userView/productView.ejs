@@ -139,26 +139,60 @@
                                                 
                                                 <div class="input-group-prepend">
                                                     <button onclick="productQuantity('<%= productData._id %>','dec')" style="min-width: 26px" class="btn btn-decrement btn-spinner" type="button">
-                                                        <i  class="icon-minus"></i>
+                                                        <i  class="icon-minus">-</i>
                                                     </button>
                                                 </div>
                                                 
-                                                <input disabled type="number" id="<%= productData._id %>" style="text-align: center;" class="form-control" name="num-product" value="1">
+                                                <input  disabled type="number" id="<%= productData._id %>" class="form-control"  name="num-product" value="1">
 
 
                                                 <div class="input-group-append">
                                                     <button onclick="productQuantity('<%= productData._id %>','inc')" style="min-width: 26px" class="btn btn-increment btn-spinner" type="button">
-                                                        <i class="icon-plus"></i>
+                                                        <i class="icon-plus">+</i>
                                                     </button>
                                                 </div>
                                             
                                     </div>
-                                            <div class="ec-single-cart ">
-                                                <button class="btn btn-primary">Add To Cart</button>
+                                    <% if (productData.stock) { %>
+                                        <% if (userData) { %>
+                                            <% if (productData.isOnCart) { %>
+                                            <div href="/cart?id=<%= userData._id %>" class="ec-single-cart ">
+                                                <button class="btn btn-primary">Go To Cart</button>
                                             </div>
+                                            <% } else { %>
+                                                
+                                                <div onclick="addToCart('<%= productData._id %>')" id="addToCartBtn" class="ec-single-cart ">
+                                                    <button class="btn btn-primary">Add To Cart</button>
+                                                </div>
+                                                
+                                                <% } %>
+                                                <% } else { %>
+                                                    
+                                                    <div  class="ec-single-cart ">
+                                                        <a href="/login">
+                                                            <button class="btn btn-primary">Add To Cart</button>
+                                                        </a>
+                                                      
+                                                    </div>
+                                                    <% } %>
+                                                    <% } else { %>
+                                                        <div  class="ec-single-cart ">
+                                                            <button class="btn btn-primary">out of stock</button>
+                                                        </div>
+                                                        <% } %>
+
+                                                        
                                             <div class="ec-single-wishlist">
-                                                <a class="ec-btn-group wishlist" title="Wishlist"><i class="fi-rr-heart"></i></a>
+                                                <% if (userData) { %>
+                                                <a onclick="addToWishlist('<%= productData._id %>','<%= cartId %>')" class="ec-btn-group wishlist" title="Wishlist"><i class="fi-rr-heart"></i></a>
+                                                <% } else { %>
+                                                    <a  href="/login" class="ec-btn-group wishlist" title="Wishlist"><i class="fi-rr-heart"></i></a>
+                                                    <% } %>
                                             </div>
+
+
+
+
                                             <div class="ec-single-quickview">
                                                 <a href="#" class="ec-btn-group quickview" data-link-action="quickview"
                                                     title="Quick view" data-bs-toggle="modal"
@@ -431,21 +465,34 @@
             </div>
             <div class="row margin-minus-b-30">
                 <!-- Related Product Content -->
+                <% relatedProducts.forEach(function(product){%>
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
                     <div class="ec-product-inner">
                         <div class="ec-pro-image-outer">
                             <div class="ec-pro-image">
-                                <a href="product-left-sidebar.html" class="image">
+                                <a href="/productView?id=<%= product._id %>" class="image">
                                     <img class="main-image"
-                                        src="/images/product-image/6_1.jpg" alt="Product" />
+                                        src="<%= product.imageUrl[0].url %>" alt="Product" />
                                     <img class="hover-image"
-                                        src="/images/product-image/6_2.jpg" alt="Product" />
+                                        src="<%= product.imageUrl[1].url %>" alt="Product" />
                                 </a>
                                 <span class="percentage">20%</span>
-                                <a href="#" class="quickview" data-link-action="quickview" title="Quick view"
+                                <% if (product.stock === 0) { %>
+                                                
+                                    <span class="flags">
+                                        <span class="sale">Sold Out</span>
+                                    </span>
+                                <% } %>
+                                <% if (product.offerlabel && product.offerlabel.length > 0) { %>
+                                    <span class="flags">
+                                        <span class="sale">Sale</span>
+                                    </span>
+                                <% } %>
+                                <!-- <a href="#" class="quickview" data-link-action="quickview" title="Quick view" -->
+
                                     data-bs-toggle="modal" data-bs-target="#ec_quickview_modal"><i class="fi-rr-eye"></i></a>
                                 <div class="ec-pro-actions">
-                                    <a href="compare.html" class="ec-btn-group compare" title="Compare"><i
+                                    <a href="#" class="ec-btn-group compare" title="Compare"><i
                                             class="fi fi-rr-arrows-repeat"></i></a>
                                     <button title="Add To Cart" class="add-to-cart"><i
                                             class="fi-rr-shopping-basket"></i> Add To Cart</button>
@@ -454,7 +501,7 @@
                             </div>
                         </div>
                         <div class="ec-pro-content">
-                            <h5 class="ec-pro-title"><a href="product-left-sidebar.html">Round Neck T-Shirt</a></h5>
+                            <h5 class="ec-pro-title"> <a href="/productView?id=<%= product._id %>"><%= product.name %></a></h5>
                             <div class="ec-pro-rating">
                                 <i class="ecicon eci-star fill"></i>
                                 <i class="ecicon eci-star fill"></i>
@@ -463,246 +510,20 @@
                                 <i class="ecicon eci-star"></i>
                             </div>
                             <div class="ec-pro-list-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dutmmy text ever since the 1500s, when an unknown printer took a galley.</div>
-                            <span class="ec-price">
-                                <span class="old-price">$27.00</span>
-                                <span class="new-price">$22.00</span>
+                            <% if (product.oldPrice) { %>
+                                <span class="ec-price">
+                                <span class="new-price">₹ <%= product.price %></span>
+                                <span class="old-price">₹ <%= product.oldPrice %></span>
                             </span>
-                            <div class="ec-pro-option">
-                                <div class="ec-pro-color">
-                                    <span class="ec-pro-opt-label">Color</span>
-                                    <ul class="ec-opt-swatch ec-change-img">
-                                        <li class="active"><a href="#" class="ec-opt-clr-img"
-                                                data-src="/images/product-image/6_1.jpg"
-                                                data-src-hover="/images/product-image/6_1.jpg"
-                                                data-tooltip="Gray"><span
-                                                    style="background-color:#e8c2ff;"></span></a></li>
-                                        <li><a href="#" class="ec-opt-clr-img"
-                                                data-src="/images/product-image/6_2.jpg"
-                                                data-src-hover="/images/product-image/6_2.jpg"
-                                                data-tooltip="Orange"><span
-                                                    style="background-color:#9cfdd5;"></span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="ec-pro-size">
-                                    <span class="ec-pro-opt-label">Size</span>
-                                    <ul class="ec-opt-size">
-                                        <li class="active"><a href="#" class="ec-opt-sz"
-                                                data-old="$25.00" data-new="$20.00"
-                                                data-tooltip="Small">S</a></li>
-                                        <li><a href="#" class="ec-opt-sz" data-old="$27.00"
-                                                data-new="$22.00" data-tooltip="Medium">M</a></li>
-                                        <li><a href="#" class="ec-opt-sz" data-old="$35.00"
-                                                data-new="$30.00" data-tooltip="Extra Large">XL</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                            <% } else { %>
+                                ₹ <%= product.price %>
+                            <% } %>
+                           
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
-                    <div class="ec-product-inner">
-                        <div class="ec-pro-image-outer">
-                            <div class="ec-pro-image">
-                                <a href="product-left-sidebar.html" class="image">
-                                    <img class="main-image"
-                                        src="/images/product-image/7_1.jpg" alt="Product" />
-                                    <img class="hover-image"
-                                        src="/images/product-image/7_2.jpg" alt="Product" />
-                                </a>
-                                <span class="percentage">20%</span>
-                                <span class="flags">
-                                    <span class="sale">Sale</span>
-                                </span>
-                                <a href="#" class="quickview" data-link-action="quickview" title="Quick view"
-                                    data-bs-toggle="modal" data-bs-target="#ec_quickview_modal"><i class="fi-rr-eye"></i></a>
-                                <div class="ec-pro-actions">
-                                    <a href="compare.html" class="ec-btn-group compare" title="Compare"><i
-                                            class="fi fi-rr-arrows-repeat"></i></a>
-                                    <button title="Add To Cart" class="add-to-cart"><i
-                                            class="fi-rr-shopping-basket"></i> Add To Cart</button>
-                                    <a class="ec-btn-group wishlist" title="Wishlist"><i class="fi-rr-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ec-pro-content">
-                            <h5 class="ec-pro-title"><a href="product-left-sidebar.html">Full Sleeve Shirt</a></h5>
-                            <div class="ec-pro-rating">
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star"></i>
-                            </div>
-                            <div class="ec-pro-list-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dutmmy text ever since the 1500s, when an unknown printer took a galley.</div>
-                            <span class="ec-price">
-                                <span class="old-price">$12.00</span>
-                                <span class="new-price">$10.00</span>
-                            </span>
-                            <div class="ec-pro-option">
-                                <div class="ec-pro-color">
-                                    <span class="ec-pro-opt-label">Color</span>
-                                    <ul class="ec-opt-swatch ec-change-img">
-                                        <li class="active"><a href="#" class="ec-opt-clr-img"
-                                                data-src="/images/product-image/7_1.jpg"
-                                                data-src-hover="/images/product-image/7_1.jpg"
-                                                data-tooltip="Gray"><span
-                                                    style="background-color:#01f1f1;"></span></a></li>
-                                        <li><a href="#" class="ec-opt-clr-img"
-                                                data-src="/images/product-image/7_2.jpg"
-                                                data-src-hover="/images/product-image/7_2.jpg"
-                                                data-tooltip="Orange"><span
-                                                    style="background-color:#b89df8;"></span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="ec-pro-size">
-                                    <span class="ec-pro-opt-label">Size</span>
-                                    <ul class="ec-opt-size">
-                                        <li class="active"><a href="#" class="ec-opt-sz"
-                                                data-old="$12.00" data-new="$10.00"
-                                                data-tooltip="Small">S</a></li>
-                                        <li><a href="#" class="ec-opt-sz" data-old="$15.00"
-                                                data-new="$12.00" data-tooltip="Medium">M</a></li>
-                                        <li><a href="#" class="ec-opt-sz" data-old="$20.00"
-                                                data-new="$17.00" data-tooltip="Extra Large">XL</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
-                    <div class="ec-product-inner">
-                        <div class="ec-pro-image-outer">
-                            <div class="ec-pro-image">
-                                <a href="product-left-sidebar.html" class="image">
-                                    <img class="main-image"
-                                        src="/images/product-image/1_1.jpg" alt="Product" />
-                                    <img class="hover-image"
-                                        src="/images/product-image/1_2.jpg" alt="Product" />
-                                </a>
-                                <span class="percentage">20%</span>
-                                <span class="flags">
-                                    <span class="sale">Sale</span>
-                                </span>
-                                <a href="#" class="quickview" data-link-action="quickview" title="Quick view"
-                                    data-bs-toggle="modal" data-bs-target="#ec_quickview_modal"><i class="fi-rr-eye"></i></a>
-                                <div class="ec-pro-actions">
-                                    <a href="compare.html" class="ec-btn-group compare" title="Compare"><i
-                                            class="fi fi-rr-arrows-repeat"></i></a>
-                                    <button title="Add To Cart" class="add-to-cart"><i
-                                            class="fi-rr-shopping-basket"></i> Add To Cart</button>
-                                    <a class="ec-btn-group wishlist" title="Wishlist"><i class="fi-rr-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ec-pro-content">
-                            <h5 class="ec-pro-title"><a href="product-left-sidebar.html">Cute Baby Toy's</a></h5>
-                            <div class="ec-pro-rating">
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star"></i>
-                            </div>
-                            <div class="ec-pro-list-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dutmmy text ever since the 1500s, when an unknown printer took a galley.</div>
-                            <span class="ec-price">
-                                <span class="old-price">$40.00</span>
-                                <span class="new-price">$30.00</span>
-                            </span>
-                            <div class="ec-pro-option">
-                                <div class="ec-pro-color">
-                                    <span class="ec-pro-opt-label">Color</span>
-                                    <ul class="ec-opt-swatch ec-change-img">
-                                        <li class="active"><a href="#" class="ec-opt-clr-img"
-                                                data-src="/images/product-image/1_1.jpg"
-                                                data-src-hover="/images/product-image/1_1.jpg"
-                                                data-tooltip="Gray"><span
-                                                    style="background-color:#90cdf7;"></span></a></li>
-                                        <li><a href="#" class="ec-opt-clr-img"
-                                                data-src="/images/product-image/1_2.jpg"
-                                                data-src-hover="/images/product-image/1_2.jpg"
-                                                data-tooltip="Orange"><span
-                                                    style="background-color:#ff3b66;"></span></a></li>
-                                        <li><a href="#" class="ec-opt-clr-img"
-                                                data-src="/images/product-image/1_3.jpg"
-                                                data-src-hover="/images/product-image/1_3.jpg"
-                                                data-tooltip="Green"><span
-                                                    style="background-color:#ffc476;"></span></a></li>
-                                        <li><a href="#" class="ec-opt-clr-img"
-                                                data-src="/images/product-image/1_4.jpg"
-                                                data-src-hover="/images/product-image/1_4.jpg"
-                                                data-tooltip="Sky Blue"><span
-                                                    style="background-color:#1af0ba;"></span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="ec-pro-size">
-                                    <span class="ec-pro-opt-label">Size</span>
-                                    <ul class="ec-opt-size">
-                                        <li class="active"><a href="#" class="ec-opt-sz"
-                                                data-old="$40.00" data-new="$30.00"
-                                                data-tooltip="Small">S</a></li>
-                                        <li><a href="#" class="ec-opt-sz" data-old="$50.00"
-                                                data-new="$40.00" data-tooltip="Medium">M</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
-                    <div class="ec-product-inner">
-                        <div class="ec-pro-image-outer">
-                            <div class="ec-pro-image">
-                                <a href="product-left-sidebar.html" class="image">
-                                    <img class="main-image"
-                                        src="/images/product-image/2_1.jpg" alt="Product" />
-                                    <img class="hover-image"
-                                        src="/images/product-image/2_2.jpg" alt="Product" />
-                                </a>
-                                <span class="percentage">20%</span>
-                                <span class="flags">
-                                    <span class="new">New</span>
-                                </span>
-                                <a href="#" class="quickview" data-link-action="quickview" title="Quick view"
-                                    data-bs-toggle="modal" data-bs-target="#ec_quickview_modal"><i class="fi-rr-eye"></i></a>
-                                <div class="ec-pro-actions">
-                                    <a href="compare.html" class="ec-btn-group compare" title="Compare"><i
-                                            class="fi fi-rr-arrows-repeat"></i></a>
-                                    <button title="Add To Cart" class="add-to-cart"><i
-                                            class="fi-rr-shopping-basket"></i> Add To Cart</button>
-                                    <a class="ec-btn-group wishlist" title="Wishlist"><i class="fi-rr-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ec-pro-content">
-                            <h5 class="ec-pro-title"><a href="product-left-sidebar.html">Jumbo Carry Bag</a></h5>
-                            <div class="ec-pro-rating">
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star fill"></i>
-                                <i class="ecicon eci-star"></i>
-                            </div>
-                            <div class="ec-pro-list-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dutmmy text ever since the 1500s, when an unknown printer took a galley.</div>
-                            <span class="ec-price">
-                                <span class="old-price">$50.00</span>
-                                <span class="new-price">$40.00</span>
-                            </span>                                                
-                            <div class="ec-pro-option">
-                                <div class="ec-pro-color">
-                                    <span class="ec-pro-opt-label">Color</span>
-                                    <ul class="ec-opt-swatch ec-change-img">
-                                        <li class="active"><a href="#" class="ec-opt-clr-img"
-                                                data-src="/images/product-image/2_1.jpg"
-                                                data-src-hover="/images/product-image/2_2.jpg"
-                                                data-tooltip="Gray"><span
-                                                    style="background-color:#fdbf04;"></span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <%})%>
+
             </div>
         </div>
     </section>

@@ -335,7 +335,7 @@ $(document).ready(function () {
 
 
     $.validator.addMethod("nameCheck", function (value) {
-        return /^[a-zA-Z]{3,8}$/.test(value);
+        return /^[a-zA-Z]{3,13}$/.test(value);
     });
 
     $.validator.addMethod("CatDescCheck", function (value) {
@@ -450,7 +450,7 @@ $(document).ready(function () {
     });
 
     $.validator.addMethod("productPriceCheck", function (value) {
-        return /^[1-9]\d{0,3}$|^10000$/.test(value);
+        return /^[1-9]\d{0,5}$|^10000$/.test(value);
     });
 
     $.validator.addMethod("quantityCheck", function (value) {

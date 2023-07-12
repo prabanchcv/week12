@@ -286,9 +286,33 @@ const offerProducts = async (req, res) => {
 
 const productView = async (req, res) => {
     try {
-        const productId = req.query.id;
+        const page = parseInt(req.query.page) || 1; // Get the current page number from the query parameter
+        const productsPerPage = 6;
+        let relatedProducts;
+         const id = req.query.id;
+        const isCategory = await Category.exists({ _id: id });
 
+        var obj=`"${id}"`
+            // Get the product id from the query string
+            
+            var id_curr = `ObjectId(${obj})`;
+          
+            // Get the category name from the product
+            var categoryName = await Product.findOne({id: id_curr}, {category: 1});
+          
+            // Get all the products from MongoDB which are related to the category
+             relatedProducts = await Product.find({category: categoryName});
+          
+            // Return the related products
+          
+    
+
+        
+        const productId = req.query.id;
+       
+       
         const productData = await Product.findById(productId);
+        console.log(productData);
         const categoryData = await Category.find({ is_blocked: false });
 
         if (req.session.user) {
@@ -303,20 +327,29 @@ const productView = async (req, res) => {
 
                 if (!productData) {
                     res.render("404", { userData });
-                } else res.render("productView", { productData, cartId, categoryData, userData,loggedIn:true });
+                } else res.render("productView", { productData, cartId, categoryData, userData,loggedIn:true ,relatedProducts});
             } else {
-                res.render("productView", { productData, categoryData, userData ,loggedIn:true});
+                res.render("productView", { productData, categoryData, userData ,loggedIn:true,cartId,relatedProducts});
             }
         } else {
+
             if (!productData) {
                 res.render("404", { categoryData });
-            } else res.render("productView", { productData, categoryData ,loggedIn:false});
+              
+            } else{
+               
+             res.render("productView", { productData, categoryData ,loggedIn:false,userData:false,relatedProducts});
+
+            }
         }
     } catch (error) {
+        
         console.log(error.message);
         const userData = req.session.user;
+        var val=(userData)?true:false
         const categoryData = await Category.find({ is_blocked: false });
-        res.render("404", { userData, categoryData });
+        
+        res.render("404", { userData, categoryData ,loggedIn:val});
     }
 };
 

@@ -29,12 +29,12 @@ const userSchema = new mongoose.Schema({
         required: true,
       },
 
-//   wishlist: [
-//       {
-//           type: mongoose.Schema.Types.ObjectId,
-//           ref: "Product",
-//       },
-//   ],
+  wishlist: [
+      {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+      },
+  ],
 
   cart: [
       {
@@ -49,33 +49,33 @@ const userSchema = new mongoose.Schema({
       },
   ],
 
-//   wallet: {
-//       balance: {
-//           type: Number,
-//           default: 0,
-//       },
-//       transactions: [
-//           {
-//               date: {
-//                   type: Date,
-//               },
-//               details: {
-//                 type: String,
-//               },
-//               amount: {
-//                   type: Number,
-//               },
-//               status: {
-//                   type: String,
-//               },
-//           },
-//       ],
-//   },
+  wallet: {
+      balance: {
+          type: Number,
+          default: 0,
+      },
+      transactions: [
+          {
+              date: {
+                  type: Date,
+              },
+              details: {
+                type: String,
+              },
+              amount: {
+                  type: Number,
+              },
+              status: {
+                  type: String,
+              },
+          },
+      ],
+  },
 
-//   referralCode:{
-//     type:String,
-//     required:true
-//   }
+  // referralCode:{
+  //   type:String,
+  //   required:true
+  // }
 });
 
 

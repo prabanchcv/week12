@@ -15,7 +15,8 @@ const moment = require('moment')
 
 const signup = async (req, res) => {
         try {
-            res.render("register",{loggedIn:false});
+            const categoryData = await Category.find({ is_blocked: false });
+            res.render("register",{loggedIn:false,categoryData});
         } catch (error) {
             console.log(error.message);
         }
@@ -185,7 +186,8 @@ let forgotPasswordOtp;
 
     const showOtp = async (req, res) => {
         try {
-            res.render("otp",{loggedIn:false});
+            const categoryData = await Category.find({ is_blocked: false });
+            res.render("otp",{loggedIn:false,categoryData});
         } catch (error) {}
     };
 
@@ -232,6 +234,7 @@ let forgotPasswordOtp;
         const EnteredOtp=txt1+txt2+txt3+txt4
         console.log(`entered otp${EnteredOtp}`);
         console.log(`saveotp${saveOtp}`);
+        const categoryData = await Category.find({ is_blocked: false });
         if (EnteredOtp === saveOtp) {
 
             const securedPassword = await securePassword(password);        
@@ -251,15 +254,15 @@ let forgotPasswordOtp;
             try {
                 await newUser.save();
                 
-                    res.render("login", { success: "Successfully registered!" ,loggedIn:false,blocked:false});
+                    res.render("login", { success: "Successfully registered!" ,loggedIn:false,blocked:false,categoryData});
                 
             } catch (error) {
                 console.log(error);
-                res.render("otp", { invalidOtp: "Error registering new user" ,loggedIn:false});
+                res.render("otp", { invalidOtp: "Error registering new user" ,loggedIn:false,categoryData});
             }
     
         } else {
-            res.render("otp", { invalidOtp: "wrong OTP" });
+            res.render("otp", { invalidOtp: "wrong OTP" ,categoryData});
         }
     };
 
@@ -465,6 +468,7 @@ const updatePassword = async (req, res) => {
                     cartId = user.cart[0]._id;
                 }
                 var useremail=req.session.user.email
+               
     
                 res.render("home", { userData, cartId, categoryData, bannerData, subCategoryData, offerProducts,loggedIn:true,useremail });
             } else {

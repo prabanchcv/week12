@@ -9,7 +9,9 @@ const productQuantity = async (id, act) => {
 };
 
 const addToCart = async (productId) => {
+    
     const addToCartButton = document.getElementById("addToCartBtn");
+    
     const productName = document.getElementsByName("productName")[0].value;
     const quantity = document.getElementById(productId).value;
 
@@ -21,6 +23,7 @@ const addToCart = async (productId) => {
     });
 
     let data = await response.json();
+    
 
     if (data.message === "Item already in cart!!") {
         Swal.fire({
@@ -49,12 +52,17 @@ const totalPrice = async (id, act, stock) => {
     let subTotal = 0;
     let datas = [];
     let length = document.getElementsByName("productTotal").length;
+    
     for (let i = 0; i < length; i++) {
+        
         const quantity = parseFloat(document.getElementsByName("num-product")[i].value);
+       
         const price = parseFloat(document.getElementsByName("productprice")[i].value);
+    
         const productTotal = isNaN(quantity) || isNaN(price) ? 0 : quantity * price;
         document.getElementsByName("productTotal")[i].innerText = "₹ " + productTotal.toFixed();
         subTotal += productTotal;
+        console.log(subtotal);
 
         datas.push({
             id: document.getElementsByName("productId")[i].value,

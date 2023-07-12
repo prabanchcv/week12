@@ -1,6 +1,6 @@
 const userController = require("../Controllers/userController");
 const productController = require('../Controllers/productController')
-// const cartController = require('../controllers/cartController')
+const cartController = require('../Controllers/cartController')
 // const orderController = require('../controllers/orderController')
 
 const auth = require("../middleware/userAuth")
@@ -56,6 +56,22 @@ user_route.get('/categoryFilter', productController.categoryFilter)
 user_route.get('/subCategoryFilter', productController.subCategoryFilter)
 user_route.get('/brandFilter', productController.brandFilter)
 user_route.post('/sortProduct', productController.sortProduct)
+
+
+user_route.get('/wishlist', isLogin, blockCheck, cartController.loadWishlist)
+user_route.get('/addToWishlist', cartController.addToWishlist)
+user_route.get('/removeWishlist', cartController.removeWishlist)
+user_route.get('/addToCartFromWishlist', cartController.addToCartFromWishlist)
+
+
+//
+user_route.get('/cart', isLogin, blockCheck, cartController.loadCart)
+user_route.get('/addToCart',cartController.addToCart)
+user_route.post('/cartUpdation',cartController.updateCart)
+user_route.get('/removeCart',cartController.removeCart)
+user_route.get('/checkStock', cartController.checkStock)
+user_route.get('/checkout', isCheckout, isLogin, blockCheck, cartController.loadCheckout)
+user_route.post('/validateCoupon', cartController.validateCoupon)
 
 
 
