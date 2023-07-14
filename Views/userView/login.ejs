@@ -19,10 +19,12 @@
                               <span class="ec-login-wrap">
                                   <label>Email Address*</label>
                                   <input type="email" name="email" placeholder="Enter your email address" required />
-                              </span>
+                                  <p id="emailError" class="p-1 text-danger"></p>
+                                </span>
                               <span class="ec-login-wrap">
                                   <label>Password*</label>
                                   <input type="password" name="password" placeholder="Enter your password" required />
+                                  <p id="passwordError" class="p-1 text-danger"></p>
                               </span>
                               <span class="ec-login-wrap ec-login-fp">
                                   <label><a href="/forgotPassword">Forgot Password?</a></label>
@@ -51,4 +53,57 @@
           </div>
       </div>
   </section>
+  <script>
+    
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            try {
+                const response = await axios.post('/signup',formData, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                
+
+                if (response.status === 200) {
+                    window.location.href = '/showOtp'
+                }
+            } catch (error) {
+                alert(error)
+
+                if (error.response.status == 400) {
+                    const errors = error.response.data.error;
+                    Object.keys(errors).forEach((key) => {
+                        let element = document.getElementById(key).textContent = errors[key];
+                    });
+                } else if (error.response.status == 401) {
+                    document.getElementById('emailError').textContent = error.response.data.error;
+                }
+                else if (error.response.status == 409) {
+                    document.getElementById('passwordError').textContent = error.response.data.error;
+                }
+                else {
+                    alert("something went wrong");
+                }
+
+            }
+        };
+
+        document.getElementById('signupForm').addEventListener('submit', handleSubmit);
+    
+
+        
+        
+                              function togglePasswordVisibility() {
+                                const passwordField = document.getElementById("password");
+                                if (passwordField.type === "password") {
+                                  passwordField.type = "text";
+                                } else {
+                                  passwordField.type = "password";
+                                }
+                              }
+                         
+</script>
 <%-include('footer')%>

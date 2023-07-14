@@ -157,31 +157,7 @@ let forgotPasswordOtp;
             console.log(error);
         }
     }
-        // try {
-        //     const emailExist = await User.findOne({ email: req.body.email });
-            
-        //     if (!emailExist) {
-               
-        //             const generatedOtp = generateOTP();
-        //             saveOtp = generatedOtp;
-        //             firstName = req.body.firstname;
-        //             lastName=req.body.lastname;
-        //             email = req.body.email;
-        //             mobile = req.body.phonenumber;
-        //             password = req.body.password;
-        //             sendOtpMail(email, generatedOtp);
-                  
-        //             res.render("otp",{loggedIn:false});
-                
-                            
-        //     } else {
-        //         res.render("register", { alreadyUser: "user already exist",loggedIn:false });
-        //     }
-        // } catch (error) {
-        //     console.log(error.message);
-        // }
-    // };
-
+     
 
 
     const showOtp = async (req, res) => {
