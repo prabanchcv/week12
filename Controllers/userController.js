@@ -53,7 +53,7 @@ const securePassword = async (password) => {
     ////user verification
 
 
-    function validate(data) {
+    function validateRegister(data) {
         const { firstname,lastname, email, phonenumber, password, repassword } = data;
         const errors = {}
     
@@ -125,7 +125,7 @@ let forgotPasswordOtp;
             const emailExist = await User.findOne({ email: emailvalid })
             const phoneExist = await User.findOne({ phone: phonenumber })
     
-            const valid = validate(req.body)
+            const valid = validateRegister(req.body)
     
             if (emailExist) {
     
@@ -163,7 +163,7 @@ let forgotPasswordOtp;
     const showOtp = async (req, res) => {
         try {
             const categoryData = await Category.find({ is_blocked: false });
-            res.render("otp",{loggedIn:false,categoryData});
+            res.render("otp",{loggedIn:false,categoryData,invalidOtp:""});
         } catch (error) {}
     };
 
@@ -238,41 +238,62 @@ let forgotPasswordOtp;
             }
     
         } else {
-            res.render("otp", { invalidOtp: "wrong OTP" ,categoryData});
+            res.render("otp", { invalidOtp: "wrong OTP" ,categoryData,loggedIn:false});
         }
     };
+    function validateLogin(data) {
+        const {email, password} = data;
+        const errors = {}
+    
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+    
+
+        // email validation //
+        if (!email) {
+            errors.emailError = "please enter your email address";
+        } else if (email.length < 1 || email.trim() === "" || !emailPattern.test(email)) {
+            errors.emailError = "please Enter a Valid email";
+        }
+        // Password Validation //
+      
+        return {
+            isValid: Object.keys(errors).length === 0,
+            errors
+        }
+    }
 
     const verifyLogin = async (req, res) => {
         try {
-               
-            const email = req.body.email;
-            console.log(email);
-            const password = req.body.password;
+            const { email, password } = req.body;
+            console.log(req.body);
+          
+            const valid = validateLogin(req.body);
+            console.log(valid);
+          
             const userData = await User.findOne({ email: email });
-                console.log(userData);
-            const categoryData = await Category.find({ is_blocked: false });
-            if (userData) {
-                
-                const passwordMatch = await bcrypt.compare(password, userData.password);
-                if (userData.is_blocked === true) {
-                    
-                    return res.render("login", { blocked: "Your account is blocked",user:req.session.user ,loggedIn:false,categoryData});
-                }
-    
-                if (passwordMatch) {
-                        console.log("verified pass");
-                    req.session.user = userData;
-                    req.session.logged=true
-                    // res.render('home',{user:req.session.user.email,blocked:false,loggedIn:true, 
-                    //     bannerData })
-                    res.redirect("/home")
-                }
-                if (!passwordMatch) {
-                    res.render("login", { invalid: "Entered password is wrong" ,blocked:false,loggedIn:false,categoryData});
-                }
+            console.log(userData);
+          
+            if (!userData) {
+              return res.status(401).json({ error: "Invalid Email address" });
+            } else if (!valid.isValid) {
+              return res.status(400).json({ error: valid.errors });
+            } else if (userData.is_blocked === true) {
+              return res.status(402).json({ error: "Your Account is blocked" });
             } else {
-                res.render("login", { invalid: "You are not registered. please register now!!" ,blocked:false,loggedIn:false,categoryData});
+              const passwordMatch = await bcrypt.compare(password, userData.password);
+          
+              if (passwordMatch) {
+                console.log("Verified password");
+                req.session.user = userData;
+                req.session.logged = true;
+                return res.status(200).end();
+              } else {
+                return res.status(409).json({ error: "Invalid Password" });
+              }
             }
+          
+          
         } catch (error) {
             console.log(error.message);
         }
@@ -281,11 +302,14 @@ let forgotPasswordOtp;
 
 const loadForgotPassword = async (req, res) => {
     try {
+        const categoryData = await Category.find({ is_blocked: false });
+    
         if (req.session.forgotEmailNotExist) {
-            res.render("verifyEmail", { emailNotExist: "Sorry, email does not exist! Please register now!" ,loggedIn:false});
+           
+            res.render("verifyEmail", {categoryData, emailNotExist: "Sorry, email does not exist! Please register now!" ,loggedIn:false});
             req.session.forgotEmailNotExist = false;
         } else {
-            res.render("verifyEmail",{loggedIn:false});
+            res.render("verifyEmail",{loggedIn:false,categoryData});
         }
     } catch (error) {
         console.log(error.message);
@@ -360,11 +384,12 @@ const resendForgotOtp = async (req, res) => {
 
 const showForgotOtp = async (req, res) => {
     try {
+        const categoryData = await Category.find({ is_blocked: false });
         if (req.session.wrongOtp) {
-            res.render("forgotOtpEnter", { invalidOtp: "Otp does not match" ,loggedIn:false});
+            res.render("forgotOtpEnter", { invalidOtp: "Otp does not match" ,loggedIn:false,categoryData});
             req.session.wrongOtp = false;
         } else {
-            res.render("forgotOtpEnter", { countdown: true ,loggedIn:false, invalidOtp:"" });
+            res.render("forgotOtpEnter", { countdown: true ,loggedIn:false, invalidOtp:"" ,categoryData});
         }
     } catch (error) {
         console.log(error.message);
@@ -373,9 +398,15 @@ const showForgotOtp = async (req, res) => {
 
 const verifyForgotOtp = async (req, res) => {
     try {
-        const userEnteredOtp = req.body.otp;
+        const categoryData = await Category.find({ is_blocked: false });
+        var txt1=req.body.txt1;
+        var txt2 =req.body.txt2
+        var txt3=req.body.txt3
+        var txt4=req.body.txt4
+        const userEnteredOtp=txt1+txt2+txt3+txt4
+     
         if (userEnteredOtp === forgotPasswordOtp) {
-            res.render("passwordReset",{loggedIn:false,invalidOtp:""});
+            res.render("passwordReset",{loggedIn:false,invalidOtp:"",categoryData});
         } else {
             req.session.wrongOtp = true;
             res.redirect("/forgotOtpEnter");
@@ -387,13 +418,14 @@ const verifyForgotOtp = async (req, res) => {
 
 const updatePassword = async (req, res) => {
     try {
+        const categoryData = await Category.find({ is_blocked: false });
         const newPassword = req.body.password;
         const securedPassword = await securePassword(newPassword);
 
         const userData = await User.findOneAndUpdate({ email: email }, { $set: { password: securedPassword } });
         if (userData) {
             req.session.passwordUpdated = true;
-            res.render("login",{blocked:false,loggedIn:false});
+            res.render("login",{blocked:false,loggedIn:false,categoryData});
         } else {
             console.log("Something error happened");
         }

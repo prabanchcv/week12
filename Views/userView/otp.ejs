@@ -77,19 +77,35 @@
     <h1 style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Verify OTP</h1>
    <p>Please enter the One time password</p>
    <div class="otp-input">
-    <input type="text" name="txt1" maxlength="1" pattern="[0-9]" autofocus oninput="handleOtpInput(this, txt2)">
-    <input type="text" name="txt2" maxlength="1" pattern="[0-9]" oninput="handleOtpInput(this, txt3)">
-    <input type="text" name="txt3" maxlength="1" pattern="[0-9]" oninput="handleOtpInput(this, txt4)">
+    <input type="text" name="txt1" maxlength="1" pattern="[0-9]" autofocus oninput="handleOtpInput(this, 'txt2')">
+    <input type="text" name="txt2" maxlength="1" pattern="[0-9]" oninput="handleOtpInput(this, 'txt3')">
+    <input type="text" name="txt3" maxlength="1" pattern="[0-9]" oninput="handleOtpInput(this, 'txt4')">
     <input type="text" name="txt4" maxlength="1" pattern="[0-9]">
+    
   </div>
+  
+  <h2><%= invalidOtp%></h2>
     <div class="recover">
-        <a href="#">Resend OTP</a>
+        <a href="/resendForgotPasswordotp">Resend OTP</a>
     </div>
     <div class="otp-submit">
       <button type="submit">Verify</button>
     </div>
   </form>
 
+  <script>
+    function handleOtpInput(input, nextInputId) {
+      console.log(11);
+  const maxLength = input.getAttribute('maxlength');
+  const inputValue = input.value;
+
+  if (inputValue.length >= maxLength) {
+    const nextInput = document.getElementsByName(nextInputId)[0];
+    nextInput.focus();
+  }
+}
+
+  </script>
 
 
 

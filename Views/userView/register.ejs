@@ -82,7 +82,7 @@
                            </div>
                              
                             <span class="ec-register-wrap ec-register-btn">
-                                <button class="btn btn-primary" type="submit" id="submit">Register</button>
+                                <button class="btn btn-primary" type="submit" >Register</button>
                             </span>
                             <br>
                             <div class="member mb-4">
@@ -104,6 +104,7 @@
         const handleSubmit = async (event) => {
             event.preventDefault();
             
+            
             const formData = new FormData(event.target);
             try {
                 const response = await axios.post('/signup',formData, {
@@ -117,7 +118,7 @@
                     window.location.href = '/showOtp'
                 }
             } catch (error) {
-                alert(error)
+                
 
                 if (error.response.status == 400) {
                     const errors = error.response.data.error;

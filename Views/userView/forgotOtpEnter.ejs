@@ -1,110 +1,111 @@
 <%-include('header')%>
 <body>
     <%-include('body')%>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-    margin: 0;
-  }
-
-  .otpPage {
-    text-align: center;
-    padding: 60px 0;
-  }
-
-  h1 {
-    color: #333333;
-    margin: 0;
-    margin-bottom: 20px;
-    font-size: 28px;
-  }
-
-  p {
-    color: #777777;
-    margin: 0;
-    margin-bottom: 30px;
-    font-size: 18px;
-  }
-
-  input[type="number"] {
-    width: 100%;
-    height: 40px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #dddddd;
-    border-radius: 5px;
-    margin-bottom: 20px;
-  }
-
-  .recover {
-    margin-bottom: 20px;
-  }
-
-  .recover a {
-    color: #0056b3;
-    text-decoration: none;
-  }
-
-  #fillout2 {
-    color: #ff0000;
-    display: none;
-  }
-
-  .logout_alert,
-  .invalid_alert {
-    margin-bottom: 20px;
-  }
-
-  .logout_alert {
-    color: #ff0000;
-  }
-
-  .invalid_alert {
-    color: #ff0000;
-  }
-
-  button[type="submit"] {
-    padding: 10px 30px;
-    font-size: 16px;
-    background-color: #0056b3;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-  }
-
-  button[type="submit"]:hover {
-    background-color: #004080;
-  }
-
-  #countdown {
-    color: grey;
-    text-align: center;
-    margin-top: 20px;
-  }
-</style>
-
-<div class="otpPage">
-  <h1>Enter the OTP</h1>
-  <p>Please enter the one-time password<br>sent to your registered email</p>
-  <form action="/verifyForgotOtp" method="post" id="otpEnter">
-    <input style="max-width: 200px;" type="number" placeholder="Enter OTP here" id="otp" name="otp" required />
-    <div class="recover" id="resend_link" style="display: none;">
-      <a href="/resendForgotPasswordotp">Resend OTP</a>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      display: block;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    
+    .otp-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    h1 {
+      color: #333333;
+      margin: 0;
+      margin-bottom: 30px;
+    }
+    
+    .otp-input {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .otp-input input {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      text-align: center;
+      border: none;
+      border-radius: 50%;
+      background-color: #f2f2f2;
+      margin: 0 10px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out;
+    }
+    
+    .otp-input input:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .otp-submit {
+      margin-top: 30px;
+      text-align: center;
+    }
+    
+    .otp-submit button {
+      padding: 10px 30px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+    
+    .otp-submit button:hover {
+      background-color: #45A049;
+    }
+  </style>
+</head>
+<body>
+  <form action="/verifyForgotOtp" class="otp-container" method="post" >
+    <h1 style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Verify OTP</h1>
+   <p>Please enter the One time password</p>
+   <div class="otp-input">
+    <input type="text" name="txt1" maxlength="1" pattern="[0-9]" autofocus oninput="handleOtpInput(this, 'txt2')">
+    <input type="text" name="txt2" maxlength="1" pattern="[0-9]" oninput="handleOtpInput(this, 'txt3')">
+    <input type="text" name="txt3" maxlength="1" pattern="[0-9]" oninput="handleOtpInput(this, 'txt4')">
+    <input type="text" name="txt4" maxlength="1" pattern="[0-9]">
+    
+  </div>
+  <h4 class="tex"><%= invalidOtp%></h4>
+    <div class="recover">
+        <a href="/resendForgotPasswordotp">Resend OTP</a>
     </div>
-    <p id="fillout2">Please enter the OTP</p>
-
-    <div class="logout_alert" role="alert">
-
+    <div class="otp-submit">
+      <button type="submit">Verify</button>
     </div>
-    <div class="invalid_alert" role="alert">
-      <%= invalidOtp %>
-    </div>
-    <button type="submit" id="auth_button">Verify</button>
   </form>
-  <div id="countdown" class="text-center mt-3" style="color: grey;"></div>
-</div>
 
-<%- include('footer') %>
+  <script>
+    function handleOtpInput(input, nextInputId) {
+      console.log(11);
+  const maxLength = input.getAttribute('maxlength');
+  const inputValue = input.value;
+
+  if (inputValue.length >= maxLength) {
+    const nextInput = document.getElementsByName(nextInputId)[0];
+    nextInput.focus();
+  }
+}
+
+  </script>
+
+
+
+<%-include('footer')%>

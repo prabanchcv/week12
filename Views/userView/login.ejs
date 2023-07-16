@@ -15,15 +15,16 @@
               <div class="ec-login-wrapper">
                   <div class="ec-login-container">
                       <div class="ec-login-form">
-                          <form action="/login" method="post">
+                       
+                          <form id="loginForm">
                               <span class="ec-login-wrap">
                                   <label>Email Address*</label>
-                                  <input type="email" name="email" placeholder="Enter your email address" required />
+                                  <input type="email" name="email" placeholder="Enter your email address"  />
                                   <p id="emailError" class="p-1 text-danger"></p>
                                 </span>
                               <span class="ec-login-wrap">
                                   <label>Password*</label>
-                                  <input type="password" name="password" placeholder="Enter your password" required />
+                                  <input type="password" name="password" placeholder="Enter your password" />
                                   <p id="passwordError" class="p-1 text-danger"></p>
                               </span>
                               <span class="ec-login-wrap ec-login-fp">
@@ -31,14 +32,10 @@
                               </span>
                            
                            
-                            <% if (blocked) { %>
-                                <div class="invalid_alert" role="alert">
-                                    <%= blocked %>
-                                </div>
-                            <% } %>
+                              <h3 id="accountBlock" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;" class="text-danger text-decoration"></h3>
                             
                               <span class="ec-login-wrap ec-login-btn">
-                                  <button class="btn btn-primary" type="submit">Login</button>
+                                  <button class="btn btn-primary" type="submit" id="submit">Login</button>
                                
                               </span>
                              <br>
@@ -53,14 +50,17 @@
           </div>
       </div>
   </section>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
   <script>
     
         const handleSubmit = async (event) => {
             event.preventDefault();
-            
+           
             const formData = new FormData(event.target);
+           
             try {
-                const response = await axios.post('/signup',formData, {
+                const response = await axios.post('/login',formData, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -68,10 +68,10 @@
                 
 
                 if (response.status === 200) {
-                    window.location.href = '/showOtp'
+                    window.location.href = '/home'
                 }
             } catch (error) {
-                alert(error)
+                
 
                 if (error.response.status == 400) {
                     const errors = error.response.data.error;
@@ -83,6 +83,9 @@
                 }
                 else if (error.response.status == 409) {
                     document.getElementById('passwordError').textContent = error.response.data.error;
+                }else if(error.response.status==402){
+                    document.getElementById('accountBlock').textContent = error.response.data.error;
+
                 }
                 else {
                     alert("something went wrong");
@@ -91,11 +94,8 @@
             }
         };
 
-        document.getElementById('signupForm').addEventListener('submit', handleSubmit);
-    
+        document.getElementById('loginForm').addEventListener('submit', handleSubmit);
 
-        
-        
                               function togglePasswordVisibility() {
                                 const passwordField = document.getElementById("password");
                                 if (passwordField.type === "password") {

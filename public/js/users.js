@@ -576,6 +576,7 @@ const productContainer = document.getElementById('productContainer')
 
 
 const filteredData = (data) => {
+    console.log(22);
     productContainer.innerHTML = '';
     productContainer.innerHTML = 
     `<div class="products mb-3"> 
@@ -585,60 +586,54 @@ const filteredData = (data) => {
     const productList = document.getElementById('productList');
   
     data.forEach((product) => {
+        console.log(333);
       productList.innerHTML +=
         `
-          <div class="col-6 col-md-4 col-lg-4">
-            <div class="product product-7 text-center">
-              <figure class="product-media">
-                ${product.stock ?
-                  `<a href="/productView?id=${product._id}">
-                    <img src="${product.imageUrl[0].url}" alt="Product image" class="product-image">
-                  </a>
-                  <div class="product-action-vertical">
-                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                  </div><!-- End .product-action-vertical -->
-                  <div class="product-action">
-                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                  </div><!-- End .product-action -->
-                </figure><!-- End .product-media -->
-                <div class="product-body">
-                  <div class="product-cat">
-                    <a href="#"></a>
-                  </div><!-- End .product-cat -->
-                  <h3 class="product-title"><a href="/productView?id=${product._id}">${product.name}</a></h3>
-                  <!-- End .product-title -->
-                  <div class="product-price">
-                    ₹ ${product.price}
-                  </div><!-- End .product-price -->` :
-  
-                  `<span class="product-label label-out">Out of Stock</span>
-                  <a href="/productView?id=${product._id}">
-                    <img src="${product.imageUrl[0].url}" alt="Product image" class="product-image">
-                  </a>
-                  <div class="product-action-vertical">
-                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                  </div><!-- End .product-action-vertical -->
-                  <div class="product-action">
-                    <button style="border: none;" disabled="disabled" class="btn-product btn-cart"><span>add to cart</span></button>
-                  </div><!-- End .product-action -->
-                </figure><!-- End .product-media -->
-                <div class="product-body">
-                  <div class="product-cat"></div><!-- End .product-cat -->
-                  <h3 class="product-title"><a href="/productView?id=${product._id}">${product.name}</a></h3>
-                  <!-- End .product-title -->
-                  <div class="product-price">
-                    ₹ ${product.price}
-                  </div><!-- End .product-price -->`
-                }
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 6 Reviews )</span>
-                </div><!-- End .rating-container -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-          </div><!-- End .col-sm-6 col-lg-4 -->`
+        <div class="col-6 col-md-4 col-lg-4">
+        <div class="product product-7 text-center">
+          <figure class="product-media">
+            <% if (product.stock) { %>
+              <a href="/productView?id=<%= product._id %>">
+                <img src="<%= product.imageUrl[0].url %>" alt="Product image" class="product-image">
+              </a>
+              <div class="product-action-vertical">
+                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+              </div><!-- End .product-action-vertical -->
+              <div class="product-action">
+                <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+              </div><!-- End .product-action -->
+            <% } else { %>
+              <span class="product-label label-out">Out of Stock</span>
+              <a href="/productView?id=<%= product._id %>">
+                <img src="<%= product.imageUrl[0].url %>" alt="Product image" class="product-image">
+              </a>
+              <div class="product-action-vertical">
+                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+              </div><!-- End .product-action-vertical -->
+              <div class="product-action">
+                <button style="border: none;" disabled="disabled" class="btn-product btn-cart"><span>add to cart</span></button>
+              </div><!-- End .product-action -->
+            <% } %>
+          </figure><!-- End .product-media -->
+          <div class="product-body">
+            <div class="product-cat">
+              <a href="#"></a>
+            </div><!-- End .product-cat -->
+            <h3 class="product-title"><a href="/productView?id=<%= product._id %>"><%= product.name %></a></h3>
+            <!-- End .product-title -->
+            <div class="product-price">
+              ₹ <%= product.price %>
+            </div><!-- End .product-price -->
+            <div class="ratings-container">
+              <div class="ratings">
+                <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+              </div><!-- End .ratings -->
+              <span class="ratings-text">( 6 Reviews )</span>
+            </div><!-- End .rating-container -->
+          </div><!-- End .product-body -->
+        </div><!-- End .product -->
+      </div><!-- End .col-6 col-md-4 col-lg-4 -->
+      `
     });
 }
   
@@ -685,7 +680,9 @@ const categoryFilter = async (categoryId) =>{
 }
 
 
+
 const subCategoryFilter = async (subCategoryId) =>{
+    
     
     const response = await fetch(`/subCategoryFilter?subCategoryId=${subCategoryId}`,{
         headers: {
@@ -701,12 +698,9 @@ const subCategoryFilter = async (subCategoryId) =>{
         productContainer.innerHTML = 
         
         `<div class="products mb-3" id="productList">
-            <div class="row justify-content-center">
-
-            
+        <div class="row justify-content-center">
             <div class="col-6 col-md-4 col-lg-4">
                 <div class="product product-7 text-center">
-        
                     <div class="error-content text-center">
                         <div class="container">
                             <h1 class="error-title">Error 404</h1><!-- End .error-title -->
@@ -719,8 +713,8 @@ const subCategoryFilter = async (subCategoryId) =>{
                     </div><!-- End .error-content text-center -->
                 </div>
             </div>
-            </div>
-        </div>`
+        </div>
+    </div>`
 
     }
 }

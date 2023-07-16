@@ -1,7 +1,46 @@
 
 <%-include('header')%>
+
     <body class="shop_page">
         <%-include('body')%>
+        <style>
+            .ec-sidebar-block-item input[type="checkbox"] {
+  display: none;
+}
+
+.ec-sidebar-block-item input[type="checkbox"] + label:before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.ec-sidebar-block-item input[type="checkbox"]:checked + label:before {
+  background-color: #ccc;
+}
+
+.ec-sidebar-block-item input[type="checkbox"]:checked + label:after {
+  content: "\2713";
+  display: inline-block;
+  font-size: 12px;
+  color: #fff;
+  background-color: #555;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 16px;
+}
+.ec-sb-block-content ul li .ec-sidebar-block-item input[type="checkbox"] {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+
+        </style>
     <!-- Ec breadcrumb start -->
     <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
         <div class="container">
@@ -50,6 +89,7 @@
                             </select>
                         </div>
                     </div>
+                    
                 </div>
                 <!-- Shop Top End -->
 
@@ -161,98 +201,98 @@
             <div class="filter-sidebar-overlay"></div>
             <div class="ec-shop-leftside filter-sidebar">
                 <div class="ec-sidebar-heading">
+                    
+                    
                     <h1>Filter Products By</h1>
                     <a class="filter-cls-btn" href="javascript:void(0)">×</a>
+                  
+                    
+                    
                 </div>
                 <div class="ec-sidebar-wrap">
-                    <!-- Sidebar Category Block -->
-
-                    <%if(categoryFilterData){%>
-                    <div class="ec-sidebar-block">
-                        <div class="ec-sb-title">
-                            <h3 class="ec-sidebar-title">Category</h3>
-                        </div>
-                        <div class="ec-sb-block-content">
-                            <ul>
-                              
-                             <%categoryFilterData.forEach(function(category){%>
-                                <li>
-                                   <div class="ec-sidebar-block-item">
-                                       <input id="cat-1" type="checkbox" onclick="categoryFilter('<%= category._id %>')" checked /> <a class="filterName" ><%= category.category %></a><a class="item-count"><%= category.productCount %></a><span
-                                           class="checked"></span>
-                                   </div>
-                               </li>
-                               <% })%>
-
-                            </ul>
-                        </div>
-                    </div>
-                    <%}%>
-
-                   
-
-                    <div class="ec-sidebar-block">
-                        <div class="ec-sb-title">
-                            <h3 class="ec-sidebar-title">Sub Category</h3>
-                        </div>
-                        <div class="ec-sb-block-content">
-                            <ul>
-                              
-                             <%subCategoryData.forEach(function(subCategory){%>
-                                <li>
-                                   <div class="ec-sidebar-block-item">
-                                       <input id="cat-1" type="checkbox" onclick="categoryFilter('<%= subCategory._id %>')" checked /> <a class="filterName" ><%= subCategory.subCategory %></a><a class="item-count"><%= subCategory.productCount %></a><span
-                                           class="checked"></span>
-                                   </div>
-                               </li>
-                               <% })%>
-
-                            </ul>
-                        </div>
-                    </div>
-
-
-                    <div class="ec-sidebar-block">
-                        <div class="ec-sb-title">
-                            <h3 class="ec-sidebar-title">Brand</h3>
-                        </div>
-                        <div class="ec-sb-block-content">
-                            <ul>
-                              
-                             <%brandData.forEach(function(brand){%>
-                                <li>
-                                   <div class="ec-sidebar-block-item">
-                                       <input id="cat-1" type="checkbox" onclick="categoryFilter('<%= brand._id %>')" checked /> <a class="filterName" ><%= brand.name %></a><a class="item-count"><%= brand.productCount %></a><span
-                                           class="checked"></span>
-                                   </div>
-                               </li>
-                               <% })%>
-
-                            </ul>
-                        </div>
-                    </div>
-
+                    <h4 class="text">
+                      <a href="" class="sidebar-filter-clear"><a href="">Clear All</a></a>
+                    </h4>
                     
-        
-                
-                    <!-- Sidebar Price Block -->
+                    <% if (categoryFilterData) { %>
+                        <div class="ec-sidebar-block">
+                          <div class="ec-sb-title">
+                            <h3 class="ec-sidebar-title">Category</h3>
+                          </div>
+                          <div class="ec-sb-block-content">
+                            <ul>
+                              <% categoryFilterData.forEach(function(category) { %>
+                                <li>
+                                  <div class="ec-sidebar-block-item">
+                                    <input  type="checkbox" onclick="categoryFilter('<%= category._id %>')" />
+                                    <label  class="filterName"><%= category.category %></label>
+                                    <a class="item-count"><%= category.productCount %></a>
+                                  </div>
+                                </li>
+                              <% }) %>
+                            </ul>
+                          </div>
+                        </div>
+                      <% } %>
+                      
+                  
                     <div class="ec-sidebar-block">
-                        <div class="ec-sb-title">
-                            <h3 class="ec-sidebar-title">Price</h3>
-                        </div>
-                        <div class="ec-sb-block-content es-price-slider">
-                            <div class="ec-price-filter">
-                                <div id="ec-sliderPrice" class="filter__slider-price" data-min="0" data-max="250"
-                                    data-step="10"></div>
-                                <div class="ec-price-input">
-                                    <label class="filter__label"><input type="text" class="filter__input"></label>
-                                    <span class="ec-price-divider"></span>
-                                    <label class="filter__label"><input type="text" class="filter__input"></label>
-                                </div>
-                            </div>
-                        </div>
+                      <div class="ec-sb-title">
+                        <h3 class="ec-sidebar-title">Sub Category</h3>
+                      </div>
+                      <div class="ec-sb-block-content">
+                        <ul>
+                          <% subCategoryData.forEach(function(subCategory) { %>
+                            <li>
+                                <div class="ec-sidebar-block-item">
+                                    <input  type="checkbox" onclick="subCategoryFilter('<%= subCategory._id %>')"/>
+                                    <label  class="filterName"><%= subCategory.subCategory %></label>
+                                    <a class="item-count"><%= subCategory.productCount %></a>
+                                  </div>
+                            
+                            </li>
+                          <% }) %>
+                        </ul>
+                      </div>
                     </div>
-                </div>
+                  
+                    <div class="ec-sidebar-block">
+                      <div class="ec-sb-title">
+                        <h3 class="ec-sidebar-title">Brand</h3>
+                      </div>
+                      <div class="ec-sb-block-content">
+                        <ul>
+                          <% brandData.forEach(function(brand) { %>
+                            <li>
+                                <div class="ec-sidebar-block-item">
+                                    <input  type="checkbox" onclick="subCategoryFilter('<%= brand._id %>')"/>
+                                    <label  class="filterName"><%= brand.name %></label>
+                                    <a class="item-count"><%= brand.productCount %></a>
+                                  </div>
+                            
+                            </li>
+                          <% }) %>
+                        </ul>
+                      </div>
+                    </div>
+                  
+                    <div class="ec-sidebar-block">
+                      <div class="ec-sb-title">
+                        <h3 class="ec-sidebar-title">Price</h3>
+                      </div>
+                      <div class="ec-sb-block-content es-price-slider">
+                        <div class="ec-price-filter">
+                          <div id="ec-sliderPrice" class="filter__slider-price" data-min="0" data-max="250" data-step="10"></div>
+                          <div class="ec-price-input">
+                            <label class="filter__label"><input type="text" class="filter__input"></label>
+                            <span class="ec-price-divider"></span>
+                            <label class="filter__label"><input type="text" class="filter__input"></label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
             </div>
 
         </div>
