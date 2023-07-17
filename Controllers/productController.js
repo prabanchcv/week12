@@ -106,7 +106,7 @@ const loadAllProducts = async (req, res) => {
 const categoryFilter = async (req, res) => {
     try {
         const categoryId = req.query.categoryId;
-
+        console.log(categoryId);
         const productData = await Product.find({ category: categoryId });
         res.json(productData);
     } catch (error) {
@@ -119,6 +119,7 @@ const subCategoryFilter = async (req, res) => {
         const subCategoryId = req.query.subCategoryId;
 
         const productData = await Product.find({ subCategory: subCategoryId });
+        console.log(productData);
         res.json(productData);
     } catch (error) {
         console.log(error.message);

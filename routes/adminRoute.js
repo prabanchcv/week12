@@ -66,4 +66,12 @@ admin_route.post('/updateProduct/:id', store.array('image', 5) , adminAuth.isLog
 admin_route.get('/deleteProduct/:id', adminAuth.isLogin, adminController.deleteProduct)
 
 
+admin_route.get('/coupons', adminAuth.isLogin, adminController.loadCoupons)
+admin_route.get('/loadAddCoupon', adminAuth.isLogin, adminController.loadAddCoupon)
+admin_route.post('/addCoupon', adminController.addCoupon)
+admin_route.post('/blockCoupon', adminController.blockCoupon)
+admin_route.post('/deleteCoupon', adminController.deleteCoupon)
+
+
+
 module.exports=admin_route

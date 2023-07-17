@@ -93,12 +93,14 @@
                 </div>
                 <!-- Shop Top End -->
 
-                
+                <span id="productContainer"></span>
 
                 <!-- Shop content Start -->
                 <div class="shop-pro-content"><!--div till pagination-->>
-                    <div class="shop-pro-inner">
+                    <div class="shop-pro-inner" id="productList">
+                      
                         <div class="row">
+                            
                             <% productData.forEach(function(product) { %>
                             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
                                 <div class="ec-product-inner">
@@ -209,6 +211,7 @@
                     
                     
                 </div>
+                
                 <div class="ec-sidebar-wrap">
                     <h4 class="text">
                       <a href="" class="sidebar-filter-clear"><a href="">Clear All</a></a>
@@ -299,6 +302,11 @@
     </div>
 </section>
 <!-- End Shop page -->
+
+
+<script src="/js/wNumb.js"></script>
+<script src="js/bootstrap-input-spinner.js"></script>
+<script src="js/nouislider.min.js"></script>
 
 <%-include('footer')%>
 

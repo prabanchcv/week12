@@ -86,6 +86,106 @@ const  loadDashboard = (req, res) => {
 }
 
 
+////////////////////ORDERS/////////////////////////////
+
+const loadOrders = async (req, res) => {
+    try {
+        const ordersPerPage = 7;
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * ordersPerPage;
+
+        const orders = await Order.find().sort({ date: -1 }).skip(skip).limit(ordersPerPage);
+
+        const totalCount = await Order.countDocuments();
+        const totalPages = Math.ceil(totalCount / ordersPerPage);
+
+        const orderData = orders.map((order) => {
+            const formattedDate = moment(order.date).format("MMMM D YYYY");
+
+            return {
+                ...order.toObject(),
+                date: formattedDate,
+            };
+        });
+
+         res.render("orders", {
+            user: req.session.admin,
+            orderData,
+            currentPage: page,
+            totalPages,
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const updateOrder = async (req, res) => {
+    try {
+        const orderId = req.query.orderId;
+        const status = req.body.status;
+        console.log(orderId, status);
+
+
+        if (status === "Delivered") {
+
+            const returnEndDate = new Date()
+            returnEndDate.setDate(returnEndDate.getDate() + 7)
+
+            await Order.findByIdAndUpdate(orderId, 
+                { $set: { 
+                    status: status, 
+                    deliveredDate: new Date(), 
+                    returnEndDate: returnEndDate,                    
+                },
+                $unset: { ExpectedDeliveryDate: "" }
+            }, 
+                { new: true });
+        }else if (status === "Cancelled") {
+
+            await Order.findByIdAndUpdate(orderId, 
+                { $set: { 
+                    status: status,                   
+                },
+                $unset: { ExpectedDeliveryDate: "" }
+            }, 
+                { new: true });
+        }
+        
+        
+        else {
+            await Order.findByIdAndUpdate(orderId, 
+                { $set: { 
+                    status: status } }, 
+                { new: true });
+        }
+
+        res.json({
+            messaage: "Success",
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const orderDetails = async (req, res) => {
+    try {
+        const orderId = req.query.orderId;
+
+        const orderDetails = await Order.findById(orderId);
+        const orderProductData = orderDetails.product;
+        const addressId = orderDetails.address;
+
+        const addressData = await Addres.findById(addressId);
+
+        res.render("adminOrderDetails", {
+            orderDetails,
+            orderProductData,
+            addressData,
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
 ////////////////////CATEGORIES/////////////////////////////
 
 const loadCategories = async (req, res) => {
@@ -887,6 +987,89 @@ const deleteProduct = async (req, res) => {
 };
 
 
+//coupons area
+
+const loadCoupons = async (req, res) => {
+    try {
+        const coupon = await Coupon.find();
+
+        const couponData = coupon.map((element) => {
+            const formattedDate = moment(element.expiryDate).format("MMMM D, YYYY");
+
+            return {
+                ...element,
+                expiryDate: formattedDate,
+            };
+        });
+
+        res.render("coupons", { couponData });
+    } catch (error) {
+        console.log(error.messaage);
+    }
+};
+
+const loadAddCoupon = async (req, res) => {
+    try {
+        res.render("addCoupon", { user: req.session.admin });
+    } catch (error) {
+        console.log(error.messaage);
+    }
+};
+
+const addCoupon = async (req, res) => {
+    try {
+        const { couponCode, couponDiscount, couponDate, minDiscount, maxDiscount } = req.body;
+
+        const couponCodeUpperCase = couponCode.toUpperCase();
+
+        const couponExist = await Coupon.findOne({ code: couponCodeUpperCase });
+
+        if (!couponExist) {
+            const coupon = new Coupon({
+                code: couponCodeUpperCase,
+                discount: couponDiscount,
+                expiryDate: couponDate,
+                minDiscount: minDiscount,
+                maxDiscount: maxDiscount
+            });
+
+            await coupon.save();
+            res.json({ message: "coupon addedd" });
+        } else {
+            res.json({ messaage: "coupon exists" });
+        }
+    } catch (error) {
+        console.log(error.messaage);
+    }
+};
+
+const blockCoupon = async (req, res) => {
+    try {
+        const couponId = req.query.couponId;
+
+        const unlistCoupon = await Coupon.findById(couponId);
+
+        await Coupon.findByIdAndUpdate(couponId, { $set: { status: !unlistCoupon.status } }, { new: true });
+
+        res.json({ message: "success" });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const deleteCoupon = async (req, res) => {
+    try {
+        const couponId = req.query.couponId;
+
+        await Coupon.findByIdAndDelete(couponId);
+
+        res.json({ message: "success" });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
 
 
 
@@ -901,7 +1084,9 @@ module.exports={
 
     loadDashboard,
 
-
+    // loadOrders,
+    // updateOrder,
+    // orderDetails,
 
     loadCategories,
     addCategory,
@@ -933,6 +1118,13 @@ module.exports={
     updateNewProduct,
     deleteProductImage,
     deleteProduct,
+
+
+    loadCoupons,
+    loadAddCoupon,
+    addCoupon,
+    deleteCoupon,
+    blockCoupon,
 
 
 

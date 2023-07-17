@@ -465,6 +465,7 @@ const updatePassword = async (req, res) => {
                     $unwind: "$subCategory",
                 }
             ]);
+            console.log(offerProducts);
     
             if (userData) {
                 const userId = userData._id;
