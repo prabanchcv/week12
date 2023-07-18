@@ -85,6 +85,7 @@ const addToCart = async (req, res) => {
 
 const updateCart = async (req, res) => {
     try {
+        console.log(111);
         const userData = req.session.user;
         const data = await User.find({ _id: userData._id }, { _id: 0, cart: 1 }).lean();
 
@@ -303,6 +304,7 @@ const loadCheckout = async (req, res) => {
             offerDiscount, 
             cart, 
             availableCoupons,
+            loggedIn:true
              
         });
         

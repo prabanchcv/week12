@@ -28,9 +28,9 @@ admin_route.get("/users", adminAuth.isLogin, adminController.loadUsers)
 admin_route.get("/blockUser/:id", adminAuth.isLogin, adminController.blockUser);
 
 
-// admin_route.get("/orders",adminController.loadOrders)
-// admin_route.post('/updateOrder', adminController.updateOrder)
-// admin_route.get('/orderDetails', adminController.orderDetails)
+admin_route.get("/orders",adminController.loadOrders)
+admin_route.post('/updateOrder', adminController.updateOrder)
+admin_route.get('/orderDetails', adminController.orderDetails)
 
 
 

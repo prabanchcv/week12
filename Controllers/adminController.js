@@ -5,6 +5,9 @@ const SubCategory = require("../Models/subCategoryModel");
 const Banner = require('../Models/bannerModel')
 const Product = require("../Models/productModel");
 const Brand=require("../Models/brandModel")
+const Coupon = require("../Models/couponModel");
+const Order =require("../Models/orderModel")
+
 
 const cloudinary = require('../database/cloudinary')
 //admin login
@@ -95,7 +98,7 @@ const loadOrders = async (req, res) => {
         const skip = (page - 1) * ordersPerPage;
 
         const orders = await Order.find().sort({ date: -1 }).skip(skip).limit(ordersPerPage);
-
+        
         const totalCount = await Order.countDocuments();
         const totalPages = Math.ceil(totalCount / ordersPerPage);
 
@@ -113,6 +116,7 @@ const loadOrders = async (req, res) => {
             orderData,
             currentPage: page,
             totalPages,
+            productUpdated:""
         });
     } catch (error) {
         console.log(error.message);
@@ -167,6 +171,7 @@ const updateOrder = async (req, res) => {
     }
 };
 
+
 const orderDetails = async (req, res) => {
     try {
         const orderId = req.query.orderId;
@@ -186,6 +191,7 @@ const orderDetails = async (req, res) => {
         console.log(error.message);
     }
 };
+
 ////////////////////CATEGORIES/////////////////////////////
 
 const loadCategories = async (req, res) => {
@@ -1002,7 +1008,7 @@ const loadCoupons = async (req, res) => {
             };
         });
 
-        res.render("coupons", { couponData });
+    res.render("coupons", { couponData, user: req.session.admin  });
     } catch (error) {
         console.log(error.messaage);
     }
@@ -1084,9 +1090,9 @@ module.exports={
 
     loadDashboard,
 
-    // loadOrders,
-    // updateOrder,
-    // orderDetails,
+    loadOrders,
+    updateOrder,
+    orderDetails,
 
     loadCategories,
     addCategory,

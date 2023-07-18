@@ -78,7 +78,7 @@
                                                             <div class="input-group  input-spinner">
                                                                 <div class="input-group-prepend">
                                                                     <button onclick="totalPrice('<%= item.product._id %>','dec')" style="min-width: 26px" class="btn btn-decrement btn-spinner" type="button">
-                                                                        <i  class="icon-minus"></i>
+                                                                        -
                                                                     </button>
                                                                 </div>
                                                                 
@@ -87,7 +87,7 @@
                 
                                                                 <div class="input-group-append">
                                                                     <button onclick="totalPrice('<%= item.product._id %>','inc','<%= item.product.stock %>')" style="min-width: 26px" class="btn btn-increment btn-spinner" type="button">
-                                                                        <i class="icon-plus"></i>
+                                                                       +
                                                                     </button>
                                                                 </div>
                                                             
@@ -95,9 +95,16 @@
                 
                                                         </div><!-- End .cart-product-quantity -->
                                                     </td>
-                                                    <td name="productTotal" id="total" class="total-col" value="<%= item.total %>" data-label="Total" class="ec-cart-pro-subtotal"><%=item.total%></td>
-                                                    <td data-label="Remove" class="ec-cart-pro-remove">
-                                                        <a href="#"><i class="ecicon eci-trash-o"></i></a>
+                                                    <td name="productTotal" data-label="Total" class="ec-cart-pro-subtotal">
+                                                        <span id="total-<%= item.product._id %>"><%= item.total %></span>
+                                                    </td>
+                                                    
+                                                    <input type="hidden" id="product_id<%= item.product._id %>" value="<%= item.product._id %>">
+                                                    <input type="hidden" name="cart_id" value="<%= item._id %>">
+                                                    <td class="remove-col">
+                                                        <button class="btn-remove" onclick="removeCartalert('<%= item.product._id %>')">
+                                                            <span style="color: red;">x</span>
+                                                        </button>
                                                     </td>
                                                 </tr>
 
@@ -109,7 +116,9 @@
                                         <div class="col-lg-12">
                                             <div class="ec-cart-update-bottom">
                                                 <a href="/home">Continue Shopping</a>
-                                                <button class="btn btn-primary">Check Out</button>
+                                                <button class="btn btn-primary" onclick="proceedToCheckout()" >Check Out</button>
+                                                <!-- <button disabled onclick="proceedToCheckout()" id="checkout-btn" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</button> -->
+
                                             </div>
                                         </div>
                                     </div>
@@ -127,63 +136,20 @@
                             <div class="ec-sb-title">
                                 <h3 class="ec-sidebar-title">Summary</h3>
                             </div>
-                            <div class="ec-sb-block-content">
-                                <h4 class="ec-ship-title">Estimate Shipping</h4>
-                                <div class="ec-cart-form">
-                                    <p>Enter your destination to get a shipping estimate</p>
-                                    <form action="#" method="post">
-                                        <span class="ec-cart-wrap">
-                                            <label>Country *</label>
-                                            <span class="ec-cart-select-inner">
-                                                <select name="ec_cart_country" id="ec-cart-select-country"
-                                                    class="ec-cart-select">
-                                                    <option selected="" disabled="">United States</option>
-                                                    <option value="1">Country 1</option>
-                                                    <option value="2">Country 2</option>
-                                                    <option value="3">Country 3</option>
-                                                    <option value="4">Country 4</option>
-                                                    <option value="5">Country 5</option>
-                                                </select>
-                                            </span>
-                                        </span>
-                                        <span class="ec-cart-wrap">
-                                            <label>State/Province</label>
-                                            <span class="ec-cart-select-inner">
-                                                <select name="ec_cart_state" id="ec-cart-select-state"
-                                                    class="ec-cart-select">
-                                                    <option selected="" disabled="">Please Select a region, state
-                                                    </option>
-                                                    <option value="1">Region/State 1</option>
-                                                    <option value="2">Region/State 2</option>
-                                                    <option value="3">Region/State 3</option>
-                                                    <option value="4">Region/State 4</option>
-                                                    <option value="5">Region/State 5</option>
-                                                </select>
-                                            </span>
-                                        </span>
-                                        <span class="ec-cart-wrap">
-                                            <label>Zip/Postal Code</label>
-                                            <input type="text" name="postalcode" placeholder="Zip/Postal Code">
-                                        </span>
-                                    </form>
-                                </div>
-                            </div>
+                          
 
                             <div class="ec-sb-block-content">
                                 <div class="ec-cart-summary-bottom">
                                     <div class="ec-cart-summary">
                                         <div>
                                             <span class="text-left">Sub-Total</span>
-                                            <span class="text-right" id="subtotal">80</span>
+                                            <span class="text-right" id="subTotal"><%=subTotal%></span>
                                         </div>
                                         <div>
                                             <span class="text-left">Delivery Charges</span>
-                                            <span class="text-right">$80.00</span>
+                                            <span class="text-right">$0.00</span>
                                         </div>
-                                        <div>
-                                            <span class="text-left">Coupan Discount</span>
-                                            <span class="text-right"><a class="ec-cart-coupan">Apply Coupan</a></span>
-                                        </div>
+                                     
                                         <div class="ec-cart-coupan-content">
                                             <form class="ec-cart-coupan-form" name="ec-cart-coupan-form" method="post"
                                                 action="#">
@@ -195,7 +161,7 @@
                                         </div>
                                         <div class="ec-cart-summary-total">
                                             <span class="text-left">Total Amount</span>
-                                            <span class="text-right">$80.00</span>
+                                            <span class="text-right" id="subTotal2"><%=subTotal%></span>
                                         </div>
                                     </div>
 
