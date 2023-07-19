@@ -492,7 +492,94 @@ const updatePassword = async (req, res) => {
     };
 
 
+//address part
 
+const addNewAddress = async (req, res) => {
+    try {
+        const userData = req.session.user;
+        const userId = userData._id;
+
+        const address = new Address({
+            userId: userId,
+            name: req.body.name,
+            mobile: req.body.mobileNumber,
+            addressLine: req.body.addressLine,
+            city: req.body.city,
+            email: req.body.email,
+            state: req.body.state,
+            pincode: req.body.pincode,
+            is_default: false,
+        });
+        console.log(address);
+
+        await address.save();
+        res.status(200).send();
+    } catch (error) {
+        res.status(500).send();
+        console.log(error.message);
+    }
+};
+
+const getAddressdata = async (req, res) => {
+    try {
+        const addressId = req.query.addressId;
+        const addressData = await Address.findById(addressId);
+
+        if (addressData) {
+            res.json(addressData); // Return the addressData as JSON response
+        } else {
+            res.json({ message: "Address not found" }); // Handle address not found case
+        }
+    } catch {
+        console.log(error.message);
+    }
+};
+
+const updateAddress = async (req, res) => {
+    try {
+        const addressId = req.query.addressId;
+
+        console.log(addressId);
+
+        const updatedAddress = await Address.findByIdAndUpdate(
+            addressId,
+            {
+                name: req.body.name,
+                mobile: req.body.mobile,
+                addressLine: req.body.addressLine,
+                email: req.body.email,
+                city: req.body.city,
+                state: req.body.state,
+                pincode: req.body.pincode,
+            },
+            { new: true }
+        );
+
+        if (updatedAddress) {
+            res.status(200).send();
+        } else {
+            res.status(500).send();
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const deleteAddress = async (req, res) => {
+    try {
+        const addressId = req.query.addressId;
+
+        const success = await Address.findByIdAndDelete(addressId);
+
+        if (success) {
+            res.status(200).send();
+        } else {
+            res.status(500).send();
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
 
 
 
@@ -531,7 +618,11 @@ module.exports={
     updatePassword,
 
 
-  
+    // loadProfile,
+    addNewAddress,
+    getAddressdata,
+    updateAddress,
+    deleteAddress,
 
 
 

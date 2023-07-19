@@ -7,7 +7,7 @@ const Product = require("../Models/productModel");
 const Brand=require("../Models/brandModel")
 const Coupon = require("../Models/couponModel");
 const Order =require("../Models/orderModel")
-
+const Addres=require("../Models/addressmodel")
 
 const cloudinary = require('../database/cloudinary')
 //admin login
@@ -186,6 +186,7 @@ const orderDetails = async (req, res) => {
             orderDetails,
             orderProductData,
             addressData,
+            user: req.session.admin 
         });
     } catch (error) {
         console.log(error.message);

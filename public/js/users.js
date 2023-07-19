@@ -337,8 +337,9 @@ if (addAddressCheckout) {
         event.preventDefault();
 
         const form = event.target;
+        console.log(form);
         const formData = new FormData(form);
-
+       
         if ($(form).valid()) {
             try {
                 const response = await fetch("/addNewAddress", {

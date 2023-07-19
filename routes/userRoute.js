@@ -1,7 +1,7 @@
 const userController = require("../Controllers/userController");
 const productController = require('../Controllers/productController')
 const cartController = require('../Controllers/cartController')
-// const orderController = require('../controllers/orderController')
+const orderController = require('../Controllers/orderController')
 
 const auth = require("../middleware/userAuth")
 const express = require("express");
@@ -40,10 +40,10 @@ user_route.get("/home",isLogin, blockCheck,userController.homeload);
 
 
 
-// user_route.post('/addNewAddress', userController.addNewAddress)
-// user_route.get('/addressData', userController.getAddressdata)
-// user_route.post('/updateAddress', userController.updateAddress)
-// user_route.get('/deleteAddress', userController.deleteAddress)
+user_route.post('/addNewAddress', userController.addNewAddress)
+user_route.get('/addressData', userController.getAddressdata)
+user_route.post('/updateAddress', userController.updateAddress)
+user_route.get('/deleteAddress', userController.deleteAddress)
 
 
 
@@ -74,6 +74,15 @@ user_route.get('/checkout', isCheckout, isLogin, blockCheck, cartController.load
 user_route.post('/validateCoupon', cartController.validateCoupon)
 
 
+
+user_route.post('/placeOrder', orderController.placeOrder)
+user_route.get('/orderSuccess', orderController.orderSuccess)
+// user_route.get('/myOrders', orderController.myOrders)
+// user_route.get('/orderDetails',orderController.orderDetails)
+// user_route.get('/orderFilter', orderController.filterOrder)
+// user_route.post('/updateOrder', orderController.updateOrder)
+// user_route.get('/invoice', orderController.invoice)
+// user_route.get('/downloadInvoice', orderController.downloadInvoice)
 
 
 
