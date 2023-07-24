@@ -77,6 +77,8 @@ const userSchema = new mongoose.Schema({
   //   required:true
   // }
 });
-
+userSchema.method("populateCart", async function () {
+    await this.populate("cart.product").execPopulate();
+  });
 
 module.exports = mongoose.model("User", userSchema);

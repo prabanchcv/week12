@@ -1,4 +1,5 @@
 <%-include('header')%>
+               
 
 <body class="checkout_page">
     <%-include('body')%>
@@ -32,7 +33,8 @@
                                     </div><!-- End .card-dashboard -->
                                 </div><!-- End .col-lg-6 -->
                             <% }); %>
-                            
+                            <input type="hidden" id="userWallet" value="<%= userData.wallet.balance %>" >
+
                             
                     
 
@@ -41,7 +43,29 @@
                         <div class="ec-checkout-wrap margin-bottom-30 padding-bottom-3">
                             <div class="ec-checkout-block ec-check-bill">
                                
+                                <div class="col-lg-12 d-flex justify-content-end sticky-alert p-0">
+
+                                    <div class="col-lg-4">
+                                        <div class="row ">
                                 
+                                    
+                                
+                                    <div id="insufficientBalanceAlert" class="alert alert-danger d-none align-items-center alert-dismissible" role="alert">
+                                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
+                                            <use xlink:href="#exclamation-triangle-fill" />
+                                        </svg>
+                                        <div style="margin-left: 7px;">
+                                            Insufficient balance in your wallet <br> Please choose another payment method
+                                        </div>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                    
+                                    
+                                
+                                        </div>
+                                    </div>
+                                
+                                    </div>
                                 <div class="ec-bl-block-content">
                                     <h3 class="ec-checkout-title">Or Add New Address</h3>
                                    
@@ -100,7 +124,9 @@
                         <button disabled onclick="placeOrder()" id="place-order-btn" class="btn btn-primary">
                             Place Order
                         </button>
+                        
                     </div>
+                    
                 </div>
                 <!--cart content End -->
             </div>
@@ -116,7 +142,7 @@
                             <div class="ec-checkout-summary">
                                 <div>
                                     <span class="text-left">Sub-Total</span>
-                                    <span class="text-right">$80.00</span>
+                                    <span class="text-right">$<%=subTotal%></span>
                                 </div>
                                 <div>
                                     <span class="text-left">Delivery Charges</span>
@@ -142,22 +168,24 @@
                                 </div>
                             </div>
                             <div class="ec-checkout-pro">
+                                <% cart.forEach(function(item) { %>
                                 <div class="col-sm-12 mb-6">
+
                                     <div class="ec-product-inner">
                                         <div class="ec-pro-image-outer">
                                             <div class="ec-pro-image">
-                                                <a href="product-left-sidebar.html" class="image">
+                                                <a href="/productView?id=<%= item.product._id %>" class="image">
                                                     <img class="main-image"
-                                                        src="/images/product-image/1_1.jpg"
+                                                        src="<%= item.product.imageUrl[0].url %>"
                                                         alt="Product" />
                                                     <img class="hover-image"
-                                                        src="/images/product-image/1_2.jpg"
+                                                        src="<%= item.product.imageUrl[1].url %>"
                                                         alt="Product" />
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="ec-pro-content">
-                                            <h5 class="ec-pro-title"><a href="product-left-sidebar.html">Baby toy teddy bear</a></h5>
+                                            <h5 class="ec-pro-title"><a href="/productView?id=<%= item.product._id %>"><%= item.product.name %></a></h5>
                                             <div class="ec-pro-rating">
                                                 <i class="ecicon eci-star fill"></i>
                                                 <i class="ecicon eci-star fill"></i>
@@ -166,128 +194,15 @@
                                                 <i class="ecicon eci-star"></i>
                                             </div>
                                             <span class="ec-price">
-                                                <span class="old-price">$95.00</span>
-                                                <span class="new-price">$79.00</span>
+                                                <span class="new-price">₹ <%= item.product.price %></span>
+                                                <span class="old-price">₹ <%= item.product.oldPrice %></span>
                                             </span>
-                                            <div class="ec-pro-option">
-                                                <div class="ec-pro-color">
-                                                    <span class="ec-pro-opt-label">Color</span>
-                                                    <ul class="ec-opt-swatch ec-change-img">
-                                                        <li class="active"><a href="#" class="ec-opt-clr-img"
-                                                                data-src="/images/product-image/1_1.jpg"
-                                                                data-src-hover="/images/product-image/1_1.jpg"
-                                                                data-tooltip="Gray"><span
-                                                                    style="background-color:#6d4c36;"></span></a>
-                                                        </li>
-                                                        <li><a href="#" class="ec-opt-clr-img"
-                                                                data-src="/images/product-image/1_2.jpg"
-                                                                data-src-hover="/images/product-image/1_2.jpg"
-                                                                data-tooltip="Orange"><span
-                                                                    style="background-color:#ffb0e1;"></span></a>
-                                                        </li>
-                                                        <li><a href="#" class="ec-opt-clr-img"
-                                                                data-src="/images/product-image/1_3.jpg"
-                                                                data-src-hover="/images/product-image/1_3.jpg"
-                                                                data-tooltip="Green"><span
-                                                                    style="background-color:#8beeff;"></span></a>
-                                                        </li>
-                                                        <li><a href="#" class="ec-opt-clr-img"
-                                                                data-src="/images/product-image/1_4.jpg"
-                                                                data-src-hover="/images/product-image/1_4.jpg"
-                                                                data-tooltip="Sky Blue"><span
-                                                                    style="background-color:#74f8d1;"></span></a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="ec-pro-size">
-                                                    <span class="ec-pro-opt-label">Size</span>
-                                                    <ul class="ec-opt-size">
-                                                        <li class="active"><a href="#" class="ec-opt-sz"
-                                                                data-old="$95.00" data-new="$79.00"
-                                                                data-tooltip="Small">S</a></li>
-                                                        <li><a href="#" class="ec-opt-sz" data-old="$90.00"
-                                                                data-new="$70.00" data-tooltip="Medium">M</a></li>
-                                                        <li><a href="#" class="ec-opt-sz" data-old="$80.00"
-                                                                data-new="$60.00" data-tooltip="Large">X</a></li>
-                                                        <li><a href="#" class="ec-opt-sz" data-old="$70.00"
-                                                                data-new="$50.00" data-tooltip="Extra Large">XL</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 mb-0">
-                                    <div class="ec-product-inner">
-                                        <div class="ec-pro-image-outer">
-                                            <div class="ec-pro-image">
-                                                <a href="product-left-sidebar.html" class="image">
-                                                    <img class="main-image"
-                                                        src="/images/product-image/8_1.jpg"
-                                                        alt="Product" />
-                                                    <img class="hover-image"
-                                                        src="/images/product-image/8_2.jpg"
-                                                        alt="Product" />
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="ec-pro-content">
-                                            <h5 class="ec-pro-title"><a href="product-left-sidebar.html">Smart I watch 2GB</a></h5>
-                                            <div class="ec-pro-rating">
-                                                <i class="ecicon eci-star fill"></i>
-                                                <i class="ecicon eci-star fill"></i>
-                                                <i class="ecicon eci-star fill"></i>
-                                                <i class="ecicon eci-star fill"></i>
-                                                <i class="ecicon eci-star"></i>
-                                            </div>
-                                            <span class="ec-price">
-                                                <span class="old-price">$58.00</span>
-                                                <span class="new-price">$45.00</span>
-                                            </span>
-                                            <div class="ec-pro-option">
-                                                <div class="ec-pro-color">
-                                                    <span class="ec-pro-opt-label">Color</span>
-                                                    <ul class="ec-opt-swatch ec-change-img">
-                                                        <li class="active"><a href="#" class="ec-opt-clr-img"
-                                                                data-src="/images/product-image/8_2.jpg"
-                                                                data-src-hover="/images/product-image/8_2.jpg"
-                                                                data-tooltip="Gray"><span
-                                                                    style="background-color:#f3f3f3;"></span></a>
-                                                        </li>
-                                                        <li><a href="#" class="ec-opt-clr-img"
-                                                                data-src="/images/product-image/8_3.jpg"
-                                                                data-src-hover="/images/product-image/8_3.jpg"
-                                                                data-tooltip="Orange"><span
-                                                                    style="background-color:#fac7f3;"></span></a>
-                                                        </li>
-                                                        <li><a href="#" class="ec-opt-clr-img"
-                                                                data-src="/images/product-image/8_4.jpg"
-                                                                data-src-hover="/images/product-image/8_4.jpg"
-                                                                data-tooltip="Green"><span
-                                                                    style="background-color:#c5f1ff;"></span></a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="ec-pro-size">
-                                                    <span class="ec-pro-opt-label">Size</span>
-                                                    <ul class="ec-opt-size">
-                                                        <li class="active"><a href="#" class="ec-opt-sz"
-                                                                data-old="$48.00" data-new="$45.00"
-                                                                data-tooltip="Small">S</a></li>
-                                                        <li><a href="#" class="ec-opt-sz" data-old="$90.00"
-                                                                data-new="$70.00" data-tooltip="Medium">M</a></li>
-                                                        <li><a href="#" class="ec-opt-sz" data-old="$80.00"
-                                                                data-new="$60.00" data-tooltip="Large">X</a></li>
-                                                        <li><a href="#" class="ec-opt-sz" data-old="$70.00"
-                                                                data-new="$50.00" data-tooltip="Extra Large">XL</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <%})%>
+                                
                             </div>
                         </div>
                     </div>
@@ -336,8 +251,10 @@
                             </div>
                         </div>
                     </div>
+                    
                     <!-- Sidebar Payment Block -->
                 </div>
+                
                 <div class="ec-sidebar-wrap ec-check-pay-img-wrap">
                     <!-- Sidebar Payment Block -->
                     <div class="ec-sidebar-block">

@@ -299,12 +299,12 @@ const razorpay = async (selectedPayment)=>{
         const subTotal = Number(document.getElementById('subTotalValue').value)
 
         var options = {
-            "key": "rzp_test_SvgHIkg1FQqxqX", // Enter the Key ID generated from the Dashboard
+            "key": "rzp_test_omwV1KzHmstnbs", // Enter the Key ID generated from the Dashboard
             "amount": subTotal * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
             "currency": "INR",
-            "name": "Yara SkinCare",
+            "name": "Gadgetry",
             "description": "Order payment",
-            "image": "/assets/images/demos/demo-8/logo.png",
+            "image": "/images/demos/demo-8/logo.png",
             "order_id": undefined, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             "handler": function (response){
                 cashOnDelivery(selectedPayment)
