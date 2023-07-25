@@ -212,13 +212,14 @@ const myOrders = async (req, res) => {
             const formattedDate = moment(order.date).format("MMMM D, YYYY");
             return { ...order.toObject(), date: formattedDate };
         });
-
+        
         res.render("myOrders", {
             userData,
             categoryData,
             myOrders: formattedOrders || [],
             currentPage: page,
             totalPages,
+            loggedIn:true
         });
     } catch (error) {
         console.log(error.message);
@@ -456,7 +457,7 @@ const invoice = async(req,res)=>{
 
 module.exports = {
     orderSuccess,
-    // myOrders,
+    myOrders,
     placeOrder,
     // orderDetails,
     // filterOrder,

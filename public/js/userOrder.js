@@ -29,6 +29,7 @@ function selectCoupon(code) {
 }
 
 const validateCoupon = async () => {
+    console.log(111);
     coupon = document.getElementById("checkout-discount-input").value;
     const subTotal = Number(document.getElementById("subTotalValue").value);
 
@@ -49,7 +50,8 @@ const validateCoupon = async () => {
 
     const couponModel = document.getElementById("couponModel");
     const couponDiscount = document.getElementById("couponDiscount");
-    const couponMessage = document.getElementById('couponMessage')
+    const couponMessage = document.getElementById("couponMessage")
+    console.log(couponMessage);
 
     const subTotalElement = document.getElementById("subTotal");
     const subTotalText = document.getElementById("subTotalText");
@@ -109,14 +111,18 @@ const validateCoupon = async () => {
             });
         }
 
-        if(couponData.maximum === "maximum" ){
-            couponMessage.innerHTML = "Maximum Coupon Discount:"
-        }
-        couponModel.style.display = "table-row";
+         if (couponMessage) {
+    // The element with ID "couponMessage" is found in the DOM
+    if (couponData.maximum === "maximum") {
+      couponMessage.innerHTML = "Maximum Coupon Discount:";
+    }
+  }
+        // couponModel.style.display = "table-row";
         couponDiscount.innerHTML = `₹ ${couponData.discountAmount}`;
 
         subTotalElement.innerHTML = `₹ ${couponData.newTotal}`;
         subTotalText.innerHTML = "Total After Coupon Discount:";
+        console.log(222);
         document.getElementById('subTotalValue').value = couponData.newTotal
 
         $('#couponIcon').removeClass('icon-long-arrow-right').addClass('fa-regular fa-trash-can p-1');

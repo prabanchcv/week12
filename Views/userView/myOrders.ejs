@@ -1,6 +1,6 @@
-{{>cartheader}}
-
-
+<%- include('header') %>
+<body>
+    <%-include('body')%>
 
 <main class="main">
     <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
@@ -18,15 +18,11 @@
         </div><!-- End .container -->
     </nav><!-- End .breadcrumb-nav -->
 
-
-<div class="page-content">
+    <div class="page-content">
         <div class="container">
-            
-            
             <div class="row">
                 <div class="col-lg-12">
-                	<div class="toolbox">
-
+                    <div class="toolbox">
                         <div class="toolbox-right">
                             <div class="toolbox-sort">
                                 <label for="sortby">Filter by:</label>
@@ -42,88 +38,67 @@
                                 </div>
                             </div><!-- End .toolbox-sort -->
                         </div>
-
                     </div>
                 </div>
             </div>
 
-
             <table class="table table-wishlist table-mobile">
-
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Order-Id</th>
-                                <th>Payment Method</th>
-                                <th>Total</th>
-                                <th>Order Status</th>
-                                <th></th>
-                                
-                            </tr>
-                        </thead>
-            
-                <tbody id="ordersTable">
-
-                    {{#each myOrders}}
+                <thead>
                     <tr>
-                        <td>{{this.date}}</td>
-                        <td>{{this.orderId}}</td>
-                        <td>{{this.paymentMethod}}</td>
-                        <td class="price-col">₹ {{this.total}}</td>
-                       
-                        {{#if (eq this.status "Pending")}}
-                        <td style="color: orange; font-weight: 600;">{{this.status}}</td>
-                        {{else if (eq this.status "Shipped")}}
-                        <td style="color: green; font-weight: 600;">{{this.status}}</td>
-                        {{else if (eq this.status "Delivered")}}
-                        <td style="color: teal; font-weight: 600;">{{this.status}}</td>
-                        {{else if (eq this.status "Cancelled")}}
-                        <td style="color: red; font-weight: 600;">{{this.status}}</td>
-                        {{else if (eq this.status "Returned")}}
-                        <td style="color: purple; font-weight: 600;">{{this.status}}</td>
-                        {{/if}}
-                 
-                        <td>                            
-                            <a style="font-weight: 500;" href="/orderDetails?orderId={{this._id}}" class="btn btn-link"><span>More Details</span><i class="icon-long-arrow-right"></i></a>
-                            <input type="hidden" name="orderId" value="{{this._id}}">                                
+                        <th>Date</th>
+                        <th>Order-Id</th>
+                        <th>Payment Method</th>
+                        <th>Total</th>
+                        <th>Order Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTable">
+                    <% myOrders.forEach(order => { %>
+                    <tr>
+                        <td><%= order.date %></td>
+                        <td><%= order.orderId %></td>
+                        <td><%= order.paymentMethod %></td>
+                        <td class="price-col">₹ <%= order.total %></td>
+                        <% if (order.status === "Pending") { %>
+                        <td style="color: orange; font-weight: 600;"><%= order.status %></td>
+                        <% } else if (order.status === "Shipped") { %>
+                        <td style="color: green; font-weight: 600;"><%= order.status %></td>
+                        <% } else if (order.status === "Delivered") { %>
+                        <td style="color: teal; font-weight: 600;"><%= order.status %></td>
+                        <% } else if (order.status === "Cancelled") { %>
+                        <td style="color: red; font-weight: 600;"><%= order.status %></td>
+                        <% } else if (order.status === "Returned") { %>
+                        <td style="color: purple; font-weight: 600;"><%= order.status %></td>
+                        <% } %>
+                        <td>
+                            <a style="font-weight: 500;" href="/orderDetails?orderId=<%= order._id %>" class="btn btn-link"><span>More Details</span><i class="icon-long-arrow-right"></i></a>
+                            <input type="hidden" name="orderId" value="<%= order._id %>">
                         </td>
                     </tr>
-                    {{/each}}
-
+                    <% }); %>
                 </tbody>
             </table><!-- End .table table-wishlist -->
 
-
-
-            
-            <div id="myOrdersPagination" >
-
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item {{#if (eq currentPage 1)}}disabled{{/if}}">
-                        <a class="page-link page-link-prev" href="?page={{subtract currentPage 1}}" aria-label="Previous"
-                            tabindex="-1" aria-disabled="{{eq currentPage 1}}">
-                            <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
-                        </a>
-                    </li>
-                    <li class="page-item-total">Page {{currentPage}} of {{totalPages}}</li>
-                    <li class="page-item {{#if (eq currentPage totalPages)}}disabled{{/if}}">
-                        <a class="page-link page-link-next" href="?page={{add currentPage 1}}" aria-label="Next"
-                            aria-disabled="{{eq currentPage totalPages}}">
-                            Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
+            <div id="myOrdersPagination">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                            <a class="page-link page-link-prev" href="?page=<%= subtract(currentPage, 1) %>" aria-label="Previous" tabindex="-1" aria-disabled="<%= currentPage === 1 %>">
+                                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                            </a>
+                        </li>
+                        <li class="page-item-total">Page <%= currentPage %> of <%= totalPages %></li>
+                        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                            <a class="page-link page-link-next" href="?page=<%= add(currentPage, 1) %>" aria-label="Next" aria-disabled="<%= currentPage === totalPages %>">
+                                Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            
-
-
-            
         </div><!-- End .container -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
 
-
-{{>cartfooter}}
+<%- include('footer') %>

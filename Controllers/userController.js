@@ -108,7 +108,7 @@ const securePassword = async (password) => {
     }
     
 let saveOtp;
-let firstName;
+var firstName;
 let email;
 let mobile;
 let password;
@@ -119,7 +119,7 @@ let forgotPasswordOtp;
     const sendOtp = async (req, res) => {
         console.log(req.body);
         try {
-
+            
             const { emailvalid, phonenumber } = req.body
             
             const emailExist = await User.findOne({ email: emailvalid })
@@ -262,7 +262,7 @@ let forgotPasswordOtp;
             errors
         }
     }
-
+var profilename
     const verifyLogin = async (req, res) => {
         try {
             const { email, password } = req.body;
@@ -273,7 +273,8 @@ let forgotPasswordOtp;
           
             const userData = await User.findOne({ email: email });
             console.log(userData);
-          
+          profilename=userData.firstName
+          console.log(`...............${profilename}`)
             if (!userData) {
               return res.status(401).json({ error: "Invalid Email address" });
             } else if (!valid.isValid) {
@@ -491,6 +492,29 @@ const updatePassword = async (req, res) => {
         
     };
 
+//user profile
+
+const loadProfile = async (req, res) => {
+    try {
+        const userData = req.session.user;
+        const userId = userData._id;
+        const categoryData = await Category.find({ is_blocked: false });
+        const addressData = await Address.find({ userId: userId });
+
+        const user = await User.findById(userId);
+        const transactions = user.wallet.transactions.sort((a, b) => b.date - a.date);
+
+        const newTransactions = transactions.map((transactions) => {
+            const formattedDate = moment(transactions.date).format("MMMM D, YYYY");
+            return { ...transactions.toObject(), date: formattedDate };
+        });
+        console.log(firstName);
+        // var useremail=req.session.user.email
+        res.render("account", { userData, categoryData, addressData, newTransactions,loggedIn:true ,profilename});
+    } catch (error) {
+        console.log(error.message);
+    }
+};
 
 //address part
 
@@ -618,7 +642,7 @@ module.exports={
     updatePassword,
 
 
-    // loadProfile,
+    loadProfile,
     addNewAddress,
     getAddressdata,
     updateAddress,

@@ -36,7 +36,7 @@ user_route.get('/resendForgotPasswordotp', isLogout ,userController.resendForgot
 user_route.post('/newPassword',isLogout, userController.updatePassword)
 
 user_route.get("/home",isLogin, blockCheck,userController.homeload);
-// user_route.get('/profile', isLogin, blockCheck, userController.loadProfile)
+user_route.get('/profile', isLogin, blockCheck, userController.loadProfile)
 
 
 
@@ -77,7 +77,7 @@ user_route.post('/validateCoupon', cartController.validateCoupon)
 
 user_route.post('/placeOrder', orderController.placeOrder)
 user_route.get('/orderSuccess', orderController.orderSuccess)
-// user_route.get('/myOrders', orderController.myOrders)
+user_route.get('/myOrders', orderController.myOrders)
 // user_route.get('/orderDetails',orderController.orderDetails)
 // user_route.get('/orderFilter', orderController.filterOrder)
 // user_route.post('/updateOrder', orderController.updateOrder)

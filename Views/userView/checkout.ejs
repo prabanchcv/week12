@@ -3,7 +3,13 @@
 
 <body class="checkout_page">
     <%-include('body')%>
-
+<style>
+       #couponMessage,
+    #couponDiscount{
+        color: green;
+        font-weight: 500;
+    }
+</style>
   <!-- Ec checkout page -->
   <section class="ec-page-content section-space-p">
     <div class="container">
@@ -152,19 +158,22 @@
                                     <span class="text-left">Coupan Discount</span>
                                     <span class="text-right"><a class="ec-checkout-coupan">Apply Coupon</a></span>
                                 </div>
+                                <tr id="couponModel" class="summary-total">
+                                    <td><p id="couponMessage"></p></td>
+                                    <td ><p id="couponDiscount"></td>
+                                  </tr>
                                 <div class="ec-checkout-coupan-content">
-                                    <form class="ec-checkout-coupan-form" name="ec-checkout-coupan-form"
-                                        method="post" action="#">
-                                        <input class="ec-coupan" type="text" required=""
-                                            placeholder="Enter Your Coupan Code" name="ec-coupan" value="">
-                                        <button class="ec-coupan-btn button btn-primary" type="submit"
+                                   
+                                        <input id="checkout-discount-input" class="ec-coupan" type="text" required=""
+                                            placeholder="Enter Your Coupon Code" name="ec-coupan" value="">
+                                        <button onclick="validateCoupon()" class="ec-coupan-btn button btn-primary" type="submit"
                                             name="subscribe" value="">Apply</button>
-                                    </form>
+                                    
                                 </div>
                                 <input type="hidden" id="subTotalValue" value="<%= subTotal %>">
                                 <div class="ec-checkout-summary-total">
-                                    <span class="text-left">Total Amount</span>
-                                    <span class="text-right">$<%= subTotal %></span>
+                                    <td ><p id="subTotalText">Grand Total:  </p></td>
+                                    <td ><p id="subTotal" >₹ <%= subTotal %> </p></td>
                                 </div>
                             </div>
                             <div class="ec-checkout-pro">
