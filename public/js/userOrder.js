@@ -507,7 +507,7 @@ const cancelOrder = async()=>{
 
 const updateOrder = async (orderId, orderStatus)=>{
     try {
-
+       
         const walletBalance = Number(document.getElementById('userWallet').value)
         const grandTotal = Number(document.getElementById('grandTotal').value)
         console.log(walletBalance);

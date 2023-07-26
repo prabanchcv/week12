@@ -212,7 +212,7 @@ const myOrders = async (req, res) => {
             const formattedDate = moment(order.date).format("MMMM D, YYYY");
             return { ...order.toObject(), date: formattedDate };
         });
-        
+
         res.render("myOrders", {
             userData,
             categoryData,
@@ -244,13 +244,24 @@ const orderDetails = async (req, res) => {
         const addressId = orderDetails.address;
 
         const address = await Address.findById(addressId);
-
+        const ExpectedDeliveryDate = moment(orderDetails.ExpectedDeliveryDate).format('MMMM D, YYYY');
+        const deliveryDate=moment(orderDetails.deliveredDate).format('MMMM D, YYYY')
+        const returnEndDate=moment(orderDetails.returnEndDate).format('MMMM D, YYYY') 
+        const currentDate=new Date()
+        const wallet= userData.wallet.balance
+       
         res.render("orderDetails", {
+            wallet,
+            currentDate,
             userData,
             categoryData,
             orderDetails,
             orderProductData,
             address,
+            ExpectedDeliveryDate,
+            loggedIn:true,
+            deliveryDate,
+            returnEndDate
         });
     } catch (error) {
         console.log(error.message);
@@ -459,9 +470,9 @@ module.exports = {
     orderSuccess,
     myOrders,
     placeOrder,
-    // orderDetails,
-    // filterOrder,
-    // updateOrder,
+    orderDetails,
+    filterOrder,
+    updateOrder,
     // downloadInvoice,
     // invoice
 };
