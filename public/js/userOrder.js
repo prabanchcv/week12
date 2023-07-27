@@ -510,12 +510,13 @@ const updateOrder = async (orderId, orderStatus)=>{
        
         const walletBalance = Number(document.getElementById('userWallet').value)
         const grandTotal = Number(document.getElementById('grandTotal').value)
-        console.log(walletBalance);
+        console.log(`.....${walletBalance}`);
         console.log(grandTotal);
 
         const updatedBalance = walletBalance + grandTotal
         
         const paymentMethod = document.getElementById('paymentMethod').innerHTML
+
         const response = await fetch(`/updateOrder?orderId=${orderId}`,{
             method:'POST',
             headers: {
@@ -612,7 +613,7 @@ const downloadInvoice = async (orderId)=>{
         const url = URL.createObjectURL(blobData)
         const link = document.createElement('a')
         link.href = url
-        link.download = "Order-Invoive.pdf"
+        link.download = "Order-Invoice.pdf"
         link.click()
         
         URL.revokeObjectURL(url)

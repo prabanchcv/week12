@@ -13,10 +13,12 @@ const Razorpay = require("razorpay");
 require("dotenv").config();
 
 ////////////////////ORDER CONTROLLERS/////////////////////////////
+var  walletBalance=0
 
     const placeOrder = async (req, res) => {
         try {
             const userData = req.session.user;
+            walletBalance=userData.wallet.balance
             const userId = userData._id;
             const addressId = req.body.selectedAddress;
             const amount = req.body.amount;
@@ -186,7 +188,7 @@ const orderSuccess = async (req, res) => {
         const userData = req.session.user;
         const categoryData = await Category.find({ is_blocked: false });
         var useremail=req.session.user.email
-        res.render("orderSuccess", { userData, categoryData ,loggedIn:true,useremail});
+        res.render("orderSuccess", { userData, categoryData ,loggedIn:true,useremail,walletBalance});
     } catch (error) {
         console.log(error.message);
     }
@@ -200,7 +202,7 @@ const myOrders = async (req, res) => {
 
         const userData = req.session.user;
         const userId = userData._id;
-
+        walletBalance=userData.wallet.balance
         const categoryData = await Category.find({ is_blocked: false });
 
         const orders = await Order.find({ userId }).sort({ date: -1 }).skip(skip).limit(ordersPerPage);
@@ -219,7 +221,8 @@ const myOrders = async (req, res) => {
             myOrders: formattedOrders || [],
             currentPage: page,
             totalPages,
-            loggedIn:true
+            loggedIn:true,
+            walletBalance
         });
     } catch (error) {
         console.log(error.message);
@@ -230,7 +233,7 @@ const orderDetails = async (req, res) => {
     try {
         const userData = req.session.user;
         const orderId = req.query.orderId;
-
+        walletBalance=userData.wallet.balance
         const categoryData = await Category.find({ is_blocked: false });
 
         const orderDetails = await Order.findById(orderId).populate({
@@ -261,7 +264,8 @@ const orderDetails = async (req, res) => {
             ExpectedDeliveryDate,
             loggedIn:true,
             deliveryDate,
-            returnEndDate
+            returnEndDate,
+            walletBalance
         });
     } catch (error) {
         console.log(error.message);
@@ -473,6 +477,6 @@ module.exports = {
     orderDetails,
     filterOrder,
     updateOrder,
-    // downloadInvoice,
-    // invoice
+    downloadInvoice,
+    invoice
 };

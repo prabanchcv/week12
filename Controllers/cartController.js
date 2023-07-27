@@ -5,13 +5,13 @@ const Address = require("../Models/addressmodel");
 const Coupon = require("../Models/couponModel");
 
 ////////////////////CART CONTROLLERS/////////////////////////////
-
+var  walletBalance=0
 const loadCart = async (req, res) => {
     try {
         req.session.checkout = true
         const userData = req.session.user;
         const userId = req.query.id;
-
+        walletBalance=userData.wallet.balance
         const categoryData = await Category.find({ is_blocked: false });
 
         const user = await User.findOne({ userId }).populate("cart.product").lean();
@@ -26,15 +26,15 @@ const loadCart = async (req, res) => {
         });
       
         if (cart.length === 0) {
-            res.render("emptyCart", { userData, categoryData ,loggedIn:true});
+            res.render("emptyCart", { userData, categoryData ,loggedIn:true, walletBalance});
         } else {
-            res.render("cart", { userData, cart, subTotal, categoryData,loggedIn:true });
+            res.render("cart", { userData, cart, subTotal, categoryData,loggedIn:true ,walletBalance});
         }
     } catch (error) {
         console.log(error.message);
         const userData = req.session.user;
         const categoryData = await Category.find({ is_blocked: false });
-        res.render("404", { userData, categoryData ,loggedIn:true});
+        res.render("404", { userData, categoryData ,loggedIn:true,walletBalance});
     }
 };
 
@@ -304,7 +304,8 @@ const loadCheckout = async (req, res) => {
             offerDiscount, 
             cart, 
             availableCoupons,
-            loggedIn:true
+            loggedIn:true,
+            walletBalance
              
         });
         

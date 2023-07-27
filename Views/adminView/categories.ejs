@@ -57,7 +57,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% categoryData.forEach(function(category, index) { %>
+                    <% categoryData.forEach(function(category, adjindex) { %>
+                        <% var index = adjindex + 1; %>
                         <tr>
                             <td scope="row"><%= index %></td>
                             <td><img style="width: 60px; height: 70px;" src="<%= category.imageUrl.url %>"

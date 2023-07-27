@@ -5,7 +5,7 @@ const Brand = require("../Models/brandModel");
 const User = require("../Models/usermodel");
 
 ////////////////////Products/////////////////////////////
-
+var walletBalance=0
 const loadAllProducts = async (req, res) => {
 
 
@@ -71,6 +71,7 @@ const loadAllProducts = async (req, res) => {
         console.log(req.session.user);
         if (req.session.user) {
             const userData = req.session.user;
+            walletBalance=userData.wallet.balance
             res.render("allProducts", {
                 loggedIn:true,
                 userData,
@@ -81,6 +82,7 @@ const loadAllProducts = async (req, res) => {
                 brandData,
                 currentPage: page,
                 totalPages,
+                walletBalance
                 
             });
         } else {
@@ -93,13 +95,14 @@ const loadAllProducts = async (req, res) => {
                 brandData,
                 currentPage: page,
                 totalPages,
+                walletBalance
                 
             });
         }
     } catch (error) {
         console.log(error.message);
         const userData = req.session.user;
-        res.render("404", { userData, categoryData ,loggedIn:false});
+        res.render("404", { userData, categoryData ,loggedIn:false,walletBalance});
     }
 };
 
@@ -205,6 +208,9 @@ const loadProducts = async (req, res) => {
 
         const userData = req.session.user;
           var val=(userData)?true:false
+        if (userData){
+            walletBalance=userData.wallet.balance
+        }
         res.render("products", {
             id,
             productData,
@@ -214,7 +220,8 @@ const loadProducts = async (req, res) => {
             brandData,
             currentPage: page,
             totalPages,
-            loggedIn:val
+            loggedIn:val,
+            walletBalance
         });
     } catch (error) {
         console.log(error.message);
@@ -320,7 +327,7 @@ const productView = async (req, res) => {
             const userData = req.session.user;
             const userId = userData._id;
             const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
-
+             walletBalance=userData.wallet.balance
             let cartId = null;
 
             if (user.cart && user.cart.length > 0) {
@@ -328,9 +335,9 @@ const productView = async (req, res) => {
 
                 if (!productData) {
                     res.render("404", { userData });
-                } else res.render("productView", { productData, cartId, categoryData, userData,loggedIn:true ,relatedProducts});
+                } else res.render("productView", { productData, cartId, categoryData, userData,loggedIn:true ,relatedProducts ,  walletBalance});
             } else {
-                res.render("productView", { productData, categoryData, userData ,loggedIn:true,cartId,relatedProducts});
+                res.render("productView", { productData, categoryData, userData ,loggedIn:true,cartId,relatedProducts,  walletBalance});
             }
         } else {
 
@@ -339,7 +346,7 @@ const productView = async (req, res) => {
               
             } else{
                
-             res.render("productView", { productData, categoryData ,loggedIn:false,userData:false,relatedProducts});
+             res.render("productView", { productData, categoryData ,loggedIn:false,userData:false,relatedProducts,  walletBalance});
 
             }
         }
@@ -350,7 +357,7 @@ const productView = async (req, res) => {
         var val=(userData)?true:false
         const categoryData = await Category.find({ is_blocked: false });
         
-        res.render("404", { userData, categoryData ,loggedIn:val});
+        res.render("404", { userData, categoryData ,loggedIn:val,  walletBalance});
     }
 };
 

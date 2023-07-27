@@ -12,11 +12,11 @@ const moment = require('moment')
 
 
 //user controller
-
+var walletBalance=0
 const signup = async (req, res) => {
         try {
             const categoryData = await Category.find({ is_blocked: false });
-            res.render("register",{loggedIn:false,categoryData});
+            res.render("register",{loggedIn:false,categoryData,walletBalance});
         } catch (error) {
             console.log(error.message);
         }
@@ -26,10 +26,10 @@ const login = async (req, res) => {
     const categoryData = await Category.find({ is_blocked: false });
         try {
             if (req.session.passwordUpdated) {
-                res.render("login", { success: "Password changed successfully!!",loggedIn:false ,categoryData});
+                res.render("login", { success: "Password changed successfully!!",loggedIn:false ,categoryData,walletBalance});
                 req.session.passwordUpdated = false;
             } else {
-                res.render("login",{blocked:false,user:req.session.user,loggedIn:false,categoryData});
+                res.render("login",{blocked:false,user:req.session.user,loggedIn:false,categoryData,walletBalance});
             }
         } catch (error) {
             console.log(error.message);
@@ -163,7 +163,7 @@ let forgotPasswordOtp;
     const showOtp = async (req, res) => {
         try {
             const categoryData = await Category.find({ is_blocked: false });
-            res.render("otp",{loggedIn:false,categoryData,invalidOtp:""});
+            res.render("otp",{loggedIn:false,categoryData,invalidOtp:"",walletBalance});
         } catch (error) {}
     };
 
@@ -230,15 +230,15 @@ let forgotPasswordOtp;
             try {
                 await newUser.save();
                 
-                    res.render("login", { success: "Successfully registered!" ,loggedIn:false,blocked:false,categoryData});
+                    res.render("login", { success: "Successfully registered!" ,loggedIn:false,blocked:false,categoryData,walletBalance});
                 
             } catch (error) {
                 console.log(error);
-                res.render("otp", { invalidOtp: "Error registering new user" ,loggedIn:false,categoryData});
+                res.render("otp", { invalidOtp: "Error registering new user" ,loggedIn:false,categoryData,walletBalance});
             }
     
         } else {
-            res.render("otp", { invalidOtp: "wrong OTP" ,categoryData,loggedIn:false});
+            res.render("otp", { invalidOtp: "wrong OTP" ,categoryData,loggedIn:false,walletBalance});
         }
     };
     function validateLogin(data) {
@@ -307,10 +307,10 @@ const loadForgotPassword = async (req, res) => {
     
         if (req.session.forgotEmailNotExist) {
            
-            res.render("verifyEmail", {categoryData, emailNotExist: "Sorry, email does not exist! Please register now!" ,loggedIn:false});
+            res.render("verifyEmail", {categoryData,walletBalance, emailNotExist: "Sorry, email does not exist! Please register now!" ,loggedIn:false,walletBalance});
             req.session.forgotEmailNotExist = false;
         } else {
-            res.render("verifyEmail",{loggedIn:false,categoryData});
+            res.render("verifyEmail",{loggedIn:false,categoryData,walletBalance});
         }
     } catch (error) {
         console.log(error.message);
@@ -387,10 +387,10 @@ const showForgotOtp = async (req, res) => {
     try {
         const categoryData = await Category.find({ is_blocked: false });
         if (req.session.wrongOtp) {
-            res.render("forgotOtpEnter", { invalidOtp: "Otp does not match" ,loggedIn:false,categoryData});
+            res.render("forgotOtpEnter", { invalidOtp: "Otp does not match" ,loggedIn:false,categoryData,walletBalance});
             req.session.wrongOtp = false;
         } else {
-            res.render("forgotOtpEnter", { countdown: true ,loggedIn:false, invalidOtp:"" ,categoryData});
+            res.render("forgotOtpEnter", { countdown: true ,loggedIn:false, invalidOtp:"" ,categoryData,walletBalance});
         }
     } catch (error) {
         console.log(error.message);
@@ -407,7 +407,7 @@ const verifyForgotOtp = async (req, res) => {
         const userEnteredOtp=txt1+txt2+txt3+txt4
      
         if (userEnteredOtp === forgotPasswordOtp) {
-            res.render("passwordReset",{loggedIn:false,invalidOtp:"",categoryData});
+            res.render("passwordReset",{loggedIn:false,invalidOtp:"",categoryData,walletBalance});
         } else {
             req.session.wrongOtp = true;
             res.redirect("/forgotOtpEnter");
@@ -426,7 +426,7 @@ const updatePassword = async (req, res) => {
         const userData = await User.findOneAndUpdate({ email: email }, { $set: { password: securedPassword } });
         if (userData) {
             req.session.passwordUpdated = true;
-            res.render("login",{blocked:false,loggedIn:false,categoryData});
+            res.render("login",{blocked:false,loggedIn:false,categoryData,walletBalance});
         } else {
             console.log("Something error happened");
         }
@@ -434,6 +434,7 @@ const updatePassword = async (req, res) => {
         console.log(error.message);
     }
 };
+
     const homeload = async (req, res) => {
         try {
             const categoryData = await Category.find({ is_blocked: false });
@@ -467,7 +468,7 @@ const updatePassword = async (req, res) => {
                 }
             ]);
             console.log(offerProducts);
-    
+            
             if (userData) {
                 const userId = userData._id;
                 let cartId = null;
@@ -478,11 +479,11 @@ const updatePassword = async (req, res) => {
                     cartId = user.cart[0]._id;
                 }
                 var useremail=req.session.user.email
-               
+                const walletBalance= user.wallet.balance
     
-                res.render("home", { userData, cartId, categoryData, bannerData, subCategoryData, offerProducts,loggedIn:true,useremail });
+                res.render("home", { userData, cartId, categoryData, bannerData, subCategoryData, offerProducts,loggedIn:true,useremail,walletBalance });
             } else {
-                res.render("home", { categoryData, subCategoryData, bannerData, offerProducts,loggedIn:false ,useremail });
+                res.render("home", { categoryData, subCategoryData, bannerData, offerProducts,loggedIn:false ,useremail,walletBalance });
             }
         } catch (error) {
             console.log(error.message);
@@ -510,7 +511,8 @@ const loadProfile = async (req, res) => {
         });
         console.log(firstName);
         // var useremail=req.session.user.email
-        res.render("account", { userData, categoryData, addressData, newTransactions,loggedIn:true ,profilename});
+        walletBalance=user.wallet.balance
+        res.render("account", { userData, categoryData, addressData, newTransactions,loggedIn:true ,profilename,walletBalance});
     } catch (error) {
         console.log(error.message);
     }

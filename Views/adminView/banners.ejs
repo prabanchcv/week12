@@ -58,7 +58,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% bannerData.forEach(function(banner, index) { %>
+                    <% bannerData.forEach(function(banner, adjindex) { %>
+                        <% var index = adjindex + 1; %>
                         <tr>
                             <td scope="row"><%= index %></td>
                             <td><img style="width: 100px; height: 60px;" src="<%= banner.image.url %>"

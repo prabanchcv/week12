@@ -54,7 +54,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% couponData.forEach((coupon, index) => { %>
+                    <% couponData.forEach((coupon, adjindex) => { %>
+                        <% var index = adjindex + 1; %>
                     <tr id="couponRow<%= coupon._doc._id %>">
                         <td scope="row"><%= index %></td>
                         <td><%= coupon._doc.code %></td>

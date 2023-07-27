@@ -51,7 +51,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% productData.forEach(function(product, index) { %>
+                    <% productData.forEach(function(product, adjindex) { %>
+                        <% var index = adjindex + 1; %>
                     <tr>
                         <td scope="row"><%= index %></td>
                         <td>

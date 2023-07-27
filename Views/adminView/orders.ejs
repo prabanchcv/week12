@@ -51,7 +51,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% orderData.forEach((order, index) => { %>
+                    <% orderData.forEach((order, adjindex) => { %>
+                        <% var index = adjindex + 1; %>
                     <tr>
                         <td><%= index %></td>
                         <td scope="row"><%= order.date %></td>
