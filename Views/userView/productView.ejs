@@ -262,30 +262,41 @@
                     <div class="ec-sidebar-wrap">
                         <!-- Sidebar Category Block -->
                         <div class="ec-sidebar-block">
-                            <div class="ec-sb-title">
-                                <h3 class="ec-sidebar-title">Category</h3>
-                            </div>
+                           
                             <div class="ec-sb-block-content">
                                 <ul>
                                     <li>
-                                        <div class="ec-sidebar-block-item">clothes</div>
+                                        <div class="ec-sidebar-block-item">categories</div>
                                         <ul style="display: block;">
+                                            <% categoryData.forEach(function(category) { %>
+
+                                           
                                             <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Men <span>-25</span></a>
+                                                <div class="ec-sidebar-sub-item"><a href="#"><%= category.category %></a>
                                                 </div>
                                             </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Women <span>-52</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Boy <span>-40</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Girl <span>-35</span></a>
-                                                </div>
-                                            </li>
+                                            <% }) %>
+                                            
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                           
+                          
+                            <div class="ec-sb-block-content">
+                                <ul>
+                                    <li>
+                                        <div class="ec-sidebar-block-item">Sub Categories</div>
+                                        <ul>
+                                            <% subCategoryData.forEach(function(subCategory) { %>
+
+                                           
+                                                <li>
+                                                    <div class="ec-sidebar-sub-item"><a href="#"><%= subCategory.subCategory %></a>
+                                                    </div>
+                                                </li>
+                                                <% }) %>
+                                            
                                         </ul>
                                     </li>
                                 </ul>
@@ -293,149 +304,17 @@
                             <div class="ec-sb-block-content">
                                 <ul>
                                     <li>
-                                        <div class="ec-sidebar-block-item">shoes</div>
+                                        <div class="ec-sidebar-block-item">Brands</div>
                                         <ul>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Men <span>-25</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Women <span>-52</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Boy <span>-40</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Girl <span>-35</span></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="ec-sb-block-content">
-                                <ul>
-                                    <li>
-                                        <div class="ec-sidebar-block-item">bag</div>
-                                        <ul>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Men <span>-25</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Women <span>-52</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Boy <span>-40</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Girl <span>-35</span></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="ec-sb-block-content">
-                                <ul>
-                                    <li>
-                                        <div class="ec-sidebar-block-item">cosmetics</div>
-                                        <ul>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Men <span>-25</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Women <span>-52</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Boy <span>-40</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Girl <span>-35</span></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="ec-sb-block-content">
-                                <ul>
-                                    <li>
-                                        <div class="ec-sidebar-block-item">electronics</div>
-                                        <ul>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Men <span>-25</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Women <span>-52</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Boy <span>-40</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Girl <span>-35</span></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="ec-sb-block-content">
-                                <ul>
-                                    <li>
-                                        <div class="ec-sidebar-block-item">phone</div>
-                                        <ul>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Men <span>-25</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Women <span>-52</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Boy <span>-40</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Girl <span>-35</span></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="ec-sb-block-content">
-                                <ul>
-                                    <li>
-                                        <div class="ec-sidebar-block-item">accessories</div>
-                                        <ul>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Men <span>-25</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Women <span>-52</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Boy <span>-40</span></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="ec-sidebar-sub-item"><a href="#">Girl <span>-35</span></a>
-                                                </div>
-                                            </li>
+                                           
+                                            <% brandData.forEach(function(brand) { %>
+
+                                           
+                                                <li>
+                                                    <div class="ec-sidebar-sub-item"><a href="#"><%= brand.name %></a>
+                                                    </div>
+                                                </li>
+                                                <% }) %>
                                         </ul>
                                     </li>
                                 </ul>

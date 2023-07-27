@@ -322,22 +322,41 @@ const productView = async (req, res) => {
         const productData = await Product.findById(productId);
         console.log(productData);
         const categoryData = await Category.find({ is_blocked: false });
-
+        const subCategoryData = await SubCategory.find();
+        const brandData = await Brand.aggregate([
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "_id",
+                    foreignField: "brand",
+                    as: "products",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    productCount: { $size: "$products" },
+                },
+            },
+        ]);
         if (req.session.user) {
             const userData = req.session.user;
             const userId = userData._id;
             const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
              walletBalance=userData.wallet.balance
             let cartId = null;
-
+        
+         
+   
             if (user.cart && user.cart.length > 0) {
                 cartId = user.cart[0]._id;
 
                 if (!productData) {
                     res.render("404", { userData });
-                } else res.render("productView", { productData, cartId, categoryData, userData,loggedIn:true ,relatedProducts ,  walletBalance});
+                } else res.render("productView", { productData, subCategoryData,brandData ,cartId, categoryData, userData,loggedIn:true ,relatedProducts ,  walletBalance});
             } else {
-                res.render("productView", { productData, categoryData, userData ,loggedIn:true,cartId,relatedProducts,  walletBalance});
+                res.render("productView", { productData, categoryData ,subCategoryData,brandData , userData ,loggedIn:true,cartId,relatedProducts,  walletBalance});
             }
         } else {
 
@@ -346,7 +365,7 @@ const productView = async (req, res) => {
               
             } else{
                
-             res.render("productView", { productData, categoryData ,loggedIn:false,userData:false,relatedProducts,  walletBalance});
+             res.render("productView", { productData, subCategoryData,brandData , categoryData ,loggedIn:false,userData:false,relatedProducts,  walletBalance});
 
             }
         }

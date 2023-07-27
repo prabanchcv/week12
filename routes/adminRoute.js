@@ -1,5 +1,5 @@
 const adminController = require("../Controllers/adminController");
-// const adminDashboard = require('../controllers/adminDashboard')
+const adminDashboard = require('../Controllers/adminDashboard')
 const express = require("express");
 const adminAuth= require('../middleware/adminAuth');
 const store = require("../middleware/multer");
@@ -17,10 +17,10 @@ admin_route.get('/logout',adminController.adminLogout)
 
 
 admin_route.get("/admindash",adminController.loadDashboard);
-// admin_route.get('/chartData', adminDashboard.chartData)
-// admin_route.get('/getSales', adminDashboard.getSales)
-// admin_route.post('/downloadSalesReport', adminDashboard.downloadSalesReport)
-// admin_route.get('/renderSalesReport', adminDashboard.renderSalesReport)
+admin_route.get('/chartData', adminDashboard.chartData)
+admin_route.get('/getSales', adminDashboard.getSales)
+admin_route.post('/downloadSalesReport', adminDashboard.downloadSalesReport)
+admin_route.get('/renderSalesReport', adminDashboard.renderSalesReport)
 
 
 
