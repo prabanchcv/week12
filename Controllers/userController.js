@@ -441,6 +441,7 @@ const updatePassword = async (req, res) => {
             const subCategoryData = await SubCategory.find({ is_blocked: false });
             const bannerData = await Banner.find({ active: true });
             const userData = req.session.user;
+          
             console.log("userData:", userData)
             const offerProducts = await Products.aggregate([
                 { $match: { offerlabel: { $ne: [] } } },
@@ -468,22 +469,32 @@ const updatePassword = async (req, res) => {
                 }
             ]);
             console.log(offerProducts);
-            
+            let subTotal = 0;
             if (userData) {
                 const userId = userData._id;
                 let cartId = null;
-                // const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
-                const user = await User.findOne({ _id: userId });
+                const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
+                // const user = await User.findOne({ _id: userId });
                 console.log("user:", user);
                 if (user.cart && user.cart.length > 0) {
                     cartId = user.cart[0]._id;
                 }
                 var useremail=req.session.user.email
                 const walletBalance= user.wallet.balance
+
+                const cart = user.cart;
+       
+               
+        
+                cart.forEach((val) => {
+                    val.total = val.product.price * val.quantity;
+                    subTotal += val.total;
+                });
+
     
-                res.render("home", { userData, cartId, categoryData, bannerData, subCategoryData, offerProducts,loggedIn:true,useremail,walletBalance });
+                res.render("home", { userData, cartId, categoryData, bannerData, subCategoryData, offerProducts,loggedIn:true,useremail,walletBalance,subTotal,cart });
             } else {
-                res.render("home", { categoryData, subCategoryData, bannerData, offerProducts,loggedIn:false ,useremail,walletBalance });
+                res.render("home", { userData, categoryData, subCategoryData, bannerData, offerProducts,loggedIn:false ,useremail,walletBalance,subTotal,cart:{}});
             }
         } catch (error) {
             console.log(error.message);

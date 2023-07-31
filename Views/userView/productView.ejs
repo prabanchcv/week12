@@ -120,7 +120,7 @@
                                         <div class="ec-single-price-stoke">
                                             <div class="ec-single-price">
                                                 <span class="ec-single-ps-title">As low as</span>
-                                                <span class="new-price">$ <%= productData.price %></span>
+                                                <span class="new-price">₹ <%= productData.price %></span>
                                             </div>
                                             <div class="ec-single-stoke">
                                                 <% if (productData.stock === 0) { %>
@@ -143,8 +143,10 @@
                                                     </button>
                                                 </div>
                                                 
+                                           
                                                 <input  disabled type="number" id="<%= productData._id %>" class="form-control"  name="num-product" value="1">
 
+                                              
 
                                                 <div class="input-group-append">
                                                     <button onclick="productQuantity('<%= productData._id %>','inc')" style="min-width: 26px" class="btn btn-increment btn-spinner" type="button">

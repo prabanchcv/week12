@@ -2,7 +2,7 @@ const moment = require('moment');
 const Sale = require('../Models/orderModel')
 const Order = require('../Models/orderModel')
 const puppeteer = require('puppeteer')
-const xvfb = require('xvfb');
+// const xvfb = require('xvfb');
 
 
 
@@ -61,7 +61,7 @@ const loadDashboard = async (req, res) => {
       const thisMonthOrder = ordersByMonth[ordersByMonth.length - 1];
       const thisMonthSales = revenueByMonth[revenueByMonth.length - 1];
   
-      res.render("dashboard", {
+      res.render("admindash", {
         user: req.session.admin,
         revenueByMonth,
         months,
@@ -69,7 +69,8 @@ const loadDashboard = async (req, res) => {
         totalRevenue,
         totalSales,
         thisMonthOrder,
-        thisMonthSales
+        thisMonthSales,
+        productUpdated:""
       });
     } catch (error) {
       console.log(error.message);
@@ -148,17 +149,17 @@ const loadDashboard = async (req, res) => {
   
         const browser = await puppeteer.launch({
           headless: true,
-          executablePath: '/usr/bin/google-chrome-stable',
+          executablePath: 'C:\\Users\\msi1\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
           args: ['--no-sandbox', '--disable-setuid-sandbox']
       });
 
-      const xvfbInstance = new xvfb(xvfbOptions);
-      xvfbInstance.startSync();
+      // const xvfbInstance = new xvfb(xvfbOptions);
+      // xvfbInstance.startSync();
 
       const page = await browser.newPage();
   
       await page.goto(
-          `https://www.yaraskin.shop/admin/renderSalesReport?orderData=${encodeURIComponent(JSON.stringify(orderData))}
+          `http://localhost:8000/admin/renderSalesReport?orderData=${encodeURIComponent(JSON.stringify(orderData))}
               &startDate=${startDate}&endDate=${endDate}`,{
               waitUntil: "networkidle2",
           }
@@ -171,7 +172,7 @@ const loadDashboard = async (req, res) => {
       });
   
       await browser.close();
-      xvfbInstance.stopSync();
+      // xvfbInstance.stopSync();
   
       // Set the Content-Disposition header once with the desired filename
       res.set({

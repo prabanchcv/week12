@@ -14,7 +14,7 @@ const addToCart = async (productId) => {
     
     const productName = document.getElementsByName("productName")[0].value;
     const quantity = document.getElementById(productId).value;
-
+    console.log(quantity,productId)
     const response = await fetch(`/addToCart?id=${productId}&quantity=${quantity}`, {
         method: "GET",
         headers: {

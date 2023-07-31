@@ -17,7 +17,7 @@ const loadAllProducts = async (req, res) => {
 
     try {
         const page = parseInt(req.query.allProductsPage) || 1; // Get the current page number from the query parameter
-        const productsPerPage = 6;
+        const productsPerPage = 8;
 
         categoryFilterData.forEach(async (category, index) => {
             const productCount = await Product.countDocuments({ category: category._id });
@@ -156,7 +156,7 @@ const loadProducts = async (req, res) => {
 
     try {
         const page = parseInt(req.query.page) || 1; // Get the current page number from the query parameter
-        const productsPerPage = 6;
+        const productsPerPage = 8;
 
         subCategoryData.forEach(async (subCategory, index) => {
             const productCount = await Product.countDocuments({ subCategory: subCategory._id });
@@ -237,7 +237,7 @@ const offerProducts = async (req, res) => {
 
     try {
         const page = parseInt(req.query.offerPage) || 1; // Get the current page number from the query parameter
-        const productsPerPage = 6;
+        const productsPerPage = 8;
 
         subCategoryData.forEach(async (subCategory, index) => {
             const productCount = await Product.countDocuments({ subCategory: subCategory._id });
@@ -295,7 +295,7 @@ const offerProducts = async (req, res) => {
 const productView = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1; // Get the current page number from the query parameter
-        const productsPerPage = 6;
+        const productsPerPage = 8;
         let relatedProducts;
          const id = req.query.id;
         const isCategory = await Category.exists({ _id: id });

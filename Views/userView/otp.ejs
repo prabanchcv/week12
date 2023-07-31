@@ -83,7 +83,8 @@
     <input type="text" name="txt4" maxlength="1" pattern="[0-9]">
     
   </div>
-  
+  <div id="otp-timer"></div>
+
   <h2><%= invalidOtp%></h2>
     <div class="recover">
         <a href="/resendForgotPasswordotp">Resend OTP</a>
@@ -104,6 +105,29 @@
     nextInput.focus();
   }
 }
+function startOTPTimer(duration, displayElement) {
+  let timer = duration, minutes, seconds;
+
+  const intervalId = setInterval(function () {
+    minutes = parseInt(timer / 60, 10);
+    seconds = parseInt(timer % 60, 10);
+
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    displayElement.textContent = minutes + ":" + seconds;
+
+    if (--timer < 0) {
+      clearInterval(intervalId);
+      // Handle timeout here (e.g., show resend button)
+    }
+  }, 1000);
+}
+
+// Example usage with 5 minutes (300 seconds) duration
+const otpDuration = 60; // 5 minutes
+const otpTimerDisplay = document.getElementById("otp-timer");
+startOTPTimer(otpDuration, otpTimerDisplay);
 
   </script>
 
