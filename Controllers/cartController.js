@@ -26,7 +26,7 @@ const loadCart = async (req, res) => {
         });
       
         if (cart.length === 0) {
-            res.render("emptyCart", { userData, categoryData ,loggedIn:true, walletBalance});
+            res.render("emptyCart", { userData, categoryData ,loggedIn:true, walletBalance,cart:{},subTotal:0});
         } else {
             res.render("cart", { userData, cart, subTotal, categoryData,loggedIn:true ,walletBalance});
         }

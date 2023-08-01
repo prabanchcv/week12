@@ -186,9 +186,23 @@ var  walletBalance=0
 const orderSuccess = async (req, res) => {
     try {
         const userData = req.session.user;
+        const userId=userData._id
+        const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
+
+
+
+        const cart = user.cart;
+       
+        let subTotal = 0;
+
+        cart.forEach((val) => {
+            val.total = val.product.price * val.quantity;
+            subTotal += val.total;
+        });
+
         const categoryData = await Category.find({ is_blocked: false });
         var useremail=req.session.user.email
-        res.render("orderSuccess", { userData, categoryData ,loggedIn:true,useremail,walletBalance});
+        res.render("orderSuccess", { userData, categoryData ,loggedIn:true,useremail,walletBalance,subTotal,cart});
     } catch (error) {
         console.log(error.message);
     }
@@ -214,6 +228,19 @@ const myOrders = async (req, res) => {
             const formattedDate = moment(order.date).format("MMMM D, YYYY");
             return { ...order.toObject(), date: formattedDate };
         });
+       
+        const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
+
+
+
+         const cart = user.cart;
+        
+         let subTotal = 0;
+ 
+         cart.forEach((val) => {
+             val.total = val.product.price * val.quantity;
+             subTotal += val.total;
+         });
 
         res.render("myOrders", {
             userData,
@@ -222,7 +249,9 @@ const myOrders = async (req, res) => {
             currentPage: page,
             totalPages,
             loggedIn:true,
-            walletBalance
+            walletBalance,
+            subTotal,
+            cart
         });
     } catch (error) {
         console.log(error.message);
@@ -232,6 +261,16 @@ const myOrders = async (req, res) => {
 const orderDetails = async (req, res) => {
     try {
         const userData = req.session.user;
+        const userId=userData._id
+        const user = await User.findOne({ _id: userId }).populate("cart.product").lean();
+        const cart = user.cart;
+       
+        let subTotal = 0;
+
+        cart.forEach((val) => {
+            val.total = val.product.price * val.quantity;
+            subTotal += val.total;
+        });
         const orderId = req.query.orderId;
         walletBalance=userData.wallet.balance
         const categoryData = await Category.find({ is_blocked: false });
@@ -265,7 +304,9 @@ const orderDetails = async (req, res) => {
             loggedIn:true,
             deliveryDate,
             returnEndDate,
-            walletBalance
+            walletBalance,
+            cart,
+            subTotal
         });
     } catch (error) {
         console.log(error.message);

@@ -60,6 +60,7 @@
                                                             <div style="color: green;" class="productprice" value="<%= item.product.price %>">₹ <%= item.product.price %></div>
                                                             
                                                         </td>
+                                                        
                                                         <input type="hidden" name="productprice" value="<%= item.product.price %>">
 
                                                         <input type="hidden" name="productId" value="<%= item.product._id %>">
@@ -78,7 +79,7 @@
                                                             <div class="input-group  input-spinner">
                                                                 <div class="input-group-prepend">
                                                                     <button onclick="totalPrice('<%= item.product._id %>','dec')" style="min-width: 26px" class="btn btn-decrement btn-spinner" type="button">
-                                                                        -
+                                                                        <i class="fi fi-rr-minus"></i>
                                                                     </button>
                                                                 </div>
                                                                 
@@ -87,7 +88,7 @@
                 
                                                                 <div class="input-group-append">
                                                                     <button onclick="totalPrice('<%= item.product._id %>','inc','<%= item.product.stock %>')" style="min-width: 26px" class="btn btn-increment btn-spinner" type="button">
-                                                                       +
+                                                                        <i class="fi fi-rr-add"></i>
                                                                     </button>
                                                                 </div>
                                                             

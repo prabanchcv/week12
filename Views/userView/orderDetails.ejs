@@ -272,7 +272,7 @@ h3 {
                                             </div>
                                             <% } else if (orderDetails.status === "Pending") { %>
                                             <div id="orderStatusBtn">
-                                                <p onclick="cancelOrder()" class="btn-product btn-cart icon-info-circle"><span id="updateOrder">Cancel Order</span></p>
+                                                <p onclick="cancelOrder()" class="btn btn-sm btn-info "><span id="updateOrder" >Cancel Order</span></p>
                                             </div>
                                             <% } %>
                                             <input type="hidden" id="orderId" value="<%= orderDetails._id %>">
