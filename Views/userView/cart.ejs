@@ -103,8 +103,8 @@
                                                     <input type="hidden" id="product_id<%= item.product._id %>" value="<%= item.product._id %>">
                                                     <input type="hidden" name="cart_id" value="<%= item._id %>">
                                                     <td class="remove-col">
-                                                        <button class="btn-remove" onclick="removeCartalert('<%= item.product._id %>')">
-                                                            <span style="color: red;">x</span>
+                                                        <button  onclick="removeCartalert('<%= item.product._id %>')">
+                                                            <i class="fi fi-rr-trash"></i>
                                                         </button>
                                                     </td>
                                                 </tr>

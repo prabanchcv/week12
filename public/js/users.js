@@ -233,6 +233,7 @@ const removeFromWishlist = async (productId) => {
                 confirmButtonText: "OK",
                 confirmButtonColor: "#4CAF50",
             });
+            console.log(`.......${productId}`);
             document.getElementById("row" + productId).innerHTML = "";
         } else {
             Swal.fire({

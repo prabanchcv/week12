@@ -128,11 +128,16 @@ const loadWishlist = async (req, res) => {
 
         const userCart = await User.findOne({ _id: userId }).populate("cart.product").lean();
         const cart = userCart.cart;
-
+        walletBalance=userData.wallet.balance
+        let subTotal = 0;
+        cart.forEach((element) => {
+            element.total = element.product.price * element.quantity;
+            subTotal += element.total;
+        });
         if (wishlistItems.length === 0) {
-            res.render("emptyWishlist", { userData, categoryData });
+            res.render("emptyWishlist", { userData, categoryData,loggedIn:true,walletBalance,cart ,subTotal});
         } else {
-            res.render("wishlist", { userData, categoryData, cart, wishlistItems });
+            res.render("wishlist", { userData, categoryData, cart, wishlistItems,loggedIn:true,  walletBalance ,cart,subTotal});
         }
     } catch (error) {
         console.log(error.message);
@@ -181,7 +186,7 @@ const addToCartFromWishlist = async (req, res) => {
         if (existed) {
             res.json({ message: "Product is already in cart!!" });
         } else {
-            await Product.findOneAndUpdate(productId, { isOnCart: true });
+            await Product.findOneAndUpdate({_id:productId}, { isOnCart: true });
             await User.findByIdAndUpdate(
                 userId,
                 {

@@ -18,12 +18,12 @@ input::-webkit-inner-spin-button {
 }
 
 thead{
-  background-color: #005772; 
+  background-color: #a437db; 
   color: rgb(138, 225, 128);
 }
 
 tbody{
-  background-color: #f4f4f4;
+  background-color: #e4cdcd;
 }
 
 .navbar {

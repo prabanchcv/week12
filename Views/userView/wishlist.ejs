@@ -1,0 +1,69 @@
+
+<%-include('header')%>
+<body class="shop_page">
+<%-include('body')%>
+
+<section class="ec-page-content section-space-p">
+    <div class="container">
+        <div class="row">
+            <!-- Compare Content Start -->
+            <div class="ec-wish-rightside col-lg-12 col-md-12">
+                <!-- Compare content Start -->
+                <div class="ec-compare-content">
+                    <div class="ec-compare-inner">
+                        <div class="row margin-minus-b-30">
+                            <input type="hidden" name="cart_id" value="<%= cart._id %>">
+
+                            <%  wishlistItems.forEach(function(wishlist){ %>
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 mb-6 pro-gl-content" id="row<%= wishlist._id %>">
+                                
+                                <div class="ec-product-inner">
+                                    <div class="ec-pro-image-outer">
+                                        <div class="ec-pro-image">
+                                            <a href="product-left-sidebar.html" class="image">
+                                                <img class="main-image" src="<%= wishlist.imageUrl[0].url %>"
+                                                    alt="Product" />
+                                                <img class="hover-image" src=" <%= wishlist.imageUrl[1].url %>"
+                                                    alt="Product" />
+                                            </a>
+                                            <button  onclick="moveToCart('<%= wishlist._id%>')"><i
+                                                class="fi-rr-shopping-basket"></i></button>
+
+                                             
+                        
+                                            <span class="ec-com-remove fi-rr-trash"  onclick="removeFromWishlist('<%= wishlist._id %>')" style="color: rgb(255, 255, 255);" ></span>>
+                                            <i ></i>
+                                               </span>
+                                            <span class="percentage">20%</span>
+                                          
+                                            <div class="ec-pro-actions">
+                                             
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ec-pro-content">
+                                        <h5 class="ec-pro-title"><a href="/productView?id=<%= wishlist._id %>"><%= wishlist.name %></a></h5>
+                                        
+                                    
+                                        <span class="ec-price">
+                                            <span class="old-price">$<%= wishlist.oldPrice %></span>
+                                            <span class="new-price">$<%= wishlist.price %></span>
+                                        </span>
+                                      
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }) %>
+                            </div>
+                 
+                        </div>
+                    </div>
+                </div>
+                <!--compare content End -->
+            </div>
+            <!-- Compare Content end -->
+        </div>
+    </div>
+</section>
+
+<%-include('footer')%>
