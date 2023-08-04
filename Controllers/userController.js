@@ -6,7 +6,8 @@ const Products = require("../Models/productModel");
 const Banner = require("../Models/bannerModel")
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
-const moment = require('moment')
+const moment = require('moment');
+const { render } = require('../routes/userRoute');
 
 
 
@@ -629,6 +630,47 @@ const deleteAddress = async (req, res) => {
 };
 
 
+const walletTransaction= async(req,res)=>{
+
+    try{
+        const userData = req.session.user;
+        const userId = userData._id;
+        const categoryData = await Category.find({ is_blocked: false });
+        
+
+        const user = await User.findById(userId);
+        const transactions = user.wallet.transactions.sort((a, b) => b.date - a.date);
+
+        const newTransactions = transactions.map((transactions) => {
+            const formattedDate = moment(transactions.date).format("MMMM D, YYYY");
+            return { ...transactions.toObject(), date: formattedDate };
+        });
+        console.log(firstName);
+        // var useremail=req.session.user.email
+        walletBalance=user.wallet.balance
+        const usercart = await User.findOne({_id:userId }).populate("cart.product").lean();
+       console.log(user);
+        const cart = usercart.cart;
+       
+        let subTotal = 0;
+
+        cart.forEach((val) => {
+            val.total = val.product.price * val.quantity;
+            subTotal += val.total;
+        });
+
+        res.render("wallet", { userData, categoryData, newTransactions,loggedIn:true,walletBalance,subTotal,cart});
+
+    }catch(error){
+        console.log(error.message)
+    }
+}
+
+
+
+
+
+
 
 
 
@@ -670,7 +712,8 @@ module.exports={
     getAddressdata,
     updateAddress,
     deleteAddress,
-
+    walletTransaction,
+   
 
 
 

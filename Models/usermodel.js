@@ -72,10 +72,7 @@ const userSchema = new mongoose.Schema({
       ],
   },
 
-  // referralCode:{
-  //   type:String,
-  //   required:true
-  // }
+
 });
 userSchema.method("populateCart", async function () {
     await this.populate("cart.product").execPopulate();

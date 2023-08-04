@@ -37,6 +37,7 @@ user_route.post('/newPassword',isLogout, userController.updatePassword)
 
 user_route.get("/home",isLogin, blockCheck,userController.homeload);
 user_route.get('/profile', isLogin, blockCheck, userController.loadProfile)
+user_route.get('/wallet',isLogin,blockCheck,userController.walletTransaction)
 
 
 

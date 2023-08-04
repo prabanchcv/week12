@@ -111,7 +111,7 @@ const loadDashboard = async (req, res) => {
           }));
 
           let salesData = [];
-
+          
           formattedOrders.forEach((element) => {
               salesData.push({
                   date: element.date,

@@ -41,19 +41,17 @@
                             <div class="ec-vendor-block">
                                 <!-- <div class="ec-vendor-block-bg"></div>
                                 <div class="ec-vendor-block-detail">
-                                    <img class="v-img" src="assets/images/user/1.jpg" alt="vendor image">
+                                    <img class="v-img" src="/images/user/1.jpg" alt="vendor image">
                                     <h5>Mariana Johns</h5>
                                 </div> -->
                                 <div class="ec-vendor-block-items">
                                     <ul>
                                         <li><a href="/profile">User Profile</a></li>
                                         <li><a href="/myOrders">order History</a></li>
-                                        <li><a href="wishlist.html">Wishlist</a></li>
+                                        <li><a href="/wishlist">Wishlist</a></li>
                                         <li><a href="/cart">Cart</a></li>
                                         <li><a href="/checkout">Checkout</a></li>
-                                        <li><a href="track-order.html">Wallet History</a></li>
-                                        <li><a href="user-invoice.html">Account details</a></li>
-                                        <li><a href="user-invoice.html">Address</a></li>
+                                        <li><a href="/wallet">Wallet History</a></li>
                                         <li><a href="/logout">Logout</a></li>
                                     </ul>
                                 </div>
@@ -79,15 +77,76 @@
                                             <p>Hello <span><%=locals.profilename%></span></p>
                                             <p>From your account you can easily view and track orders. You can manage and change your account information like address, contact information and history of orders.</p>
                                         </div>
+                                        <h5>Account Information</h5>
+
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="ec-vendor-detail-block ec-vendor-block-contact space-bottom-30">
+                                                    <h6>Edit Profile Details<a href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#edit_details"><i class="fi-rr-edit"></i></a></h6>
+                                                   
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="ec-vendor-detail-block ec-vendor-block-email space-bottom-30">
+                                                
+                                                    <h6>Edit Address Details
+                                                         <a href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#edit_address"><i class="fi-rr-edit"></i></a></h6>
+
+                                                         <h3 class="card-title mt-2 mb-2">Billing Address</h3><!-- End .card-title -->
+                                                         <p>The following addresses will be used on the checkout page by default.</p>
+                                                    <ul>
+                                     
+                                                        <button type="submit" id="addAddressBtn" class="btn btn-sm btn-primary " >
+                                                      <a href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#add_address" style="color: aliceblue;">Add New Address <i class="fi-rr-add"></i></a></h6>
+                                                                                    
+                                                        </button>
+                                                    </ul>
+                                                </div>
+                                                
+                                           
+                                            </div>
+                                            
+                                        
+                                            <div class="row">
+                                                <% addressData.forEach(function(address) { %>
+                                                    <div class="col-lg-6" id="addressCard<%= address._id %>">
+                                                        <div class="card card-dashboard">
+                                                            <div class="card-body">
+                                                                <p>
+                                                                    <strong>Name:</strong> <%= address.name %><br>
+                                                                    <strong>Mobile number:</strong> <%= address.mobile %><br>
+                                                                    <strong>Email:</strong> <%= address.email %><br>
+                                                                    <strong>Address:</strong> <%= address.addressLine %><br>
+                                                                    <strong>City:</strong> <%= address.city %><br>
+                                                                    <strong>State:</strong> <%= address.state %><br>
+                                                                    <strong>Pincode:</strong> <%= address.pincode %><br>
+                                                                    <h6 class="btn btn-sm btn-primary ">Edit
+                                                                        <a style="color: white;"   class="edit-address-btn" id="editAddressBtn" data-id="<%= address._id %>" href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#edit_address"><i class="fi-rr-edit"></i></a></h6>
+
+                                                                  <h6 class="btn btn-sm btn-primary " >  <a style="color: white;" href="#" class="ml-5" onclick="deleteAddress('<%= address._id %>')">Delete <i class="fi fi-rr-trash"></i></a></h6>
+                                                                </p>
+                                                            </div><!-- End .card-body -->
+                                                        </div><!-- End .card-dashboard -->
+                                                    </div><!-- End .col-lg-6 -->
+                                                <% }); %>
+                                            </div><!-- End .row -->
+                                           
+                                           
+                                        </div>
                                         
 
                                      
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </section>
@@ -97,6 +156,183 @@
 
 
 
+ <!-- Modal edit  Address-->
+ <div class="modal fade" id="edit_address" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="ec-vendor-block-img space-bottom-30">
+                    
+                     
+                        <div class="ec-vendor-upload-detail">
+                            <h6>Edit User Address</h6>
+                            <form class="row g-3" id="updateAddress">
+                                <input type="hidden" id="addressId">
+
+                                <div class="col-md-6 space-t-15">
+                                     <label>Full Name *</label>
+                                     <input type="text" name="name" class="form-control full-name-input" id="name">
+                                </div>
+                           
+                                <div class="col-md-12 space-t-15">
+                                    <label>Mobile Number *</label>
+                                    <input type="text" name="mobile" class="form-control mobile-number-input" id="mobileNumber">
+                                </div>
+                                <div class="col-md-12 space-t-15">
+                                    <label>Address Line *</label>
+                                    <input type="text" name="addressLine" class="form-control address-line-input" id="addressLine">
+                                </div>
+                                <div class="col-md-12 space-t-15">
+                                    <label>Email *</label>
+                                    <input type="tel" name="email" class="form-control email-input" id="email">
+                                </div>
+                                <div class="col-md-12 space-t-15">
+                                    <label>Town / City *</label>
+                                    <input type="text" name="city" class="form-control city-input" id="city">
+                                </div>
+                                <div class="col-md-6 space-t-15">
+                                    <label>State *</label>
+                                    <input type="text" name="state" class="form-control state-input" id="state">
+                                </div>
+                                
+                                <div class="col-md-6 space-t-15">
+                                    <label>Pincode *</label>
+                                    <input type="text" name="pincode" class="form-control pincode-input" id="pincode">
+                                </div>
+                              
+                                <div class="col-md-12 space-t-15">
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <a href="#" class="btn btn-lg btn-secondary qty_close" data-bs-dismiss="modal"
+                                        aria-label="Close">Close</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal end -->
+
+
+ <!-- Modal Add  Address-->
+ <div class="modal fade" id="add_address" tabindex="-1" role="dialog" id="addAddressPanel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="ec-vendor-block-img space-bottom-30">
+                    
+                     
+                        <div class="ec-vendor-upload-detail">
+                            <h6>Add User Address</h6>
+                            <form class="row g-3" id="addAddress">
+                                <div class="col-md-6 space-t-15">
+                                    <label>Full Name *</label>
+                                    <input type="text" name="name" class="form-control">
+                                </div>
+                           
+                                <div class="col-md-12 space-t-15">
+                                    <label>Mobile Number *</label>
+                                    <input type="number" name="mobileNumber" class="form-control">
+                                </div>
+                                <div class="col-md-12 space-t-15">
+                                    <label>Address Line *</label>
+                                    <input type="text" name="addressLine" class="form-control">
+                                </div>
+                                <div class="col-md-12 space-t-15">
+                                    <label>Email *</label>
+                                    <input type="text" name="email" class="form-control">
+                                </div>
+                                <div class="col-md-12 space-t-15">
+                                    <label>Town / City *</label>
+                                    <input type="text" name="city" class="form-control">
+                                </div>
+                                <div class="col-md-6 space-t-15">
+                                    <label>State *</label>
+                                     <input type="text" name="state" class="form-control">
+                                </div>
+                                
+                                <div class="col-md-6 space-t-15">
+                                    <label>Pincode *</label>
+                                    <input type="number" name="pincode" class="form-control">
+                                </div>
+                              
+                                <div class="col-md-12 space-t-15">
+                                    <button type="submit" class="btn btn-primary">Save Address</button>
+                                    <a href="#" class="btn btn-lg btn-secondary qty_close" data-bs-dismiss="modal"
+                                        aria-label="Close">Close</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal end -->
+
+
+
+<!-- Modal Account details-->
+<div class="modal fade"tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="ec-vendor-block-img space-bottom-30">
+                       
+                      
+                        <div class="ec-vendor-upload-detail">
+                            <form class="row g-3" id="userProfile">
+                                <h3>Edit User Details</h3>
+                                <div class="col-md-6 space-t-15">
+                                    <label>First Name</label>
+                                    <input type="text" class="form-control" name="userName" value="<%= userData.firstName %>" required>
+                                </div>
+                                <div class="col-md-6 space-t-15">
+                                    <label>last Name</label>
+                                    <input type="text" class="form-control" name="userName" value="<%= userData.lastName %>" required>
+                                </div>
+                               
+                                <div class="col-md-6 space-t-15">
+                                    <label>Mobile Number</label>
+                                    <input type="number" class="form-control" name="userMobileNumber" value="<%= userData.phoneNumber %>" required>
+                                </div>
+                                
+                                <div class="col-md-6 space-t-15">
+                                    <label>Email address</label>
+                                    <input type="email" class="form-control" name="userEmail" value="<%= userData.email %>" required>
+                                </div>
+                                <div class="col-md-6 space-t-15">
+                                    <label>Current password</label>
+                                  <input type="password" class="form-control" name="userCurrentPassword">
+                                </div>
+                                <div class="col-md-6 space-t-15">
+                                    <label>New password</label>
+                                    <input type="password" class="form-control" name="userNewPassword">
+                                </div>
+                                <div class="col-md-6 space-t-15">
+                                    <label>Confirm new password</label>
+                                    <input type="password" class="form-control mb-2" name="userConfirmNewPassword">
+                                </div>
+                                <div class="col-md-12 space-t-15">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    <a href="#" class="btn btn-lg btn-secondary qty_close" data-bs-dismiss="modal"
+                                        aria-label="Close">Close</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal end -->
 
 
 <%-include('footer')%>

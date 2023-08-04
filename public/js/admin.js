@@ -455,7 +455,7 @@ $(document).ready(function () {
 
 
   
-  if (window.location.pathname === '/admin/dashboard') {
+  if (window.location.pathname === '/admin/admindash') {
   // Move the Chart rendering code inside the window.onload event listener
 window.onload = function() {
   // Place your existing JavaScript code here
@@ -482,6 +482,7 @@ window.onload = function() {
 
 
   function salesGraph(months, ordersByMonth) {
+    console.log(11);
     const ctx = document.getElementById('myChart');
     new Chart(ctx, {
       type: 'bar',
@@ -504,6 +505,7 @@ window.onload = function() {
   }
 
   function revenue(months, revenueByMonth) {
+  
     const ctx1 = document.getElementById('myChart1');
     new Chart(ctx1, {
       type: 'line',
@@ -571,76 +573,75 @@ const getSalesData = async() => {
     endDate = document.getElementById("end-date").value;
     console.log(startDate, endDate);
 
-    Handlebars.registerHelper("for", function (from, to, incr, block) {
-        var accum = "";
-        for (var i = from; i < to; i += incr) accum += block.fn(i);
-        return accum;
-    });
+
 
     const salesReportTemplate = `
-<div class="col-xl-12">
-  <!-- Account details card-->
-  <div class="card mb-4">
-    <div class="card-header">Sales Report 
-
-    </div>
-
-    <div class="card-body ml-3 p-5">
-      <ul>   
-        <table id="my-table" class="my-table table table-hover" style="border-top: 1px solid black;">
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Order id</th>
-              <th scope="col">Payment Method</th>
-              <th scope="col">Product Details</th>
-              <th scope="col">Total</th>
-              
-            </tr>
-          </thead>
-          <tbody>
-            {{#each data.orders}}
-            <tr>
-              <td>{{this.date}}</td>
-              <td>{{this.orderId}}</td>
-              <td>{{this.paymentMethod}}</td> 
-              <td>
-                 {{#each this.productName}}
-                 <p>Name: {{this.name}}</p>
-                 <p>Quantity: {{this.quantity}}</p>
-                 <p>Price: <span>₹</span>{{this.price}}</p>
-                 {{/each}}
-                 </td> 
-            
-              <td><span>₹</span>{{this.total}}</td> 
-            </tr>
-            {{/each}} 
-          </tbody>
-        </table>
-                
-        <h5>Total Revenue: ₹<strong class="ml-auto">{{data.grandTotal}}</strong>  </h5>
-       
-      </ul>
+    <%
+    function forLoop(from, to, incr, block) {
+      let accum = "";
+      for (let i = from; i < to; i += incr) {
+        accum += block(i);
+      }
+      return accum;
+    }
+  %>
+    <div class="col-xl-12">
+    <!-- Account details card-->
+    <div class="card mb-4">
+      <div class="card-header">Sales Report</div>
+      <div class="card-body ml-3 p-5">
+        <ul>
+          <table id="my-table" class="my-table table table-hover" style="border-top: 1px solid black;">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Order id</th>
+                <th scope="col">Payment Method</th>
+                <th scope="col">Product Details</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% data.orders.forEach(function(order) { %>
+              <tr>
+                <td><%= order.date %></td>
+                <td><%= order.orderId %></td>
+                <td><%= order.paymentMethod %></td>
+                <td>
+                  <% order.productName.forEach(function(product) { %>
+                  <p>Name: <%= product.name %></p>
+                  <p>Quantity: <%= product.quantity %></p>
+                  <p>Price: <span>₹</span><%= product.price %></p>
+                  <% }); %>
+                </td>
+                <td><span>₹</span><%= order.total %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+          <h5>Total Revenue: ₹<strong class="ml-auto"><%= data.grandTotal %></strong></h5>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
-<div>
-    <button onclick="downloadSalesReport()" class="btn btn-primary" >DOWNLOAD REPORT</button>
-    </div>
+  <div>
+    <button onclick="downloadSalesReport()" class="btn btn-primary">DOWNLOAD REPORT</button>
+  </div>
+  
 `;
 
-    function renderSalesReport(orderData) {
-        const compiledTemplate = Handlebars.compile(salesReportTemplate);
-        const salesReportHTML = compiledTemplate({ data: orderData });
-        document.getElementById("table").innerHTML = salesReportHTML;
+function renderSalesReport(orderData) {
+  const salesReportHTML = ejs.render(salesReportTemplate, { data: orderData });
+  document.getElementById("table").innerHTML = salesReportHTML;
 
-        jQuery(document).ready(function ($) {
-            $("#my-table").DataTable({
-                dom: "Bfrtip",
-                buttons: ["excelHtml5", "pdfHtml5"],
-            });
-        });
-    }
+  jQuery(document).ready(function ($) {
+    $("#my-table").DataTable({
+      dom: "Bfrtip",
+      buttons: ["excelHtml5", "pdfHtml5"],
+    });
+  });
+}
+
 
 
     ///////////sales report fetch///////////

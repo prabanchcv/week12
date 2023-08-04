@@ -397,11 +397,10 @@ const pincodeInput = document.querySelector(".pincode-input");
 editAddressBtns.forEach((btn) => {
     btn.addEventListener("click", async (event) => {
         event.preventDefault();
-        editAddressPanel.style.display = "block";
-        addAddressPanel.style.display = "none";
+      
 
         const addressId = btn.dataset.id;
-
+        console.log(11);
         try {
             const response = await fetch(`/addressData?addressId=${addressId}`, {
                 method: "GET",
@@ -410,7 +409,7 @@ editAddressBtns.forEach((btn) => {
                     // Add any other headers if required
                 },
             });
-
+            console.log(22);
             if (response.ok) {
                 const addressData = await response.json();
 
@@ -473,9 +472,9 @@ function scrollToForm2() {
             {
                 scrollTop: scrollPosition,
             },
-            800
+            8000
         ); // Adjust the animation speed as needed
-    }, 300); // Adjust the delay duration as needed
+    }, 3000); // Adjust the delay duration as needed
 }
 
 const updateAddress = document.getElementById("updateAddress");
@@ -486,7 +485,7 @@ if (updateAddress) {
 
         const form = event.target;
         const formData = new FormData(form);
-
+        console.log(11);
         const addressId = document.getElementById("addressId").value;
 
         if ($(form).valid()) {

@@ -125,7 +125,7 @@ h3 {
 </style>
 
 <main class="main">
-    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+    <div class="page-header text-center" style="border-bottom: #acb9cc solid ;" >
         <div class="container">
             <h1 class="page-title">Order Details</h1>
         </div><!-- End .container -->
@@ -181,7 +181,7 @@ h3 {
 
                                             <div class="product-info">
                                                 <p>Quantity :</p> <span>
-                                                    <p><%= order.quantity %> nos</p>
+                                                    <p> x  <%= order.quantity %> </p>
                                                 </span>
                                             </div>
 
@@ -259,7 +259,7 @@ h3 {
                                             </div>
                                             <% } else { %>
                                             <div id="orderStatusBtn">
-                                                <p onclick="returnOrder()" class="btn-product btn-cart icon-info-circle"><span id="updateOrder">Return Order</span></p>
+                                                <p onclick="returnOrder()" class="btn-product btn-cart icon-info-circle"><span id="updateOrder" class="btn btn-sm btn-primary " >Return Order</span></p>
                                             </div>
                                             <% } %>
                                             <% } else if (orderDetails.status === "Cancelled") { %>
@@ -272,7 +272,7 @@ h3 {
                                             </div>
                                             <% } else if (orderDetails.status === "Pending") { %>
                                             <div id="orderStatusBtn">
-                                                <p onclick="cancelOrder()" class="btn btn-sm btn-info "><span id="updateOrder" >Cancel Order</span></p>
+                                                <p onclick="cancelOrder()" class="btn btn-sm btn-primary "><span id="updateOrder" >Cancel Order</span></p>
                                             </div>
                                             <% } %>
                                             <input type="hidden" id="orderId" value="<%= orderDetails._id %>">
@@ -323,7 +323,7 @@ h3 {
                     <div class="summary">
                         <div class="sidebar sidebar-shop ">
                             <div class="widget widget-clean">
-                                <p style="font-size: 16pt; font-weight: 600; color: #c96;">Order Summary</p>
+                                <p style="font-size: 16pt; font-weight: 600; color: #3474d4;">Order Summary</p>
                             </div><!-- End .widget widget-clean -->
 
                             <div class="product-list-action ">
@@ -363,7 +363,7 @@ h3 {
                                 </table>
 
                                 <table class="table table-summary">
-                                    <h6 class="mt-2" style="color: #c96;">Delivery Address :</h6>
+                                    <h6 class="mt-2" style="color: #3474d4;">Delivery Address :</h6>
                                     <div class="address-data">
                                         <tr>
                                             <td>Name: <br>Mobile: <br>Email: <br> Home: <br>City: <br>State: <br>Pincode: </td>
@@ -380,7 +380,7 @@ h3 {
                     <% if (orderDetails.status === "Delivered") { %>
                     <div class="download-invoice">
                         <a href="/downloadInvoice?orderId=<%= orderDetails._id %>" class="btn btn-outline-dark-2 btn-block mb-3">
-                            <span>DOWNLOAD INVOICE</span>
+                            <span class="btn btn-sm btn-primary " >DOWNLOAD INVOICE</span>
                             <i class="fa-regular fa-file-lines"></i>
                         </a>
                     </div>
