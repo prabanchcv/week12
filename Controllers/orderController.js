@@ -430,16 +430,17 @@ const downloadInvoice = async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: true,
-            executablePath: '/usr/bin/google-chrome-stable',
+            // executablePath: '/usr/bin/google-chrome-stable',
+            executablePath: 'C:\\Users\\msi1\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
         const xvfbInstance = new xvfb(xvfbOptions);
-        xvfbInstance.startSync();
+        // xvfbInstance.startSync();
 
         const page = await browser.newPage();
 
-        await page.goto(`https://www.Gadgetry.com/invoice?orderId=${orderId}`, {
+        await page.goto(`http://localhost:8000/invoice?orderId=${orderId}`, {
             waitUntil: 'networkidle2'
         });
 
@@ -451,7 +452,7 @@ const downloadInvoice = async (req, res) => {
         });
 
         await browser.close();
-        xvfbInstance.stopSync();
+        // xvfbInstance.stopSync();
 
         res.set({
             'Content-Type': 'application/pdf',

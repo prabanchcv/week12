@@ -82,8 +82,8 @@ user_route.get('/myOrders', orderController.myOrders)
 user_route.get('/orderDetails',orderController.orderDetails)
 user_route.get('/orderFilter', orderController.filterOrder)
 user_route.post('/updateOrder', orderController.updateOrder)
-// user_route.get('/invoice', orderController.invoice)
-// user_route.get('/downloadInvoice', orderController.downloadInvoice)
+user_route.get('/invoice', orderController.invoice)
+user_route.get('/downloadInvoice', orderController.downloadInvoice)
 
 
 
