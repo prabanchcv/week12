@@ -119,15 +119,17 @@
                         <!-- Ec Header Logo End -->
 
                         <!-- Ec Header Search Start -->
-                        <div class="align-self-center">
-                            <div class="header-search">
-                                <form class="ec-btn-group-form" action="#">
-                                    <input class="form-control ec-search-bar" placeholder="Search products..."
-                                        type="text">
-                                    <button class="submit" type="submit"><i class="fi-rr-search"></i></button>
-                                </form>
-                            </div>
-                        </div>
+                        <div class="header-search">
+                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                            <form action="/allProducts" method="get">
+                                <div class="header-search-wrapper">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="search" id="q" placeholder="Search in..."
+                                        required>
+                                        <button class="submit" type="submit"><i class="fi-rr-search"></i></button>
+                                </div><!-- End .header-search-wrapper -->
+                            </form>
+                        </div><!-- End .header-search -->
                         <!-- Ec Header Search End -->
 
                         <!-- Ec Header Button Start -->

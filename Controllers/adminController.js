@@ -28,7 +28,7 @@ const loadLogin = async (req, res) => {
             res.render("login", { invalid: "invalid details" });
             req.session.wrongAdmin = false;
         } else {
-            res.render("login");
+            res.render("login",{ invalid: "" });
         }
     } catch (error) {
         console.log(error.message);

@@ -1,16 +1,17 @@
-const express=require('express')
-const app=express()
-const session=require('express-session')
+const express = require('express')
+const app = express()
+const session = require('express-session')
 const axios = require('axios');
 
 // const Port=process.env.PORT || 3000
-const {v4:uuid}=require("uuid")
-const mongoose=require('mongoose')
-const userRoute=require("./routes/userRoute")
-const adminRoute=require('./routes/adminRoute')
+const { v4: uuid } = require("uuid")
+const mongoose = require('mongoose')
+const userRoute = require("./routes/userRoute")
+const adminRoute = require('./routes/adminRoute')
 const mongoDB = require("./database/connection")
-const nocache=require("nocache")
-const path=require('path')
+const nocache = require("nocache")
+const path = require('path')
+const Category = require("./Models/categoryModel");
 app.use(nocache())
 
 require('dotenv').config();
@@ -31,13 +32,13 @@ mongoDB()
 
 
 
-app.set('view engine','ejs')
+app.set('view engine', 'ejs')
 app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
 //view child folders mount
 
-app.set('views',path.join(__dirname,'Views','userView'))
-app.set('views',path.join(__dirname,'Views','adminView'))
+app.set('views', path.join(__dirname, 'Views', 'userView'))
+app.set('views', path.join(__dirname, 'Views', 'adminView'))
 
 //mount public
 
@@ -58,17 +59,24 @@ app.use('/js', express.static(path.join(__dirname, 'public/js')));
 //mount session
 app.use(
     session({
-        secret:uuid(),
-        resave:false,
-        saveUninitialized:true
+        secret: uuid(),
+        resave: false,
+        saveUninitialized: true
     })
-    
+
 );
 
 app.use(nocache())
 
-app.use('/',userRoute)
-app.use('/admin',adminRoute)
+app.use('/', userRoute)
+app.use('/admin', adminRoute)
+
+app.use(async function(req, res, next) {
+    const userData=req.session.user
+    const categoryData = await Category.find({ is_blocked: false });
+    res.status(404).render('404',{userData, categoryData});
+});
+
 
 
 app.listen(PORT, (() => console.log(`server started at  http://localhost:${PORT}`)))

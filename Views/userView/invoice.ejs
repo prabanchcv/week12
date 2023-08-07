@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title> Order confirmation </title>
-<link rel="icon" href="/assets/images/icons/logo.png" type="image/x-icon">
+<link rel="icon" href="/images/logo/logo.png" type="image/x-icon">
 <meta name="robots" content="noindex,nofollow" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0;" />
 <style>
@@ -58,7 +58,7 @@
           <tr class="visibleMobile">
             <td height="30"></td>
           </tr>
-  
+
           <tr>
             <td>
               <table width="480" border="0" cellpadding="0" cellspacing="0" align="center" class="fullPadding">
@@ -68,7 +68,7 @@
                       <table width="220" border="0" cellpadding="0" cellspacing="0" align="left" class="col">
                         <tbody>
                           <tr>
-                            <td align="left"> <img src="/assets/images/demos/demo-8/logo.png" width="50" height="19" style="margin-top: 8px;" alt="logo" border="0" /></td>
+                            <td align="left"> <img src="/images/logo/logo.png" width="50" height="19" style="margin-top: 8px;" alt="logo" border="0" /></td>
                           </tr>
                           <tr class="hiddenMobile">
                             <td height="40"></td>
@@ -78,7 +78,7 @@
                           </tr>
                           <tr>
                             <td style="font-size: 12px; color: #5b5b5b; font-family: 'Open Sans', sans-serif; line-height: 18px; vertical-align: top; text-align: left;">
-                              Hello, <strong>{{userData.name}}</strong>.
+                              Hello, <strong><%= userData.name %></strong>.
                               <br> Thank you for shopping from our store and for your order.
                             </td>
                           </tr>
@@ -106,8 +106,8 @@
                           </tr>
                           <tr>
                             <td style="font-size: 12px; color: #5b5b5b; font-family: 'Open Sans', sans-serif; line-height: 18px; vertical-align: top; text-align: right;">
-                              <small>ORDER ID :</small> {{orderData.orderId}}<br />
-                              <small>INVOICE DATE :  {{invoiceDate}}</small>
+                              <small>ORDER ID :</small> <%= orderData.orderId %><br />
+                              <small>INVOICE DATE : <%= invoiceDate %></small>
                             </td>
                           </tr>
                         </tbody>
@@ -161,29 +161,23 @@
                       <tr>
                         <td height="10" colspan="4"></td>
                       </tr>
-                      
-                      {{#each productData}}
-                      <tr>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #ff0000;  line-height: 18px;  vertical-align: top; padding:10px 0;" class="article">
-                          {{this.name}}
-                        </td>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;">
-                            ₹{{#if this.oldPrice}}
-                            {{this.oldPrice}}
-                            {{else}}
-                            {{this.price}}
-                            {{/if}}
-                        </td>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="center">{{this.quantity}}</td>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #1e2b33;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="right">₹{{this.totalPrice}}</td>
-                      </tr>
 
-                      <tr>
-                        <td height="1" colspan="4" style="border-bottom:1px solid #e4e4e4"></td>
-                      </tr>
-                      {{/each}}
-                      
-                    
+                      <% productData.forEach(product => { %>
+                        <tr>
+                          <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #ff0000;  line-height: 18px;  vertical-align: top; padding:10px 0;" class="article">
+                            <%= product.name %>
+                          </td>
+                          <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;">
+                              ₹<%= product.oldPrice ? product.oldPrice : product.price %>
+                          </td>
+                          <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="center"><%= product.quantity %></td>
+                          <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #1e2b33;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="right">₹<%= product.totalPrice %></td>
+                        </tr>
+                        <tr>
+                          <td height="1" colspan="4" style="border-bottom:1px solid #e4e4e4"></td>
+                        </tr>
+                      <% }); %>
+
                     </tbody>
                   </table>
                 </td>
@@ -207,7 +201,7 @@
             <tbody>
               <tr>
                 <td>
-  
+
                   <!-- Table Total -->
                   <table width="480" border="0" cellpadding="0" cellspacing="0" align="center" class="fullPadding">
                     <tbody>
@@ -216,7 +210,7 @@
                           Subtotal
                         </td>
                         <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; white-space:nowrap;" width="80">
-                          ₹{{subTotal}}
+                          ₹<%= subTotal %>
                         </td>
                       </tr>
                       <tr>
@@ -232,7 +226,7 @@
                             Offer Discount(If any)
                         </td>
                         <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                          ₹{{orderData.offerDiscount}}
+                          ₹<%= orderData.offerDiscount %>
                         </td>
                       </tr>
                       <tr>
@@ -240,7 +234,7 @@
                             Coupon Discount(If any)
                         </td>
                         <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                          ₹{{orderData.discountAmount}}
+                          ₹<%= orderData.discountAmount %>
                         </td>
                       </tr>
                       <tr>
@@ -248,19 +242,13 @@
                           <strong>Grand Total </strong>
                         </td>
                         <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #000; line-height: 22px; vertical-align: top; text-align:right; ">
-                          <strong>₹{{orderData.total}}</strong>
+                          <strong>₹<%= orderData.total %></strong>
                         </td>
                       </tr>
-                      {{!-- <tr>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #b0b0b0; line-height: 22px; vertical-align: top; text-align:right; "><small>TAX</small></td>
-                        <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #b0b0b0; line-height: 22px; vertical-align: top; text-align:right; ">
-                          <small₹>0</small>
-                        </td>
-                      </tr> --}}
                     </tbody>
                   </table>
                   <!-- /Table Total -->
-  
+
                 </td>
               </tr>
             </tbody>
@@ -278,20 +266,12 @@
           <table width="600" border="0" cellpadding="0" cellspacing="0" align="center" class="fullTable" bgcolor="#ffffff">
             <tbody>
               <tr>
-              <tr class="hiddenMobile">
-                <td height="60"></td>
-              </tr>
-              <tr class="visibleMobile">
-                <td height="40"></td>
-              </tr>
-              <tr>
                 <td>
                   <table width="480" border="0" cellpadding="0" cellspacing="0" align="center" class="fullPadding">
                     <tbody>
                       <tr>
                         <td>
                           <table width="220" border="0" cellpadding="0" cellspacing="0" align="left" class="col">
-  
                             <tbody>
                               <tr>
                                 <td style="font-size: 11px; font-family: 'Open Sans', sans-serif; color: #5b5b5b; line-height: 1; vertical-align: top; ">
@@ -303,12 +283,11 @@
                               </tr>
                               <tr>
                                 <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #5b5b5b; line-height: 20px; vertical-align: top; ">
-                                  {{addressData.name}}<br> {{addressData.addressLine}}<br> {{addressData.email}}<br> {{addressData.mobile}}<br> {{addressData.city}}, {{addressData.state}}, {{addressData.pincode}}
+                                  <%= addressData.name %><br> <%= addressData.addressLine %><br> <%= addressData.email %><br> <%= addressData.mobile %><br> <%= addressData.city %>, <%= addressData.state %>, <%= addressData.pincode %>
                                 </td>
                               </tr>
                             </tbody>
                           </table>
-  
   
                           <table width="220" border="0" cellpadding="0" cellspacing="0" align="right" class="col">
                             <tbody>
@@ -325,10 +304,7 @@
                               </tr>
                               <tr>
                                 <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #5b5b5b; line-height: 20px; vertical-align: top; ">
-                                  Payment Method : {{orderData.paymentMethod}}<br>Coupon Name : {{orderData.couponName}}<br> Order Date : {{orderDate}}<br> Delivered Date : {{formatDate orderData.deliveredDate}}<br> Return End Date : {{formatDate orderData.returnEndDate}}
-                                    {{!-- <a href="#" style="color: #ff0000; text-decoration:underline;">4185939336</a> --}}
-                                  {{!-- <br>
-                                  <a href="#" style="color:#b0b0b0;">Right of Withdrawal</a> --}}
+                                  Payment Method : <%= orderData.paymentMethod %><br>Coupon Name : <%= orderData.couponName %><br> Order Date : <%= orderDate %><br> Delivered Date : <%= deliveryDate %><br> Return End Date :<%= returnEndDate%>
                                 </td>
                               </tr>
                             </tbody>
@@ -340,50 +316,6 @@
                 </td>
               </tr>
 
-
-            {{!-- <tr> --}}
-                
-                <td>
-                  <table width="480" border="0" cellpadding="0" cellspacing="0" align="center" class="fullPadding">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <table width="220" border="0" cellpadding="0" cellspacing="0" align="left" class="col">
-                            <tbody>
-                              
-                              
-                              {{!-- <tr class="hiddenMobile">
-                                <td height="35"></td>
-                              </tr>
-                              <tr class="visibleMobile">
-                                <td height="20"></td>
-                              </tr>
-                              <tr>
-                                <td style="font-size: 11px; font-family: 'Open Sans', sans-serif; color: #5b5b5b; line-height: 1; vertical-align: top; ">
-                                  <strong>SHIPPING METHOD</strong>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td width="100%" height="10"></td>
-                              </tr>
-                              <tr>
-                                <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #5b5b5b; line-height: 20px; vertical-align: top; ">
-                                  Azhar Super Fast Delivery<br>
-                                </td>
-                              </tr> --}}
-                            
-                            
-                            </tbody>
-                          </table>
-  
-  
-                          
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
               <tr class="hiddenMobile">
                 <td height="60"></td>
               </tr>
@@ -394,9 +326,6 @@
           </table>
         </td>
       </tr>
-
-
-
     </tbody>
   </table>
   <!-- /Information -->

@@ -499,11 +499,12 @@ const invoice = async(req,res)=>{
             return total + price * product.quantity;
           }, 0);
           
-
+          const deliveryDate=moment(orderDetails.deliveredDate).format('MMMM D, YYYY')
+          const returnEndDate=moment(orderDetails.returnEndDate).format('MMMM D, YYYY') 
         const orderDate = moment(orderData.date).format('MMMM D, YYYY')
         const invoiceDate = moment(new Date()).format('MMMM D, YYYY')
 
-        res.render('invoice',{userData, orderData, productData, subTotal, addressData, orderDate, invoiceDate })
+        res.render('invoice',{userData, orderData, productData,deliveryDate,returnEndDate, subTotal, addressData, orderDate, invoiceDate })
 
 
     } catch (error) {
