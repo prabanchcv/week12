@@ -149,7 +149,8 @@ const loadDashboard = async (req, res) => {
   
         const browser = await puppeteer.launch({
           headless: true,
-          executablePath: 'C:\\Users\\msi1\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+          // executablePath: 'C:\\Users\\msi1\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+          executablePath: "/usr/bin/google-chrome-stable",
           args: ['--no-sandbox', '--disable-setuid-sandbox']
       });
 
@@ -159,7 +160,7 @@ const loadDashboard = async (req, res) => {
       const page = await browser.newPage();
   
       await page.goto(
-          `http://localhost:8000/admin/renderSalesReport?orderData=${encodeURIComponent(JSON.stringify(orderData))}
+          `https://www.gadgetry.fun/admin/renderSalesReport?orderData=${encodeURIComponent(JSON.stringify(orderData))}
               &startDate=${startDate}&endDate=${endDate}`,{
               waitUntil: "networkidle2",
           }
