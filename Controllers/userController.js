@@ -7,7 +7,7 @@ const Banner = require("../Models/bannerModel")
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const moment = require('moment');
-const { render } = require('../routes/userRoute');
+// const { render } = require('../routes/userRoute');
 
 
 
