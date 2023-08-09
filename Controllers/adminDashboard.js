@@ -138,54 +138,56 @@ const loadDashboard = async (req, res) => {
   };
 
 
+  
+
   const downloadSalesReport = async (req, res) => {
-    try {
-      const orderData = req.body.orderData;
-      const { startDate, endDate } = req.query;
+    // try {
+    //   const orderData = req.body.orderData;
+    //   const { startDate, endDate } = req.query;
 
-        const xvfbOptions = {
-            silent: true
-        };
+    //     const xvfbOptions = {
+    //         silent: true
+    //     };
   
-        const browser = await puppeteer.launch({
-          headless: true,
-          // executablePath: 'C:\\Users\\msi1\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
-          executablePath: "/usr/bin/google-chrome-stable",
-          args: ['--no-sandbox', '--disable-setuid-sandbox']
-      });
+    //     const browser = await puppeteer.launch({
+    //       headless: true,
+    //       // executablePath: 'C:\\Users\\msi1\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+    //       executablePath: "/usr/bin/google-chrome-stable",
+    //       args: ['--no-sandbox', '--disable-setuid-sandbox']
+    //   });
 
-      // const xvfbInstance = new xvfb(xvfbOptions);
-      // xvfbInstance.startSync();
+    //   // const xvfbInstance = new xvfb(xvfbOptions);
+    //   // xvfbInstance.startSync();
 
-      const page = await browser.newPage();
+    //   const page = await browser.newPage();
   
-      await page.goto(
-          `https://www.gadgetry.fun/admin/renderSalesReport?orderData=${encodeURIComponent(JSON.stringify(orderData))}
-              &startDate=${startDate}&endDate=${endDate}`,{
-              waitUntil: "networkidle2",
-          }
-      );
+    //   await page.goto(
+    //       `https://www.gadgetry.fun/admin/renderSalesReport?orderData=${encodeURIComponent(JSON.stringify(orderData))}
+    //           &startDate=${startDate}&endDate=${endDate}`,{
+    //           waitUntil: "networkidle2",
+    //       }
+    //   );
   
       
-      const pdfBuffer = await page.pdf({
-        format: 'A4',
-        printBackground: true,
-      });
+    //   const pdfBuffer = await page.pdf({
+    //     format: 'A4',
+    //     printBackground: true,
+    //   });
   
-      await browser.close();
-      // xvfbInstance.stopSync();
+    //   await browser.close();
+    //   // xvfbInstance.stopSync();
   
-      // Set the Content-Disposition header once with the desired filename
-      res.set({
-        'Content-Type': 'application/json',
-        'Content-Disposition': `attachment; filename=SalesReport.pdf`,
-      });
+    //   // Set the Content-Disposition header once with the desired filename
+    //   res.set({
+    //     'Content-Type': 'application/json',
+    //     'Content-Disposition': `attachment; filename=SalesReport.pdf`,
+    //   });
   
-      res.send(pdfBuffer);
+    //   res.send(pdfBuffer);
   
-    } catch (error) {
-      console.log(error.message);
-    }
+    // } catch (error) {
+    //   console.log(error.message);
+    // }
   };
   
   const renderSalesReport = async (req, res) => {
