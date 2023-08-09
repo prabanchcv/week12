@@ -6,7 +6,7 @@ const Coupon = require("../Models/couponModel");
 const Order = require("../Models/orderModel");
 const moment = require("moment");
 const path = require('path')
-const puppeteer = require('puppeteer')
+// const puppeteer = require('puppeteer')
 const xvfb = require('xvfb');
 const Razorpay = require("razorpay");
 

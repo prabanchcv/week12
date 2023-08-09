@@ -1,7 +1,7 @@
 const moment = require('moment');
 const Sale = require('../Models/orderModel')
 const Order = require('../Models/orderModel')
-const puppeteer = require('puppeteer')
+// const puppeteer = require('puppeteer')
 // const xvfb = require('xvfb');
 
 
@@ -138,7 +138,7 @@ const loadDashboard = async (req, res) => {
   };
 
 
-  
+
 
   const downloadSalesReport = async (req, res) => {
     // try {
