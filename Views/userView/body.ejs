@@ -156,10 +156,11 @@
                                 <!-- Header wishlist End -->
                                 <!-- Header Cart Start -->
                                 <% if(loggedIn){ %>
-                                <a href="#ec-side-cart" class="ec-header-btn ec-side-toggle">
-                                    <div class="header-icon"><i class="fi-rr-shopping-bag"></i></div>
-                                    <span class="ec-header-count cart-count-lable"><%= cart.length%></span>
-                                </a>
+                                    <div class="ec-nav-panel-icons">
+                                        <a href="#ec-side-cart" class="toggle-cart ec-header-btn ec-side-toggle"><i
+                                                class="fi-rr-shopping-bag"></i><span
+                                                class="ec-cart-noti ec-header-count cart-count-lable"><%= cart.length%></span></a>
+                                    </div>
                                 <%  } %>
                                 <!-- Header Cart End -->
                             </div>
