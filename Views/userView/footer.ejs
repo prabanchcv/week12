@@ -176,11 +176,13 @@
                 <a href="#ec-mobile-menu" class="navbar-toggler-btn ec-header-btn ec-side-toggle"><i
                         class="fi-rr-menu-burger"></i></a>
             </div>
+            <% if(loggedIn){ %>
             <div class="ec-nav-panel-icons">
                 <a href="#ec-side-cart" class="toggle-cart ec-header-btn ec-side-toggle"><i
                         class="fi-rr-shopping-bag"></i><span
                         class="ec-cart-noti ec-header-count cart-count-lable"><%= cart.length%></span></a>
             </div>
+            <%  } %>
             <div class="ec-nav-panel-icons">
                 <a href="/home" class="ec-header-btn"><i class="fi-rr-home"></i></a>
             </div>
