@@ -5,6 +5,9 @@ const Order = require('../Models/orderModel')
 const xvfb = require('xvfb');
 
 
+const PDFDocument = require('pdfkit');
+
+
 
 let months        = []
 let ordersByMonth  = []
@@ -183,7 +186,26 @@ const loadDashboard = async (req, res) => {
   // } catch (error) {
   //     console.log(error.message);
   // }
+
+  try {
+    const orderData = req.body.orderData;
+    console.log(orderData);
+    const { startDate, endDate } = req.query;
+
+    const pdfBuffer = await generateSalesReportPDF( startDate, endDate);
+
+    res.set({
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename=GadgetrySalesReport.pdf`,
+    });
+
+    res.send(pdfBuffer);
+} catch (error) {
+    console.log(error.message);
+    res.status(500).send('An error occurred');
+}
   };
+  
   
   const renderSalesReport = async (req, res) => {
     try {
@@ -202,6 +224,66 @@ const loadDashboard = async (req, res) => {
       console.log(error.message);
     }
   };
+
+
+  const generateSalesReportPDF = async ( startDate, endDate) => {
+    const newstartDate = new Date(startDate);
+    const newEndDate = new Date(endDate);
+    const orderData = await Order.find({
+      date: {
+          $gte: newstartDate,
+          $lte: newEndDate,
+      },
+      status: "Delivered",
+  }).sort({ date: "desc" });
+    return new Promise((resolve, reject) => {
+      
+        const doc = new PDFDocument();
+        const pdfBuffer = [];
+
+        doc.on('data', (chunk) => {
+            pdfBuffer.push(chunk);
+        });
+
+        doc.on('end', () => {
+            resolve(Buffer.concat(pdfBuffer));
+        });
+
+        doc.on('error', (error) => {
+            reject(error);
+        });
+
+        // Customize PDF content
+        doc.fontSize(18).text('Sales Report', { align: 'center' }).moveDown();
+        doc.fontSize(14).text(`Start Date: ${startDate}`, { align: 'center' });
+        doc.text(`End Date: ${endDate}`, { align: 'center' }).moveDown();
+
+        // Add order data to the PDF
+        doc.moveDown();
+        doc.fontSize(14).text('Order Details:', { underline: true }).moveDown();
+
+        orderData.forEach(async (order) => {
+            doc.text(`Order ID: ${order.orderId}`);
+          
+            doc.text(`Total: ${order.total}`);
+            doc.text(`Payment Method: ${order.paymentMethod}`);
+            doc.text(`Status: ${order.status}`);
+            doc.moveDown();
+
+            // Add product details
+            order.product.forEach(product => {
+                doc.text(`Product: ${product.name}`);
+                doc.text(`Price: ${product.price}`);
+                doc.text(`Quantity: ${product.quantity}`);
+                doc.moveDown();
+            });
+
+            doc.moveDown();
+        });
+
+        doc.end();
+    });
+};
   
 
 
@@ -210,5 +292,6 @@ module.exports = {
     chartData,
     getSales,
     downloadSalesReport,
-    renderSalesReport
+    renderSalesReport,
+    generateSalesReportPDF
 }
